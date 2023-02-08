@@ -55,7 +55,7 @@ class MachineTasksImport implements ToModel, WithHeadingRow
             $opt_rampa_dime = isset($row['opt_rampa_dime']) ? $row['opt_rampa_dime'] : '';
             $opt_cart = isset($row['opt_cart']) ? $row['opt_cart'] : '';
 
-            
+            // dd($row);
             // dd(Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data_consegna)));
 
             if(MachineJob::where('matricola', $matricola)->exists()){
@@ -73,7 +73,6 @@ class MachineTasksImport implements ToModel, WithHeadingRow
                 $machineJob->ruota_tastatrice = $ruota_tastatrice;
                 $machineJob->opt_cart1 = $opt_cart1;
                 $machineJob->opt_cart2 = $opt_cart2;
-                $machineJob->opt_cart3 = $opt_cart3;
                 $machineJob->dim_imballo = $dim_imballo;
                 $machineJob->note_imballo = $note_imballo;
                 $machineJob->note = $note;
@@ -101,7 +100,6 @@ class MachineTasksImport implements ToModel, WithHeadingRow
                     'ruota_tastatrice' => $ruota_tastatrice,
                     'opt_cart1' => $opt_cart1,
                     'opt_cart2' => $opt_cart2,
-                    'opt_cart3' => $opt_cart3,
                     'dim_imballo' => $dim_imballo,
                     'note_imballo' => $note_imballo,
                     'note' => $note,

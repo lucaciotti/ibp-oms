@@ -7,7 +7,7 @@ require 'contrib/npm.php';
 
 set('application', 'pNet');
 set('keep_releases', 2);
-set('repository', 'https://github.com/lucaciotti/pNet.git');
+set('repository', 'https://github.com/lucaciotti/ibp-oms.git');
 set('git_tty', true);
 set('php_fpm_version', '8.0');
 
@@ -17,8 +17,8 @@ set('ssh_multiplexing', false);
 host('dev')
     ->set('stage', 'dev')
     ->set('remote_user', 'root')
-    ->set('hostname', 'ibp-oms.lucaciotti.space')
-    ->set('deploy_path', '/var/www/{{hostname}}');
+    ->set('hostname', 'ibpoms.lucaciotti.space')
+    ->set('deploy_path', '/var/www/ibp-oms.lucaciotti.space');
 
 task('deploy', [
     'deploy:prepare',
@@ -27,16 +27,15 @@ task('deploy', [
     'artisan:view:cache',
     'artisan:config:cache',
     'artisan:migrate',
-    'migrate:pNet',
     // 'npm:install',
     // 'npm:run:prod',
     'deploy:publish',
     'php-fpm:reload',
-    'supervisor:reload:dbSeed',
-    'supervisor:reload:email',
-    'supervisor:reload:dataMining',
-    'setPermission:bootstrap',
-    'setPermission:storage',
+    // 'supervisor:reload:dbSeed',
+    // 'supervisor:reload:email',
+    // 'supervisor:reload:dataMining',
+    // 'setPermission:bootstrap',
+    // 'setPermission:storage',
     'apache:restart'
 ]);
 
