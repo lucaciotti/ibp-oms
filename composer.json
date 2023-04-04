@@ -15,7 +15,8 @@
         "livewire/livewire": "^2.11",
         "maatwebsite/excel": "^3.1",
         "mpdf/mpdf": "^6.1",
-        "rappasoft/laravel-livewire-tables": "^2.10"
+        "rappasoft/laravel-livewire-tables": "^2.10",
+        "santigarcor/laratrust": "^7.2"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.13",
