@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "lucaciotti/ibp-oms",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "An Order Management System.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
@@ -16,7 +16,8 @@
         "maatwebsite/excel": "^3.1",
         "mpdf/mpdf": "^6.1",
         "rappasoft/laravel-livewire-tables": "^2.10",
-        "santigarcor/laratrust": "^7.2"
+        "santigarcor/laratrust": "^7.2",
+        "wire-elements/pro": "^3.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.13",
@@ -72,6 +73,12 @@
             "pestphp/pest-plugin": true
         }
     },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://wire-elements-pro.composer.sh"
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true
 }

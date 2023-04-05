@@ -42,5 +42,16 @@
 
 {{-- Extra common CSS --}}
 @push('css')
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/js/app.js'])
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+    <link rel="stylesheet" href="{{ asset('vendor/wire-elements-pro/css/bootstrap-overlay-component.css') }}">
+    <style>
+        .wep-slide-over-container-inner-content {
+        padding-top: 3.5rem;
+        }
+    </style>
+@endpush
+
+@push('js')
+    <script src="{{ asset('vendor/wire-elements-pro/js/overlay-component.js') }}"></script>
 @endpush

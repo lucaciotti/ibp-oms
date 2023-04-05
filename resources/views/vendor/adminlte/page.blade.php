@@ -54,4 +54,6 @@
 @section('adminlte_js')
     @stack('js')
     @yield('js')
+    @livewire('modal-pro')
+    @livewire('slide-over-pro')
 @stop

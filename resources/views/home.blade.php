@@ -77,6 +77,9 @@
                             class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
+
+            <button onclick="Livewire.emit('slide-over.open', 'users-overview')">
+                Open</button>
             <!-- ./col -->
         </div>
 </div>

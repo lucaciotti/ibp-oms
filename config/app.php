@@ -195,6 +195,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        WireElements\Pro\Components\Modal\ModalServiceProvider::class,
+        WireElements\Pro\Components\SlideOver\SlideOverServiceProvider::class,
+
+
     ],
 
     /*
