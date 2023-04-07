@@ -5,6 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\MachineJob
+ *
+ * @property-read \App\Models\Cart|null $cart
+ * @property-read \App\Models\Customer|null $customer
+ * @property-read \App\Models\Package|null $package
+ * @property-read \App\Models\Product|null $product
+ * @method static \Illuminate\Database\Eloquent\Builder|MachineJob newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|MachineJob newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|MachineJob query()
+ * @mixin \Eloquent
+ */
 class MachineJob extends Model
 {
     use HasFactory;

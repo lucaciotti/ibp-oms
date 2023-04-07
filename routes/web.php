@@ -30,4 +30,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/carts', [App\Http\Controllers\CartController::class, 'index'])->name('carts');
     Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products');
     Route::get('/packages', [App\Http\Controllers\PackageController::class, 'index'])->name('packages');
+
+    
+    Route::get('/config/plantypes', [App\Http\Controllers\PlanTypesController::class, 'index'])->name('planTypes');
+    Route::get('/config/planimporttypes/{id?}', [App\Http\Controllers\PlanImportTypesController::class, 'index'])->name('planImportTypes');
 });

@@ -1,4 +1,4 @@
-<x-wire-elements-pro::bootstrap.slide-over on-submit="save" :content-padding="false">
+<x-wire-elements-pro::bootstrap.modal on-submit="save" :content-padding="false">
     <x-slot name="title">
         <h4 class="modal-title">Large Modal</h4>
     </x-slot>
@@ -14,11 +14,5 @@
             <button type="button" class="btn btn-default" wire:click="$emit('slide-over.close')">Cancel</button>
             <button type="submit" class="btn btn-primary">Save Changes</button>
         
-        {{-- <button type="submit">
-            Save Changes
-        </button>
-        <button type="button" wire:click="$emit('modal.close')">
-            Cancel
-        </button> --}}
     </x-slot>
-</x-wire-elements-pro::bootstrap.slide-over>
+</x-wire-elements-pro::bootstrap.modal>
