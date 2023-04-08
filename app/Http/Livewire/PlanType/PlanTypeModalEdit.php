@@ -60,7 +60,7 @@ class PlanTypeModalEdit extends Modal
 
     public function render()
     {
-        return view('livewire.modal.plan-type-edit');
+        return view('livewire.plan-type.plan-type-modal-edit');
     }
 
 

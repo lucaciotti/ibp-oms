@@ -123,7 +123,7 @@ class PlanTypeTable extends DataTableComponent
                         ->attributes(function ($row) {
                             return [
                                 'class' => 'btn btn-warning btn-xs',
-                                'onclick' => "Livewire.emit('modal.open', 'modal.plan-type-edit', {'id': " . $row->id . "});"
+                                'onclick' => "Livewire.emit('modal.open', 'plan-type.plan-type-modal-edit', {'id': " . $row->id . "});"
                             ];
                         }),
                 ]),

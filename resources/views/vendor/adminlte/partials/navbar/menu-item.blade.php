@@ -8,7 +8,10 @@
 @elseif ($navbarItemHelper->isNotification($item))
 
     {{-- Notification link --}}
-    <x-adminlte-navbar-notification
+    @if(config('adminlte.livewire'))
+        @livewire('layouts.notification-bell', [$item])
+    @endif
+    {{-- <x-adminlte-navbar-notification
         :id="$item['id']"
         :href="$item['href']"
         :icon="$item['icon']"
@@ -18,7 +21,7 @@
         :update-cfg="$item['update_cfg'] ?? null"
         :enable-dropdown-mode="$item['dropdown_mode'] ?? null"
         :dropdown-footer-label="$item['dropdown_flabel'] ?? null"
-    />
+    /> --}}
 
 @elseif ($navbarItemHelper->isFullscreen($item))
 

@@ -16,7 +16,7 @@
         <div class="card">
             <!-- /.card-header -->
             <div class="card-body">
-                <button class="btn btn-outline-success btn-block" onclick="Livewire.emit('modal.open', 'modal.plan-type-edit');">
+                <button class="btn btn-outline-success btn-block" onclick="Livewire.emit('modal.open', 'plan-type.plan-type-modal-edit');">
                     <span class="fa fa-edit"></span> Crea nuovo piano
                 </button>
             </div>

@@ -58,20 +58,21 @@
             </p>
         </div>
     </div> --}}
-    <div class="bs-canvas-header p-3 bg-primary overflow-auto">
-        @if($closeButton)
-        <button type="button" class="bs-canvas-close float-left close" wire:click="$emit('slide-over.close')" aria-label="Close">
-            <span aria-hidden="true" class="text-light">×</span>
-        </button>
-        @endif
+    <div class="modal-header pt-reduced pb-reduced" style="background: #D0D0D0; padding-top: 10px; padding-bottom: 10px">
         @if($title ?? false)
-        <h4 class="inline-block float-right">{{ $title }}</h4>
+        <h5 class="modal-title">{{ $title }}</h5>
         @endif
+        <button type="button" class="close" wire:click="$emit('slide-over.close')" aria-label="Close">
+            <span aria-hidden="true"><span class="fa fa-times pt-1" style="color:#505050"></span></span>
+        </button>
         
         {{-- <button type="button" wire:click="$emit('slide-over.close')" class="btn-close text-reset" aria-label="Close"></button> --}}
         {{-- @endif --}}
     </div>
-    <div @class(['offcanvas-body', 'px-0 py-0' => !$contentPadding])>
+    {{-- <div @class(['offcanvas-body', 'px-0 py-0' => !$contentPadding])>
+        {{ $slot }}
+    </div> --}}
+    <div @class(['modal-body' , 'px-0 py-0'=> !$contentPadding])>
         {{ $slot }}
     </div>
     @if($buttons ?? false)
