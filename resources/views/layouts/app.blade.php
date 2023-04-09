@@ -47,7 +47,15 @@
     <link rel="stylesheet" href="{{ asset('vendor/wire-elements-pro/css/bootstrap-overlay-component.css') }}">
     <style>
         .wep-slide-over-container-inner-content {
-        padding-top: 3.5rem;
+        padding-top: 2.8rem;
+        }
+
+        .table td, .table th {
+            padding: 0rem;
+            padding-left: 0.75rem;
+            padding-top: 0.2rem;
+            padding-bottom: 0.2rem;
+            vertical-align: unset;
         }
     </style>
 @endpush

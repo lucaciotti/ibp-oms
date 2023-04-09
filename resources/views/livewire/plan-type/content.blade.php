@@ -11,7 +11,7 @@
             </div>
 
             <div class="card-body">
-                <div style="font-size: smaller">
+                <div style="">
                     <livewire:plan-type.plan-type-table />
                 </div>
             </div>
