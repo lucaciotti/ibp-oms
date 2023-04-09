@@ -6,9 +6,12 @@ use Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Schema;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class PlannedTask extends Model
+class PlannedTask extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+    
     use HasFactory;
     
     protected $guarded = ['id'];

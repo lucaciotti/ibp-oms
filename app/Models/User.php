@@ -8,9 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laratrust\Traits\LaratrustUserTrait;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class User extends Authenticatable 
+class User extends Authenticatable implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use LaratrustUserTrait;
     use HasApiTokens, HasFactory, Notifiable;
 
