@@ -20,7 +20,17 @@ class PlanTypeTable extends DataTableComponent
         $this->setPrimaryKey('id')
             // ->setDebugEnabled()
             ->setPerPage(25)
-            ->setPerPageAccepted([25, 50, 75, 100]);
+            ->setPerPageAccepted([25, 50, 75, 100])
+            ->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
+                if ($column->getTitle() == '') {
+                    return [
+                        'default' => false,
+                        // 'class' => 'w-5',
+                        'style' => 'width:20%;'
+                    ];
+                }
+                return [];
+            });
         // ->setAdditionalSelects(['plan_types.id as id'])
         // ->setReorderEnabled()
         // ->setHideReorderColumnUnlessReorderingEnabled()
@@ -110,20 +120,31 @@ class PlanTypeTable extends DataTableComponent
             //         }
             //     )
             //     ->html(),
-            ButtonGroupColumn::make('Actions')
-                ->attributes(function ($row) {
-                    return [
-                        'class' => 'space-x-2',
-                    ];
-                })
+            ButtonGroupColumn::make('')
                 ->buttons([
                     LinkColumn::make('Modifica')
                         ->title(fn ($row) => 'Modifica')
                         ->location(fn ($row) => '#')
                         ->attributes(function ($row) {
                             return [
-                                'class' => 'btn btn-warning btn-xs',
+                                'class' => 'btn btn-default btn-xs mr-2 text-bold',
                                 'onclick' => "Livewire.emit('modal.open', 'plan-type.plan-type-modal-edit', {'id': " . $row->id . "});"
+                            ];
+                        }),
+                    LinkColumn::make('Attributi')
+                        ->title(fn ($row) => 'Attributi')
+                        ->location(fn ($row) => 'plantypes/'.$row->id.'/attributes')
+                        ->attributes(function ($row) {
+                            return [
+                                'class' => 'btn btn-primary btn-xs mr-2 text-bold',
+                            ];
+                        }),
+                    LinkColumn::make('Conf. Import')
+                        ->title(fn ($row) => 'Conf. Import')
+                        ->location(fn ($row) => 'plantypes/'.$row->id.'/plantypeimport')
+                        ->attributes(function ($row) {
+                            return [
+                                'class' => 'btn btn-success btn-xs mr-1 text-bold',
                             ];
                         }),
                 ]),
