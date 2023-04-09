@@ -27,6 +27,12 @@
                     <i class="fa fa-exclamation fa-stack-1x fa-inverse"></i>
                 </span>
                 @break
+                @case('error')
+                <span class="fa-stack mr-3 text-danger">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-exclamation fa-stack-1x fa-inverse"></i>
+                </span>
+                @break
                 @case('warning')
                 <span class="fa-stack mr-3 text-warning">
                     <i class="fa fa-circle fa-stack-2x"></i>
@@ -81,6 +87,12 @@
                     </span>
                     @break
                     @case('danger')
+                    <span class="fa-stack mr-3 text-danger">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-exclamation fa-stack-1x fa-inverse"></i>
+                    </span>
+                    @break
+                    @case('error')
                     <span class="fa-stack mr-3 text-danger">
                         <i class="fa fa-circle fa-stack-2x"></i>
                         <i class="fa fa-exclamation fa-stack-1x fa-inverse"></i>

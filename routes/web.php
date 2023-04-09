@@ -33,5 +33,7 @@ Route::middleware(['auth'])->group(function () {
 
     
     Route::get('/config/plantypes', [App\Http\Controllers\PlanTypesController::class, 'index'])->name('planTypes');
+    Route::get('/config/attributes', [App\Http\Controllers\AttributeController::class, 'index'])->name('attributes');
+    Route::get('/config/plantypes/{id}/attributes', [App\Http\Controllers\PlanTypeAttributesController::class, 'index'])->name('planTypesAttribute');
     Route::get('/config/planimporttypes/{id?}', [App\Http\Controllers\PlanImportTypesController::class, 'index'])->name('planImportTypes');
 });
