@@ -13,18 +13,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('plan_import_files', function (Blueprint $table) {
+        Schema::create('plan_import_types_attribute', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('import_type_id');
-            $table->string('filename', 100);
-            $table->string('path');
-            $table->string('status');
-            $table->date('date_upload')->useCurrent();
-            $table->date('date_last_import')->nullable();
+            $table->unsignedBigInteger('attribute_id');
+            $table->unsignedInteger('cell_num')->nullable();
             $table->timestamps();
 
             $table->foreign('import_type_id')->references('id')->on('plan_import_types')
-                ->onUpdate('cascade')->onDelete('cascade');   
+                ->onUpdate('cascade')->onDelete('cascade');
+
+            $table->foreign('attribute_id')->references('id')->on('attributes')
+                ->onUpdate('cascade')->onDelete('cascade');
+
+            $table->unique(['import_type_id', 'attribute_id']);
         });
     }
 
@@ -35,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('plan_import_files');
+        Schema::dropIfExists('plan_import_types_attribute');
     }
 };

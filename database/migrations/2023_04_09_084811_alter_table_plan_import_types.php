@@ -13,14 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('attributes', function (Blueprint $table) {
-            $table->id();
-            $table->string('col_name');
-            $table->string('col_type');
-            $table->string('label')->nullable();
-            $table->string('default')->nullable();
-            $table->boolean('required')->default(false);
-            $table->timestamps();
+        Schema::table('plan_import_types', function (Blueprint $table) {
+            $table->dropColumn('columns_import');
         });
     }
 
@@ -31,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attributes');
+        Schema::table('plan_import_types', function (Blueprint $table) {
+            $table->json('columns_import');
+        });
     }
 };

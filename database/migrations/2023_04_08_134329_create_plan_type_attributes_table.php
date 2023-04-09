@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('type_id');
             $table->unsignedBigInteger('attribute_id');            
-            $table->unsignedInteger('order')->default(0);        
+            $table->unsignedInteger('order')->default(99);        
             $table->timestamps();
 
             $table->foreign('type_id')->references('id')->on('plan_types')
@@ -25,6 +25,8 @@ return new class extends Migration
 
             $table->foreign('attribute_id')->references('id')->on('attributes')
                 ->onUpdate('cascade')->onDelete('cascade');
+
+            $table->unique(['type_id', 'attribute_id']);
         });
     }
 
