@@ -11,11 +11,11 @@ class PlanTypeAttributesController extends Controller
 {
     public function index(Request $req, $id = null)
     {
-        if (!empty($id)) {
-            $req->session()->put('config.plantypesattribute.id', $id);
-        } else {
-            $req->session()->forget('config.plantypesattribute.id');
-        }
+        // if (!empty($id)) {
+        //     $req->session()->put('config.plantypesattribute.id', $id);
+        // } else {
+        //     $req->session()->forget('config.plantypesattribute.id');
+        // }
 
         $planType = PlanType::find($id);
 

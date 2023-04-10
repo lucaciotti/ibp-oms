@@ -141,7 +141,7 @@ class PlanTypeTable extends DataTableComponent
                         }),
                     LinkColumn::make('Conf. Import')
                         ->title(fn ($row) => 'Conf. Import')
-                        ->location(fn ($row) => 'plantypes/'.$row->id.'/plantypeimport')
+                        ->location(fn ($row) => 'plantypes/'.$row->id. '/planimporttypes')
                         ->attributes(function ($row) {
                             return [
                                 'class' => 'btn btn-success btn-xs mr-1 text-bold',

@@ -1,22 +1,32 @@
 <?php
 
-namespace App\Http\Livewire\Attribute;
+namespace App\Http\Livewire\PlanImportType;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Attribute;
+use App\Models\PlanImportTypeAttribute;
+use App\Models\PlanTypeAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
-use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
-use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 
 class AttributeTable extends DataTableComponent
 {
-    // protected $model = Attribute::class;
+    protected $model = Attribute::class;
+
+    public $type_id;
+    public $import_type_id;
+
+    // public function mount($type_id){
+    //     dd($type_id);
+    //     $this->type_id = $type_id;
+    // }
 
     public function builder(): Builder
     {
-        return Attribute::query();
+        return Attribute::query()
+                ->whereHas('planTypeAttribute', fn ($query) => $query->where('type_id', $this->type_id))
+                ->whereDoesntHave('planImportTypeAttribute', fn ($query) => $query->where('import_type_id', $this->import_type_id));
     }
 
     public function configure(): void
@@ -24,7 +34,6 @@ class AttributeTable extends DataTableComponent
         $this->setPrimaryKey('id')
             ->setPerPage(25)
             ->setPerPageAccepted([25, 50, 75, 100]);
-            // ->setDebugEnabled();
     }
 
     public function columns(): array
@@ -68,32 +77,21 @@ class AttributeTable extends DataTableComponent
                 )
                 ->searchable()
                 ->sortable(),
-            Column::make("Data creazione", "created_at")
-                ->format(
-                    fn ($value, $row, Column $column) => $value->format('d-m-Y')
-                )
-                ->sortable(),
-            Column::make("Creato da")
-                ->label(
-                    fn ($row, Column $column) => $this->getAuditCreatedUser($row, $column)
-                ),
             BooleanColumn::make('Obbligatorio', 'required'),
-            ButtonGroupColumn::make('Actions')
-                ->buttons([
-                    LinkColumn::make('Modifica')
-                        ->title(fn ($row) => 'Modifica')
-                        ->location(fn ($row) => '#')
-                        ->attributes(function ($row) {
-                            return [
-                                'class' => 'btn btn-warning btn-xs',
-                                'onclick' => "Livewire.emit('modal.open', 'attribute.attribute-modal-edit', {'id': " . $row->id . "});"
-                            ];
-                        }),
-                ]),
+            Column::make('')
+                ->label(
+                    function ($row) {
+                        $data = '<button class="btn btn-success btn-xs text-bold" wire:click="linkAttrToPlanImportTypeAttribute('.$row->id.')"><span class="fa fa-plus mr-1"></span>Associa</button>&nbsp;'; 
+                        return $data;
+                    }
+                )
+                ->html(),
         ];
     }
 
-    public function getAuditCreatedUser($row, $column){
-        return $row->audits()->first()->user->name;
+    public function linkAttrToPlanImportTypeAttribute($attr_id){
+        $cell_num = PlanImportTypeAttribute::where('import_type_id', $this->import_type_id)->max('cell_num');
+        PlanImportTypeAttribute::create(['import_type_id' => $this->import_type_id, 'attribute_id' => $attr_id, 'cell_num' => ++$cell_num]);
+        $this->emit('refreshDatatable');
     }
 }

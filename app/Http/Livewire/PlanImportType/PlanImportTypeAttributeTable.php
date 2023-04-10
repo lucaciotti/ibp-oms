@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Http\Livewire\PlanTypeAttribute;
+namespace App\Http\Livewire\PlanImportType;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\PlanTypeAttribute;
+use App\Models\PlanImportTypeAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
-class PlanTypeAttributeTable extends DataTableComponent
+class PlanImportTypeAttributeTable extends DataTableComponent
 {
-    protected $model = PlanTypeAttribute::class;
+    protected $model = PlanImportTypeAttribute::class;
 
-    public $type_id;
+    public $import_type_id;
     public $orderRows = [];
 
     public function builder(): Builder
     {
-        return PlanTypeAttribute::query()
-            ->where('type_id', $this->type_id)
+        return PlanImportTypeAttribute::query()
+            ->where('import_type_id', $this->import_type_id)
             ->with(['attribute'])
-            ->orderBy('order', 'asc');
+            ->orderBy('cell_num', 'asc');
     }
 
     public function configure(): void
@@ -28,23 +28,21 @@ class PlanTypeAttributeTable extends DataTableComponent
         $this->setPrimaryKey('id')
             ->setReorderEnabled()
             ->setPerPageAccepted([25, 50, 75, 100])
-            ->setAdditionalSelects(['plan_type_attributes.id as id'])
+            ->setAdditionalSelects(['plan_import_types_attribute.id as id'])
             // ->setHideReorderColumnUnlessReorderingEnabled()
-            ->setDefaultReorderSort('order', 'asc')
+            ->setDefaultReorderSort('cell_num', 'asc')
             ->setPerPage(25);
     }
 
     public function columns(): array
     {
         return [
-            // Column::make("ID", "id")
-            //     ->sortable(),
-            Column::make('Posizione', "order")
+            Column::make('# Cella', "cell_num")
                 ->sortable(),
             Column::make("Nome Attributo", "attribute.label")
                 ->searchable()
                 ->format(
-                    fn ($value, $row, Column $column) => '<strong>'.$value.'</strong>'
+                    fn ($value, $row, Column $column) => '<strong>' . $value . '</strong>'
                 )->html()
                 ->sortable(),
             Column::make("Tipo di dato", "attribute.col_type")
@@ -75,26 +73,12 @@ class PlanTypeAttributeTable extends DataTableComponent
                         }
                     }
                 )
-                ->sortable(),
-            // Column::make("Posizione", "order")
-            //     ->format(
-            //     function ($value, $row, Column $column) {
-            //             $this->orderRows[$row->id] = $value;
-            //             $data = '<div class="input-group input-group-sm" style="width: 100px;">
-            //                         <input id="iNum" name="iNum" class="form-control text-right" placeholder="number" type="number" min="1" max="10" wire:model="orderRows[]">
-            //                         <div class="input-group-append"><button class="input-group-text btn btn-outline-success">
-            //                             <i class="fas fa-check"></i>
-            //                         </button></div>
-            //                     </div>';
-            //             return $data;
-            //         }
-            //     )->html()
-            //     ->sortable(),            
+                ->sortable(),       
             BooleanColumn::make('Obbligatorio', 'attribute.required'),
             Column::make('')
                 ->label(
                     function ($row) {
-                        $data = '<button class="btn btn-danger btn-xs text-bold" wire:click="unLinkAttrToPlanType(' . $row->id . ')"><span class="fa fa-plus mr-1"></span>Elimina</button>&nbsp;';
+                        $data = '<button class="btn btn-danger btn-xs text-bold" wire:click="unLinkAttrToPlanImportTypeAttribute(' . $row->id . ')"><span class="fa fa-plus mr-1"></span>Elimina</button>&nbsp;';
                         return $data;
                     }
                 )
@@ -105,13 +89,13 @@ class PlanTypeAttributeTable extends DataTableComponent
     public function reorder($items): void
     {
         foreach ($items as $item) {
-            PlanTypeAttribute::find((int)$item['value'])->update(['order' => (int)$item['order']]);
+            PlanImportTypeAttribute::find((int)$item['value'])->update(['cell_num' => (int)$item['order']]);
         }
     }
 
-    public function unLinkAttrToPlanType($id)
+    public function unLinkAttrToPlanImportTypeAttribute($id)
     {
-        PlanTypeAttribute::find($id)->delete();
+        PlanImportTypeAttribute::find($id)->delete();
         $this->emit('refreshDatatable');
     }
 }

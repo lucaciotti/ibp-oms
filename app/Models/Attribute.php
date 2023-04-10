@@ -67,4 +67,8 @@ class Attribute extends Model implements Auditable
     public function planTypeAttribute(){
         return $this->hasMany('App\Models\PlanTypeAttribute', 'attribute_id', 'id');
     }
+
+    public function planImportTypeAttribute(){
+        return $this->hasMany('App\Models\PlanImportTypeAttribute', 'attribute_id', 'id');
+    }
 }
