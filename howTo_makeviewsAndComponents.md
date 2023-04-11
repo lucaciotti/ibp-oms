@@ -1,6 +1,9 @@
-sail artisan make:controller PlanImportTypeController
+sail artisan make:controller PlannedTaskController
 
 //Se view con DynamicContent
-sail artisan livewire:make PlanImportType/Content
-sail artisan livewire:make PlanImportType/PlanImportTypeModalEdit
-sail artisan make:datatable PlanImportType/PlanImportTypeTable PlanImportType
+sail artisan livewire:make PlannedTask/Content
+sail artisan livewire:make PlannedTask/PlannedTaskModalEdit
+sail artisan make:datatable PlannedTask/PlannedTaskTable PlannedTask
+
+
+sail artisan livewire:make PlanImportFile/PlanImportFileModal

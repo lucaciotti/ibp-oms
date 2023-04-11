@@ -5,6 +5,7 @@ namespace App\Models;
 use Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Schema;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -38,4 +39,13 @@ class PlannedTask extends Model implements Auditable
         return $columnsDetails;
     }
 
+    /**
+     * Get the plantype associated with the PlannedTask
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function plantype(): HasOne
+    {
+        return $this->hasOne(PlanType::class, 'id', 'type_id');
+    }
 }

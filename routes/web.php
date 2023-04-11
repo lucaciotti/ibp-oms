@@ -24,7 +24,7 @@ Auth::routes();
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-    Route::get('/machine_jobs', [App\Http\Controllers\MachineJobController::class, 'index'])->name('machine_jobs');
+    Route::get('/machine_jobs', [App\Http\Controllers\PlannedTaskController::class, 'index'])->name('machine_jobs');
 
     Route::get('/customers', [App\Http\Controllers\CustomerController::class, 'index'])->name('customers');
     Route::get('/carts', [App\Http\Controllers\CartController::class, 'index'])->name('carts');
