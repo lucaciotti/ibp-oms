@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\PlanImportFile;
 
-use Livewire\Component;
+use App\Http\Livewire\Layouts\DynamicContent;
 
-class Content extends Component
+class Content extends DynamicContent
 {
     public function render()
     {

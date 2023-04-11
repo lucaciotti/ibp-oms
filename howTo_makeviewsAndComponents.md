@@ -7,3 +7,5 @@ sail artisan make:datatable PlannedTask/PlannedTaskTable PlannedTask
 
 
 sail artisan livewire:make PlanImportFile/PlanImportFileModal
+
+sail artisan livewire:make PlanImportFile/PlanImportFileModalEdit

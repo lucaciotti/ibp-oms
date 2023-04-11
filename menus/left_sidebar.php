@@ -16,8 +16,15 @@ $leftSidebar = [
     ],
     [
         'text'        => ' Lista Lavori',
-        'url'         => 'machine_jobs',
+        'url'         => 'planned_tasks',
         'icon'        => 'fas fa-tasks',
+        // 'label'       => 4,
+        // 'label_color' => 'success',
+    ],
+    [
+        'text'        => ' File Excels',
+        'url'         => 'plan_xls',
+        'icon'        => 'fas fa-file-excel',
         // 'label'       => 4,
         // 'label_color' => 'success',
     ],
