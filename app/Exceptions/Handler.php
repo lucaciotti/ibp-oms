@@ -2,7 +2,11 @@
 
 namespace App\Exceptions;
 
+use App\Models\User;
+use App\Notifications\DefaultMessageNotify;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Log;
+use Notification;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -44,7 +48,20 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-            //
+            Log::error($e);
+            $adminUsers = User::whereHas('roles', fn ($query) => $query->where('name', 'admin'))->get();
+            foreach ($adminUsers as $user) {
+                Notification::send($user, new DefaultMessageNotify(
+                    $title = 'App Error! [' . $e->getFile() . ']',
+                    $body = 'Contattare supporto! Errore: [' . $e->getMessage() . ']',
+                    $link = '#',
+                    $level = 'error'
+                ));
+                // Mail::raw($e->getMessage(), function ($message) {
+                //     $message->to('luca.ciotti@gmail.com')
+                //     ->subject('FAIL! Log Database');
+                // });
+            }
         });
     }
 }

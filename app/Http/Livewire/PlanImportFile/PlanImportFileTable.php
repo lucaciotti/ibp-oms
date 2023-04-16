@@ -30,12 +30,20 @@ class PlanImportFileTable extends DataTableComponent
             ->setEagerLoadAllRelationsEnabled()
             ->setPerPageAccepted([25, 50, 75, 100])
             ->setPerPage(25)
+            ->setTableRowUrl(function ($row) {
+                return route('plan_xls_rows', $row->id);
+            })
             ->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
+                
                 if ($column->getTitle() == '') {
                     return [
-                        'default' => false,
-                        // 'class' => 'w-5',
-                        'style' => 'width:20%;'
+                        'style' => 'width:22%;'
+                    ];
+                }
+                if ($column->getTitle() == "Dt.Modifica") {
+                    return [
+                        'class' => 'text-bold btn',
+                        'onclick' => "Livewire.emit('slide-over.open', 'audits.audits-slide-over', {'ormClass': '" . class_basename(get_class($row)) . "', 'ormId': " . $row->id . "});",
                     ];
                 }
                 return [];
@@ -64,47 +72,48 @@ class PlanImportFileTable extends DataTableComponent
                 ->sortable(),
             Column::make("Stato", "status")
                 ->searchable()
-                ->sortable(),
+                ->sortable()
+                ->unclickable(),
             BooleanColumn::make('Forza Import', 'force_import'),
             Column::make("Caricato da")
                 ->label(
                     fn ($row, Column $column) => $this->getAuditCreatedUser($row, $column)
                 ),
-            Column::make("Data Caricamento", "created_at")
+            Column::make("Dt.Modifica", "updated_at")
                 ->format(
-                    fn ($value, $row, Column $column) => $value->format('d-m-Y')
-                )
+                    fn ($value, $row, Column $column) => '<span class="fa fa-history pr-1"></span>'.$value->format('d-m-Y')
+                )->html()
+                ->unclickable()
                 ->sortable(),
             ButtonGroupColumn::make('')
+                ->unclickable()
                 ->buttons([
                     LinkColumn::make('Modifica')
-                        ->title(fn ($row) => 'Modifica')
+                        ->title(fn ($row) => '<span class="fa fa-edit pr-1"></span>Modifica')
                         ->location(fn ($row) => '#')
                         ->attributes(function ($row) {
                             return [
-                                'class' => 'btn btn-default btn-xs mr-2 text-bold',
+                                'class' => 'btn btn-default btn-xs mr-2 ',
                                 'onclick' => "Livewire.emit('modal.open', 'plan-import-file.plan-import-file-modal-edit', {'plan_file_id': " . $row->id . "});"
                             ];
                         }),
-                    LinkColumn::make('Cancella')
-                        ->title(fn ($row) => 'Cancella')
+                    LinkColumn::make('Download')
+                        ->title(fn ($row) => '<span class="fa fa-download pr-1"></span>Download')
                         ->location(fn ($row) => '#')
                         ->attributes(function ($row) {
-                            if(in_array($row->status, ['Modificato'])) {
-                                return [
-                                    'class' => 'btn btn-danger btn-xs mr-2 text-bold',
-                                    // 'style' => 'display: none;'
-                                    'style' => 'pointer-events: none; cursor: not-allowed; opacity: 0.65;'
-                                ];
-                            } else {
-                                return [
-                                    'class' => 'btn btn-danger btn-xs mr-2 text-bold',
-                            'onclick' => "Livewire.emit('modal.open', 'plan-import-file.plan-import-file-modal-edit', {'plan_file_id': " . $row->id . "});"
-                                ];
-                            }
+                            return [
+                                'class' => 'btn btn-primary btn-xs mr-2 ',
+                                'style' => 'opacity: 85%',
+                                'wire:click' => "exportFile(" . $row->id . ");"
+                            ];
                         }),
                 ]),
         ];
+    }
+
+    public function exportFile($id){
+        $file = PlanImportFile::find($id);
+        return response()->download(storage_path('app/'. $file->path), $file->filename);
     }
 
     private function getAuditCreatedUser($row, $column)

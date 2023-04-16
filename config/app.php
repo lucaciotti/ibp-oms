@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/Rome',
 
     /*
     |--------------------------------------------------------------------------
@@ -82,7 +82,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'it',
 
     /*
     |--------------------------------------------------------------------------
@@ -195,9 +195,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // My Helpers
+        App\Providers\HelpersServiceProvider::class,
+
         WireElements\Pro\Components\Modal\ModalServiceProvider::class,
         WireElements\Pro\Components\SlideOver\SlideOverServiceProvider::class,
-
 
     ],
 
@@ -214,6 +216,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        // MyHelpers
+        'LabelHelper' => App\Helpers\LabelHelper::class,
     ])->toArray(),
 
 ];

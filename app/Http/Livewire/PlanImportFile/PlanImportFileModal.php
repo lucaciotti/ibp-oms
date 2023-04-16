@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\PlanImportFile;
 
+use App\Jobs\ImportFileExcelRows;
 use App\Models\PlanImportFile;
 use App\Models\PlanImportType;
 use App\Models\PlanType;
@@ -87,9 +88,10 @@ class PlanImportFileModal extends Modal
             'path' => $this->path,
         ];
         // dd(array_merge($validatedData, $extradata));
-        PlanImportFile::create(array_merge($validatedData, $extradata));
+        $planImportFile = PlanImportFile::create(array_merge($validatedData, $extradata));
 
         //TODO Avvia JOb
+        ImportFileExcelRows::dispatch($planImportFile->id)->onQueue('importFiles');
 
         Notification::send(Auth::user(), new DefaultMessageNotify(
             $title = 'Import Pianificazione - '. $this->planTypes->where('id', $this->type_id)->first()->name,

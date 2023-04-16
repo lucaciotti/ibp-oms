@@ -17,6 +17,7 @@
         "mpdf/mpdf": "^6.1",
         "opcodesio/log-viewer": "^2.4",
         "owen-it/laravel-auditing": "^13.5",
+        "predis/predis": "^2.1",
         "rappasoft/laravel-livewire-tables": "^2.10",
         "santigarcor/laratrust": "^7.2",
         "wire-elements/pro": "^3.0"

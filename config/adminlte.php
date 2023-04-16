@@ -37,8 +37,8 @@ return [
     |
     */
 
-    'use_ico_only' => false,
-    'use_full_favicon' => true,
+    'use_ico_only' => true,
+    'use_full_favicon' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -71,8 +71,8 @@ return [
     */
 
     'logo' => '<b>IBP</b>oms',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
+    'logo_img' => 'assets/img/logo.png', //'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo_img_class' => 'brand-image elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
     'logo_img_alt' => 'IBP-oms',
@@ -93,10 +93,10 @@ return [
     'auth_logo' => [
         'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-            'alt' => 'Auth Logo',
+            'path' => 'assets/img/logo.png', //'vendor/adminlte/dist/img/AdminLTELogo.png',
+            'alt' => 'IBP Logo',
             'class' => '',
-            'width' => 50,
+            // 'width' => 50,
             'height' => 50,
         ],
     ],
@@ -186,12 +186,12 @@ return [
     // 'classes_auth_footer' => 'text-center',
     // 'classes_auth_icon' => 'fa-fw text-light',
     // 'classes_auth_btn' => 'btn-flat btn-light',
-    'classes_auth_card' => 'card-outline text-sm',
+    'classes_auth_card' => 'card-outline card-primary text-sm',
     'classes_auth_header' => '',
     'classes_auth_body' => '',
     'classes_auth_footer' => 'text-center',
     'classes_auth_icon' => '',
-    'classes_auth_btn' => 'btn-flat btn-lightblue',
+    'classes_auth_btn' => 'btn-flat btn-primary',
 
     /*
     |--------------------------------------------------------------------------
@@ -423,6 +423,26 @@ return [
                     'type' => 'js',
                     'asset' => false,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
+                ],
+            ],
+        ],
+        'TempusDominusBs4' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/moment/moment-with-locales.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
                 ],
             ],
         ],

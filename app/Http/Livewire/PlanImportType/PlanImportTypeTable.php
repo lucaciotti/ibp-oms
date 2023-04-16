@@ -30,11 +30,16 @@ class PlanImportTypeTable extends DataTableComponent
             ->setPerPage(25)
             ->setPerPageAccepted([25, 50, 75, 100])
             ->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
-                if ($column->getTitle() == 'Actions') {
+                if ($column->getTitle() == '') {
                     return [
                         'default' => false,
-                        // 'class' => 'w-5',
-                        'style' => 'width:15%;'
+                        'style' => 'width:20%;'
+                    ];
+                }
+                if ($column->getTitle() == "Dt.Modifica") {
+                    return [
+                        'class' => 'text-bold btn',
+                        'onclick' => "Livewire.emit('slide-over.open', 'audits.audits-slide-over', {'ormClass': '" . class_basename(get_class($row)) . "', 'ormId': " . $row->id . "});",
                     ];
                 }
                 return [];
@@ -59,34 +64,35 @@ class PlanImportTypeTable extends DataTableComponent
             Column::make("Tipo Pianificazione", "plantype.name")
                 ->searchable()
                 ->sortable(),
-            Column::make("Data creazione", "created_at")
+            Column::make("Dt.Modifica", "updated_at")
                 ->format(
-                    fn ($value, $row, Column $column) => $value->format('d-m-Y')
-                )
+                    fn ($value, $row, Column $column) => '<span class="fa fa-history pr-1"></span>' . $value->format('d-m-Y')
+                )->html()
                 ->sortable(),
-            Column::make("Creato da")
-                ->label(
-                    fn ($row, Column $column) => $this->getAuditCreatedUser($row, $column)
-                ),
+            // Column::make("Creato da")
+            //     ->label(
+            //         fn ($row, Column $column) => $this->getAuditCreatedUser($row, $column)
+            //     ),
             BooleanColumn::make('Predefinito', 'default'),
-            ButtonGroupColumn::make('Actions')
+            ButtonGroupColumn::make('')
                 ->buttons([
                     LinkColumn::make('Modifica')
-                        ->title(fn ($row) => 'Modifica')
+                        ->title(fn ($row) => '<span class="fa fa-edit pr-1"></span>Modifica')
                         ->location(fn ($row) => '#')
                         ->attributes(function ($row) {
                             return [
-                                'class' => 'btn btn-warning btn-xs mr-2 text-bold',
+                                'class' => 'btn btn-default btn-xs mr-2',
                                 'onclick' => "Livewire.emit('modal.open', 'plan-import-type.plan-import-type-modal-edit', {'type_id': ".$this->type_id. ",'import_type_id': " . $row->id . "});"
                             ];
                         }),
                     LinkColumn::make('Conf.Colonne')
-                        ->title(fn ($row) => 'Conf.Colonne')
+                        ->title(fn ($row) => '<span class="fa fa-table pr-1"></span>Colonne')
                         ->location(fn ($row) => '#')
                         ->attributes(function ($row) {
                             return [
-                                'class' => 'btn btn-primary btn-xs mr-2 text-bold',
-                                'onclick' => "Livewire.emit('modal.open', 'plan-import-type.plan-import-type-attribute-modal', {'type_id': " . $this->type_id . ",'import_type_id': " . $row->id . "});"
+                                'class' => 'btn btn-warning btn-xs mr-2',
+                                'style' => 'opacity: 85%',
+                                'onclick' => "Livewire.emit('modal.open', 'plan-import-type.plan-import-type-attribute-modal', {'type_id': " . $this->type_id . ",'import_type_id': " . $row->id . "});",
                             ];
                         }),
                 ]),

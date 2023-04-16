@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\PlanImportFile;
 
+use App\Jobs\ImportFileExcelRows;
 use App\Models\PlanFilesTempTask;
 use App\Models\PlanImportFile;
 use App\Models\PlanImportType;
@@ -79,10 +80,11 @@ class PlanImportFileModalEdit extends Modal
         
         try {
             DB::transaction(function () use ($validatedData, $extradata, $deleteTempRows) {
-                if ($deleteTempRows) PlanFilesTempTask::where('import_file_id', $this->planImportFile->id);
+                if ($deleteTempRows) PlanFilesTempTask::where('import_file_id', $this->planImportFile->id)->delete();
                 $this->planImportFile->update(array_merge($validatedData, $extradata));
             });
             //TODO Avvia JOb
+            ImportFileExcelRows::dispatch($this->planImportFile->id)->onQueue('importFiles');
     
             Notification::send(Auth::user(), new DefaultMessageNotify(
                 $title = 'File di Import - Modificato!',
@@ -91,12 +93,8 @@ class PlanImportFileModalEdit extends Modal
                 $level = 'warning'
             ));
         } catch (\Throwable $th) {
-            Notification::send(Auth::user(), new DefaultMessageNotify(
-                $title = 'File di Import - Errore!',
-                $body = 'Errore in fase di modifica del file ' . $this->planImportFile->filename .' ['.$th->getMessage().']',
-                $link = '#',
-                $level = 'error'
-            ));
+            report($th);
+            // return false;
         }
 
         $this->close(
@@ -121,12 +119,7 @@ class PlanImportFileModalEdit extends Modal
                 $level = 'warning'
             ));
         } catch (\Throwable $th) {
-            Notification::send(Auth::user(), new DefaultMessageNotify(
-                $title = 'File di Import - Errore!',
-                $body = 'Errore in fase di cancellazione del file ' . $this->planImportFile->filename . ' [' . $th->getMessage() . ']',
-                $link = '#',
-                $level = 'error'
-            ));
+            report($th);
         }
 
         $this->close(

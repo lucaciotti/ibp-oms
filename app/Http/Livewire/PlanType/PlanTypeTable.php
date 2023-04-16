@@ -26,78 +26,28 @@ class PlanTypeTable extends DataTableComponent
                     return [
                         'default' => false,
                         // 'class' => 'w-5',
-                        'style' => 'width:20%;'
+                        'style' => 'width:30%;'
+                    ];
+                }
+                if ($column->getTitle() == 'Nome') {
+                    return [
+                        'class' => 'text-bold',
+                    ];
+                }
+                if ($column->getTitle()== "Dt.Modifica") {
+                    return [
+                        'class' => 'text-bold btn',
+                        'onclick' => "Livewire.emit('slide-over.open', 'audits.audits-slide-over', {'ormClass': '". class_basename(get_class($row)) ."', 'ormId': " . $row->id . "});",
                     ];
                 }
                 return [];
             });
-        // ->setAdditionalSelects(['plan_types.id as id'])
-        // ->setReorderEnabled()
-        // ->setHideReorderColumnUnlessReorderingEnabled()
-        // ->setSecondaryHeaderTrAttributes(function ($rows) {
-        //     return ['class' => 'bg-gray'];
-        // })
-        // ->setTrAttributes(function ($row, $index) {
-        //     return [
-        //         'class' => 'hover:bg-gray',
-        //     ];
-        // });
-        // ->setThAttributes(function (Column $column) {
-        //     if ($column->isLabel() && $column->getTitle() === 'Nome') {
-        //         return [
-        //             'class' => 'bg-yellow-100 font-bold',
-        //             'style' => 'background-color: #00CC99',
-        //         ];
-        //     } elseif ($column->isLabel() && $column->getTitle() === 'In Progress') {
-        //         return [
-        //             'class' => 'bg-purple-100 font-bold',
-        //         ];
-        //     } elseif ($column->isLabel() && $column->getTitle() === 'Live') {
-        //         return [
-        //             'class' => 'bg-green-100 font-bold',
-        //         ];
-        //     } elseif ($column->isLabel() && $column->getTitle() === 'Canceled') {
-        //         return [
-        //             'class' => 'bg-red-100 font-bold',
-        //         ];
-        //     }
-        //     return [];
-        // })
-        // ->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
-        //     switch ($columnIndex) {
-        //         case 2:
-        //             return [
-        //                 'style' => 'background-color: #00CC99',
-        //             ];
-        //             break;
-        //         case 3:
-        //             return [
-        //                 'class' => 'bg-purple-50',
-        //             ];
-        //             break;
-        //         case 4:
-        //             return [
-        //                 'class' => 'bg-yellow-50',
-        //             ];
-        //             break;
-        //         case 5:
-        //             return [
-        //                 'class' => 'bg-red-50',
-        //             ];
-        //             break;
-
-        //         default:
-        //             # code...
-        //             break;
-        //     }
-        //     return [];
-        // });
     }
 
     public function columns(): array
     {
         return [
-            Column::make("Id", "id")
+            Column::make("#", "id")
                 ->sortable(),
             Column::make("Nome", "name")
                 ->sortable()
@@ -105,46 +55,38 @@ class PlanTypeTable extends DataTableComponent
             Column::make("Descrizione", "description")
                 ->sortable()
                 ->searchable(),
-            Column::make("Data creazione", "created_at")
+            Column::make("Dt.Modifica", "updated_at")
                 ->format(
-                    fn ($value, $row, Column $column) => $value->format('d-m-Y')
-                )
+                    fn ($value, $row, Column $column) => '<span class="fa fa-history pr-1"></span>' . $value->format('d-m-Y')
+                )->html()
                 ->sortable(),
-            // Column::make('')
-            //     ->label(
-            //         function ($row) {
-            //             $data = '<button class="btn btn-default btn-sm"><span class="fa fa-cogs"></span></button>&nbsp;'; 
-            //             $data .= '<button class="btn btn-default btn-sm"><span class="fa fa-cogs"></span></button>&nbsp;'; 
-            //             $data .= '<button class="btn btn-default btn-sm"><span class="fa fa-cogs"></span></button>&nbsp;'; 
-            //             return $data;
-            //         }
-            //     )
-            //     ->html(),
             ButtonGroupColumn::make('')
                 ->buttons([
                     LinkColumn::make('Modifica')
-                        ->title(fn ($row) => 'Modifica')
+                        ->title(fn ($row) => '<span class="fa fa-edit pr-1"></span>Modifica')
                         ->location(fn ($row) => '#')
                         ->attributes(function ($row) {
                             return [
-                                'class' => 'btn btn-default btn-xs mr-2 text-bold',
+                                'class' => 'btn btn-default btn-xs mr-2 ',
                                 'onclick' => "Livewire.emit('modal.open', 'plan-type.plan-type-modal-edit', {'id': " . $row->id . "});"
                             ];
                         }),
                     LinkColumn::make('Attributi')
-                        ->title(fn ($row) => 'Attributi')
+                        ->title(fn ($row) => '<span class="fa fa-tools pr-1"></span>Attributi')
                         ->location(fn ($row) => 'plantypes/'.$row->id.'/attributes')
                         ->attributes(function ($row) {
                             return [
                                 'class' => 'btn btn-primary btn-xs mr-2 text-bold',
+                                'style' => 'opacity: 75%'
                             ];
                         }),
-                    LinkColumn::make('Conf. Import')
-                        ->title(fn ($row) => 'Conf. Import')
+                    LinkColumn::make('Conf. Xls')
+                        ->title(fn ($row) => '<span class="fa fa-file-excel pr-1"></span>Conf. Xls')
                         ->location(fn ($row) => 'plantypes/'.$row->id. '/planimporttypes')
                         ->attributes(function ($row) {
                             return [
                                 'class' => 'btn btn-success btn-xs mr-1 text-bold',
+                                'style' => 'opacity: 85%'
                             ];
                         }),
                 ]),

@@ -22,11 +22,24 @@ class AttributeModalEdit extends Modal
 
     public $label;
     public $col_type;
+    public $hidden_in_view=false;
 
-    protected $rules = [
-        'label' => 'required|unique:attributes',
-        'col_type' => 'required|in:string,integer,float,date,text,boolean',
-    ];
+    protected function rules()
+    {
+        if($this->mode == 'edit') {
+            return [
+                'label' => 'required|unique:attributes,label,' . $this->attribute->id,
+                'col_type' => 'required|in:string,integer,float,date,text,boolean',
+                'hidden_in_view' => 'required',
+            ];
+        } else {
+            return [
+                'label' => 'required|unique:attributes',
+                'col_type' => 'required|in:string,integer,float,date,text,boolean',
+                'hidden_in_view' => 'required',
+            ];
+        }
+    }
 
     protected $messages = [
         'label.required' => 'Nome Attributo obbligatorio!',
@@ -45,6 +58,7 @@ class AttributeModalEdit extends Modal
             $this->attribute = Attribute::find($id);
             $this->label = $this->attribute->label;
             $this->col_type = $this->attribute->col_type;
+            $this->hidden_in_view = $this->attribute->hidden_in_view;
         }
     }
 
@@ -59,7 +73,7 @@ class AttributeModalEdit extends Modal
             $validator->after(function ($validator) {
                 $tasksColumns = array_keys((new PlannedTask())->getTableColumns());
                 $colName = 'ibp_' . Str::snake(preg_replace('/[^\p{L}\p{N}\s]/u', '', $this->label));
-                if (in_array($colName, $tasksColumns)) {
+                if (in_array($colName, $tasksColumns) and empty($this->attribute)) {
                     $validator->errors()->add('label', 'Attenzione! Contattare supporto! Inserire altro nome per continuare!');
                 }
             });
@@ -103,12 +117,7 @@ class AttributeModalEdit extends Modal
                         $level = 'error'
                     ));
                 } else {
-                    Notification::send(Auth::user(), new DefaultMessageNotify(
-                        $title = 'Creazione Attributo',
-                        $body = 'Attributo ' . $validatedData['label'] . ' creato',
-                        $link = 'config/attributes',
-                        $level = 'info'
-                    ));
+                   report($th);
                 }
             }
             

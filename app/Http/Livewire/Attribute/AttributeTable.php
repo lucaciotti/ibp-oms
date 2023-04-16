@@ -23,7 +23,16 @@ class AttributeTable extends DataTableComponent
     {
         $this->setPrimaryKey('id')
             ->setPerPage(25)
-            ->setPerPageAccepted([25, 50, 75, 100]);
+            ->setPerPageAccepted([25, 50, 75, 100])
+            ->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
+                if ($column->getTitle() == "Dt.Modifica") {
+                    return [
+                        'class' => 'text-bold btn',
+                        'onclick' => "Livewire.emit('slide-over.open', 'audits.audits-slide-over', {'ormClass': '" . class_basename(get_class($row)) . "', 'ormId': " . $row->id . "});",
+                    ];
+                }
+                return [];
+            });
             // ->setDebugEnabled();
     }
 
@@ -68,24 +77,25 @@ class AttributeTable extends DataTableComponent
                 )
                 ->searchable()
                 ->sortable(),
-            Column::make("Data creazione", "created_at")
-                ->format(
-                    fn ($value, $row, Column $column) => $value->format('d-m-Y')
-                )
-                ->sortable(),
-            Column::make("Creato da")
-                ->label(
-                    fn ($row, Column $column) => $this->getAuditCreatedUser($row, $column)
-                ),
+            // Column::make("Creato da")
+            //     ->label(
+            //         fn ($row, Column $column) => $this->getAuditCreatedUser($row, $column)
+            //     ),
             BooleanColumn::make('Obbligatorio', 'required'),
-            ButtonGroupColumn::make('Actions')
+            BooleanColumn::make('Nascosto in Tabella', 'hidden_in_view'),
+            Column::make("Dt.Modifica", "updated_at")
+                ->format(
+                    fn ($value, $row, Column $column) => '<span class="fa fa-history pr-1"></span>' . $value->format('d-m-Y')
+                )->html()
+                ->sortable(),
+            ButtonGroupColumn::make('')
                 ->buttons([
                     LinkColumn::make('Modifica')
-                        ->title(fn ($row) => 'Modifica')
+                        ->title(fn ($row) => '<span class="fa fa-edit pr-1"></span>Modifica')
                         ->location(fn ($row) => '#')
                         ->attributes(function ($row) {
                             return [
-                                'class' => 'btn btn-warning btn-xs',
+                                'class' => 'btn btn-default btn-xs',
                                 'onclick' => "Livewire.emit('modal.open', 'attribute.attribute-modal-edit', {'id': " . $row->id . "});"
                             ];
                         }),

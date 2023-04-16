@@ -15,9 +15,15 @@ class PlannedTask extends Model implements Auditable
     
     use HasFactory;
     
-    protected $guarded = ['id'];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $exceptColumnList = ['id', 'type_id', 'completed', 'created_at', 'updated_at'];
+
+    // protected $dates = ['ibp_data_consegna'];
+    protected $casts = [
+        'ibp_data_consegna' => 'datetime:d-m-Y',
+    ];
+
 
     public function getTableColumns()
     {

@@ -30,6 +30,11 @@
         </x-adminlte-select>
         @endif
 
+        <div class="form-check">
+            <input class="form-check-input" id="hidden_in_view" name="hidden_in_view" type="checkbox" wire:model="hidden_in_view">
+            <label class="form-check-label" for="hidden_in_view"><strong>Nascondi di Default in visualizzazione Tabella</strong></label>
+        </div>
+
     </div>
 
     <x-slot name="buttons">

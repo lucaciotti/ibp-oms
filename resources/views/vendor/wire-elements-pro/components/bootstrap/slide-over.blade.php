@@ -58,7 +58,7 @@
             </p>
         </div>
     </div> --}}
-    <div class="modal-header pt-reduced pb-reduced" style="background: #D0D0D0; padding-top: 10px; padding-bottom: 10px">
+    <div class="modal-header pt-reduced pb-reduced " style="background: #3c8dbcc3; padding-top: 8px; padding-bottom: 5px">
         @if($title ?? false)
         <h5 class="modal-title">{{ $title }}</h5>
         @endif

@@ -16,7 +16,11 @@ class PlanImportFile extends Model implements Auditable
     use HasFactory;
     
     protected $guarded = ['id'];
-
+    
+    public function userCreated()
+    {
+        return $this->audits()->first()->user;
+    }
     /**
      * Get the planimporttype associated with the PlanImportFile
      *
@@ -36,5 +40,6 @@ class PlanImportFile extends Model implements Auditable
     {
         return $this->hasMany(PlanFilesTempTask::class, 'import_file_id', 'id');
     }
+
 
 }
