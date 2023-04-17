@@ -61,7 +61,7 @@ class Handler extends ExceptionHandler
                 //     $message->to('luca.ciotti@gmail.com')
                 //     ->subject('FAIL! Log Database');
                 // });
-            }
+            // }
         });
     }
 }
