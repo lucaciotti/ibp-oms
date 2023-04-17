@@ -32,6 +32,8 @@ class PlannedTaskTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id')
+            ->setPerPageAccepted([25, 50, 75, 100])
+            ->setPerPage(25)
             ->setAdditionalSelects(['planned_tasks.id as id'])
             ->setDefaultSort('ibp_data_consegna', 'asc')
             ->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
@@ -155,9 +157,14 @@ class PlannedTaskTable extends DataTableComponent
     public function bulkActions(): array
     {
         return [
-            'activate' => 'Activate',
-            'deactivate' => 'Deactivate',
-            'export' => 'Export',
+            'doReport' => 'Stampa Report',
+            'xlsExport' => 'Export Xls',
+            // 'export' => 'Export',
         ];
+    }
+
+    public function doReport()  {
+        $this->emit('modal.open', 'pdf-reports.list-of-reports', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id]);
+        // dd($this->getSelected());
     }
 }

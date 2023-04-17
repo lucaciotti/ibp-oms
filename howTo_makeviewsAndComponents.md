@@ -15,3 +15,8 @@ sail artisan make:job ProcessTempTasks
 
 <!-- EXCEL -->
 php artisan make:import UsersImport --model=User
+
+apt install libfontconfig1 libxrender1
+
+docker exec -u root ibp-oms-laravel.test-1 apt update
+docker exec -u root ibp-oms-laravel.test-1 apt install libxrender1

@@ -57,22 +57,30 @@ class ImportFileExcelRows implements ShouldQueue
             $force_import = $this->importedfile->force_import;
             $tempRows = $this->importedfile->planfiletemptasks;
             $this->hasWarnings = false;
+            $aPlanMatricola=[];
             if (count($tempRows)>0){
                 foreach ($tempRows as $row) {
-                    $plannedTask = PlannedTask::where('ibp_plan_matricola', $row->ibp_plan_matricola)->first();
-                    if($plannedTask != null){
-                        $row->task_id = $plannedTask->id;
-                        if($plannedTask->audits->last()->user_id != null){
-                            $row->warning = true;
-                            $this->hasWarnings = true;
+                    if(!in_array($row->ibp_plan_matricola, $aPlanMatricola)){
+                        array_push($aPlanMatricola, $row->ibp_plan_matricola);
+                        $plannedTask = PlannedTask::where('ibp_plan_matricola', $row->ibp_plan_matricola)->first();
+                        if($plannedTask != null){
+                            $row->task_id = $plannedTask->id;
+                            if($plannedTask->audits->last()->user_id != null){
+                                $row->warning = true;
+                                $this->hasWarnings = true;
+                            } else {
+                                $row->selected = true;
+                            }
+                            if($force_import) {
+                                $row->selected = true;
+                            }
                         } else {
                             $row->selected = true;
                         }
-                        if($force_import) {
-                            $row->selected = true;
-                        }
                     } else {
-                        $row->selected = true;
+                        $row->warning = true;
+                        $row->error = 'Riga Duplicata in file!';
+                        $this->hasWarnings = true;
                     }
                     $row->save();
                 }

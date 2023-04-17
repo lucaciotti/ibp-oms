@@ -217,7 +217,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         // MyHelpers
-        'LabelHelper' => App\Helpers\LabelHelper::class,
+        // 'LabelHelper' => App\Helpers\LabelHelper::class,
     ])->toArray(),
 
 ];

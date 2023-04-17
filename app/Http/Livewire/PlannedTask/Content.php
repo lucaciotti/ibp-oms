@@ -24,4 +24,9 @@ class Content extends DynamicContent
         $this->plantypes = PlanType::all();
         return view('livewire.planned-task.content');
     }
+
+    public function updatedPlantypeId(){
+        Session::put('plannedtask.plantype.id', $this->plantype_id);
+        $this->emit('refreshDatatable');
+    }
 }

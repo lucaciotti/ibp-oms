@@ -57,6 +57,9 @@
         .wep-slide-over{bottom:0;left:0;overflow:hidden;position:fixed;right:0;top:0;z-index:36}
         .wep-slide-over.wep-slide-over-top{z-index:37}
         .wep-slide-over-container-inner-content {padding-top: 2.8rem;}
+        /* .modal-body {
+            max-height: calc(100vh - 210px); overflow-y: auto;
+        } */
     </style>
 @endpush
 
