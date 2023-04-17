@@ -7,7 +7,9 @@
 @stop
 
 @section('content-fluid')
+@if ($planType)
 <livewire:planned-task.content/>
+@endif
 @stop
 
 @push('js')

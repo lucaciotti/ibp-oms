@@ -17,10 +17,10 @@ class PlannedTaskController extends Controller
         } else {
             if(!$req->session()->has('plannedtask.plantype.id')){
                 $planType = PlanType::first();
-                $req->session()->put('plannedtask.plantype.id', $planType->id);
+                if($planType) $req->session()->put('plannedtask.plantype.id', $planType->id);
             }
         }
-        $planType = PlanType::find($req->session()->get('plannedtask.plantype.id'));
+        $planType = ($req->session()->has('plannedtask')) ? PlanType::find($req->session()->get('plannedtask.plantype.id')) : null;
         return view('ibp.plannedtask', ['planType' => $planType]);
     }
 
