@@ -18,7 +18,7 @@ class LabelHelper {
 
     public function __construct()
     {
-        // $attributes = Attribute::all();
+        $attributes = Attribute::all();
         foreach ($attributes as $attr) {
             $this->keysLabel[$attr->col_name] = $attr->label;
         }

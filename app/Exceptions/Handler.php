@@ -49,14 +49,14 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             Log::error($e);
-            $adminUsers = User::whereHas('roles', fn ($query) => $query->where('name', 'admin'))->get();
-            foreach ($adminUsers as $user) {
-                Notification::send($user, new DefaultMessageNotify(
-                    $title = 'App Error! [' . $e->getFile() . ']',
-                    $body = 'Contattare supporto! Errore: [' . $e->getMessage() . ']',
-                    $link = '#',
-                    $level = 'error'
-                ));
+            // $adminUsers = User::whereHas('roles', fn ($query) => $query->where('name', 'admin'))->get();
+            // foreach ($adminUsers as $user) {
+            //     Notification::send($user, new DefaultMessageNotify(
+            //         $title = 'App Error! [' . $e->getFile() . ']',
+            //         $body = 'Contattare supporto! Errore: [' . $e->getMessage() . ']',
+            //         $link = '#',
+            //         $level = 'error'
+            //     ));
                 // Mail::raw($e->getMessage(), function ($message) {
                 //     $message->to('luca.ciotti@gmail.com')
                 //     ->subject('FAIL! Log Database');
