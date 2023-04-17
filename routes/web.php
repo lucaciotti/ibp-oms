@@ -24,7 +24,8 @@ Auth::routes();
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-    Route::get('/planned_tasks', [App\Http\Controllers\PlannedTaskController::class, 'index'])->name('planned_tasks');
+    Route::get('/planned_tasks/{id?}', [App\Http\Controllers\PlannedTaskController::class, 'index'])->name('planned_tasks');
+    Route::get('/exportxls_tasks', [App\Http\Controllers\PlannedTaskController::class, 'exportXls'])->name('exportxls_tasks');
     Route::get('/plan_xls', [App\Http\Controllers\PlanImportFileController::class, 'index'])->name('plan_xls');
     Route::get('/plan_xls/{id}/', [App\Http\Controllers\PlanImportFileController::class, 'rows'])->name('plan_xls_rows');
 

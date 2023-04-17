@@ -9,6 +9,7 @@ use App\Models\PlanTypeAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\DateFilter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
 use Session;
 
@@ -20,6 +21,7 @@ class PlannedTaskTable extends DataTableComponent
 
     public function mount() {
         $this->setFilter('date_from', date('Y-m-d', strtotime('-' . date('w') . ' days')));
+        $this->setFilter('completed', 'no');
     }
 
     public function builder(): Builder
@@ -32,6 +34,7 @@ class PlannedTaskTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id')
+            // ->setDebugEnabled()
             ->setPerPageAccepted([25, 50, 75, 100])
             ->setPerPage(25)
             ->setAdditionalSelects(['planned_tasks.id as id'])
@@ -62,6 +65,11 @@ class PlannedTaskTable extends DataTableComponent
     {
         $planAttrs = PlanTypeAttribute::where('type_id', $this->type_id)->with(['attribute'])->get();
         $columns = [];
+        array_push(
+            $columns,
+            BooleanColumn::make('', 'completed')
+            ->excludeFromColumnSelect(),
+        );
         foreach ($planAttrs as $planAttr) {
             if ($planAttr->attribute->hidden_in_view){
                 if ($planAttr->attribute->col_type == 'date'){
@@ -105,8 +113,6 @@ class PlannedTaskTable extends DataTableComponent
         }
         array_push(
             $columns,
-            BooleanColumn::make('Completato', 'completed')
-            ->excludeFromColumnSelect(),
             Column::make("Dt.Modifica", "updated_at")
                 ->format(
                     fn ($value, $row, Column $column) => '<span class="fa fa-history pr-1"></span>'.$value->format('d-m-Y')
@@ -150,6 +156,17 @@ class PlannedTaskTable extends DataTableComponent
                     $builder->where('ibp_cliente_ragsoc', 'like', '%' . $value . '%');
                 }),
 
+            SelectFilter::make('Completato', 'completed')
+                ->options([
+                    '' => 'Tutti',
+                    'yes' => 'Si',
+                    'no' => 'No',
+                ])
+                ->filter(function (Builder $builder, string $value) {
+                    $valueFilter = ($value=='yes') ? true : (($value=='no') ? false : null);
+                    if($valueFilter!=null) $builder->where('completed', $valueFilter);
+                }),
+
 
         ];
     }
@@ -159,12 +176,33 @@ class PlannedTaskTable extends DataTableComponent
         return [
             'doReport' => 'Stampa Report',
             'xlsExport' => 'Export Xls',
-            // 'export' => 'Export',
+            'completed' => 'Completati',
+            'notcompleted' => 'Non Completati',
         ];
     }
 
     public function doReport()  {
         $this->emit('modal.open', 'pdf-reports.list-of-reports', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id]);
         // dd($this->getSelected());
+    }
+
+    public function xlsExport()
+    {
+        $this->emit('modal.open', 'xls-export.xls-export-modal', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id]);
+        // dd($this->getSelected());
+    }
+
+    public function completed()
+    {
+        foreach ($this->getSelected() as $id) {
+            $tasks = PlannedTask::find($id)->update(['completed' => 1]);
+        }
+    }
+
+    public function notcompleted()
+    {
+        foreach ($this->getSelected() as $id) {
+            $tasks = PlannedTask::find($id)->update(['completed' => 0]);
+        }
     }
 }

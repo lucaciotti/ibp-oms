@@ -24,7 +24,7 @@
             <div class="card-body">
                 <button class="btn btn-outline-success btn-block"
                     onclick="Livewire.emit('modal.open', 'attribute.attribute-modal-edit');">
-                    <span class="fa fa-edit"></span> Crea nuovo piano
+                    <span class="fa fa-edit"></span> Crea nuovo attributo
                 </button>
                 <hr>
                 @if (!$syncJob)

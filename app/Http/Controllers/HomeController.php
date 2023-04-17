@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PlannedTask;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $stdplan = PlannedTask::where('type_id', 1)->where('ibp_data_consegna', '>', date('Y-m-d', strtotime('-' . date('w') . ' days')))->where('completed', false)->count();
+        $robotplan = PlannedTask::where('type_id', 2)->where('ibp_data_consegna', '>', date('Y-m-d', strtotime('-' . date('w') . ' days')))->where('completed', false)->count();
+        return view('home',['stdplan'=>$stdplan, 'robotplan' => $robotplan]);
     }
 }

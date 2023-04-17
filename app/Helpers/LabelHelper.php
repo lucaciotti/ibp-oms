@@ -13,6 +13,7 @@ class LabelHelper {
         'status' => 'Stato',
         'date_last_import' => 'Dt.Ultimo Import',
         'force_import' => 'Forza Importazione',
+        'completed' => 'Completato',
     ];
 
     public function __construct()

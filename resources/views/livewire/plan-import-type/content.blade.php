@@ -24,7 +24,7 @@
             <div class="card-body">
                 <button class="btn btn-outline-success btn-block"
                     onclick="Livewire.emit('modal.open', 'plan-import-type.plan-import-type-modal-edit', {'type_id': {{ $type_id }}});">
-                    <span class="fa fa-edit"></span> Crea nuovo piano
+                    <span class="fa fa-edit"></span> Crea nuovo import
                 </button>
             </div>
         </div>

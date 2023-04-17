@@ -11,11 +11,11 @@ $leftSidebar = [
         'icon'        => 'fas fa-fw fa-home',
     ],
     [
-        'header' => 'main_header',
+        'header' => 'Funzioni principali',
         'classes'  => 'text-bold text-center',
     ],
     [
-        'text'        => ' Lista Lavori',
+        'text'        => ' Pianificazioni',
         'url'         => 'planned_tasks',
         'icon'        => 'fas fa-tasks',
         // 'label'       => 4,

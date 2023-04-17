@@ -19,14 +19,14 @@
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>#</h3>
+                        <h3>{{ $stdplan }}</h3>
 
-                        <p>Lavori in sospeso</p>
+                        <p>Pianificazioni STD</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-clipboard-list"></i>
                     </div>
-                    <a href="#" class="small-box-footer">Visualizza <i
+                    <a href="{{ route('planned_tasks', 1) }}" class="small-box-footer">Visualizza <i
                             class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
@@ -34,35 +34,39 @@
                 <!-- small box -->
                 <div class="small-box bg-yellow">
                     <div class="inner">
-                        <h3>#</h3>
+                        <h3>{{ $robotplan }}</h3>
 
-                        <p>Clienti</p>
+                        <p>Pianificazioni ROBOT</p>
                     </div>
                     <div class="icon">
-                        <i class="fa fa-users"></i>
+                        <i class="fa fa-clipboard-list"></i>
                     </div>
-                    <a href="#" class="small-box-footer">Visualizza <i
+                    <a href="{{ route('planned_tasks', 2) }}" class="small-box-footer">Visualizza <i
                             class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row ">
+            <div class="col-lg-3 col-3 ml-auto">
+            </div>
             <div class="col-lg-6 col-6 ml-auto">
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>#</h3>
+                        <h3>&NonBreakingSpace;</h3>
 
-                        <p>Modelli</p>
+                        <p>Importa Xls</p>
                     </div>
                     <div class="icon">
-                        <i class="fa fa-barcode"></i>
+                        <i class="fa fa-file-excel"></i>
                     </div>
-                    <a href="#" class="small-box-footer">Visualizza <i
+                    <a href="{{ route('plan_xls') }}" class="small-box-footer">Visualizza <i
                             class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            <div class="col-lg-6 col-6 ml-auto">
+            <div class="col-lg-3 col-3 ml-auto">
+            </div>
+            {{-- <div class="col-lg-6 col-6 ml-auto">
                 <!-- small box -->
                 <div class="small-box bg-danger">
                     <div class="inner">
@@ -76,10 +80,7 @@
                     <a href="#" class="small-box-footer">Visualizza <i
                             class="fas fa-arrow-circle-right"></i></a>
                 </div>
-            </div>
-
-            <button onclick="Livewire.emit('slide-over.open', 'users-overview')">
-                Open</button>
+            </div> --}}
             <!-- ./col -->
         </div>
 </div>

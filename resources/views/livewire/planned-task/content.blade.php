@@ -4,7 +4,7 @@
         <div class="card">
             <div class="card-body">
                 <div style="">
-                    <x-adminlte-select name="plantype_id" label="Tipo di Pianificazione" error-key="plantype_id" wire:model="plantype_id" style="text-align: center;">
+                    <x-adminlte-select name="plantype_id" label="Tipo di Pianificazione" error-key="plantype_id" wire:model="plantype_id" style="text-align: center;" class="text-bold">
                         @foreach ($plantypes as $plantype)
                             <option value='{{ $plantype->id }}'><strong>{{ $plantype->name }}</strong> - {{ $plantype->description }}</option>
                         @endforeach
