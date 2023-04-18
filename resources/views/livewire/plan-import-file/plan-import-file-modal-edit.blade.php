@@ -6,9 +6,9 @@
     <!-- No padding will be applied because the component attribute "content-padding" is set to false -->
     <div class="modal-body">
 
-        <x-adminlte-input name="filename" label="Nome File" placeholder="Nome File" error-key="filename" wire:model="filename" disabled/>
+        <x-adminlte-input name="filename" label="Nome File" placeholder="Nome File" error-key="filename" wire:model.lazy="filename" disabled/>
 
-        <x-adminlte-select name="type_id" label="Tipo di Pianificazione" error-key="type_id" wire:model="type_id"
+        <x-adminlte-select name="type_id" label="Tipo di Pianificazione" error-key="type_id" wire:model.lazy="type_id"
             style="text-align: center;">
             @foreach ($planTypes as $plantype)
             <option value='{{ $plantype->id }}'><strong>{{ $plantype->name }}</strong> - {{ $plantype->description }}
@@ -17,7 +17,7 @@
         </x-adminlte-select>
 
         <x-adminlte-select name="import_type_id" label="Tipo di Import" error-key="import_type_id"
-            wire:model="import_type_id" style="text-align: center;" fgroup-class="mb-0">
+            wire:model.lazy="import_type_id" style="text-align: center;" fgroup-class="mb-0">
             @if ($planImportTypes)
             @foreach ($planImportTypes as $planimporttype)
             <option value='{{ $planimporttype->id }}'><strong>{{ $planimporttype->name }}</strong> - {{
@@ -31,7 +31,7 @@
         </div>
 
         <div class="form-check">
-            <input class="form-check-input" id="force_import" name="force_import" type="checkbox" wire:model="force_import">
+            <input class="form-check-input" id="force_import" name="force_import" type="checkbox" wire:model.lazy="force_import">
             <label class="form-check-label" for="force_import"><strong>Forza importazione</strong><em
                     style="font-size: smaller"> - Sovrascrive righe esistenti</em></label>
             @error('force_import') <span class="text-danger">{{ $message }}</span> @enderror

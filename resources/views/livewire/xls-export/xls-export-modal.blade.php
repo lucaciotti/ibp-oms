@@ -7,7 +7,7 @@
     <div class="modal-body">
 
         <x-adminlte-select name="import_type_id" label="Seleziona Tipologia Export" error-key="import_type_id"
-            wire:model="import_type_id" style="text-align: center;">
+            wire:model.lazy="import_type_id" style="text-align: center;">
             @foreach ($importTypes as $type)
             <option value='{{ $type->id }}'><strong>{{ $type->name }}</strong></option>
             @endforeach

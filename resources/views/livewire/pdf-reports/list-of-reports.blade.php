@@ -6,7 +6,7 @@
     <!-- No padding will be applied because the component attribute "content-padding" is set to false -->
     <div class="modal-body">
 
-        <x-adminlte-select name="selectedReport" label="Seleziona Report" error-key="selectedReport" wire:model="selectedReport"
+        <x-adminlte-select name="selectedReport" label="Seleziona Report" error-key="selectedReport" wire:model.lazy="selectedReport"
             style="text-align: center;">
             @foreach ($reports as $key => $value)
             <option value='{{ $key }}'><strong>{{ $value }}</strong></option>

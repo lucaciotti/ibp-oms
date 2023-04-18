@@ -6,12 +6,12 @@
     <!-- No padding will be applied because the component attribute "content-padding" is set to false -->
     <div class="modal-body">
 
-        <x-adminlte-input name="name" label="Nome Tipo Import" placeholder="Nome Tipo Import" error-key="name" wire:model="name" />
+        <x-adminlte-input name="name" label="Nome Tipo Import" placeholder="Nome Tipo Import" error-key="name" wire:model.lazy="name" />
 
-        <x-adminlte-input name="description" label="Descrizione" placeholder="Descrizione" error-key="description" wire:model="description" />
+        <x-adminlte-input name="description" label="Descrizione" placeholder="Descrizione" error-key="description" wire:model.lazy="description" />
 
         <div class="form-check">
-            <input class="form-check-input" id="default" name="default" type="checkbox" wire:model="default">
+            <input class="form-check-input" id="default" name="default" type="checkbox" wire:model.lazy="default">
             <label class="form-check-label" for="default"><strong>Imposta come predefinito</strong></label>
         </div>
 

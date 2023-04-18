@@ -6,10 +6,10 @@
     <!-- No padding will be applied because the component attribute "content-padding" is set to false -->
     <div class="modal-body">
 
-        <x-adminlte-input name="name" label="Nome Piano" placeholder="Nome Piano" error-key="name" wire:model="name" />
+        <x-adminlte-input name="name" label="Nome Piano" placeholder="Nome Piano" error-key="name" wire:model.lazy="name" />
 
         <x-adminlte-input name="description" label="Descrizione" placeholder="Descrizione" error-key="description"
-            wire:model="description" />
+            wire:model.lazy="description" />
 
     </div>
 

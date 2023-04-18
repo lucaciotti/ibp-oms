@@ -9,9 +9,9 @@
         {{-- VALORI STATICI --}}
         <div class="row">
 
-            <x-adminlte-input name="aTask.ibp_cliente_ragsoc" label="Cliente" error-key="aTask.ibp_cliente_ragsoc" wire:model="aTask.ibp_cliente_ragsoc" fgroup-class="col-lg-4" disabled />
+            <x-adminlte-input name="aTask.ibp_cliente_ragsoc" label="Cliente" error-key="aTask.ibp_cliente_ragsoc" wire:model.lazy="aTask.ibp_cliente_ragsoc" fgroup-class="col-lg-4" disabled />
             
-            <x-adminlte-input name="aTask.ibp_prodotto_tipo" label="Tipo Prodotto" error-key="aTask.ibp_prodotto_tipo" wire:model="aTask.ibp_prodotto_tipo" fgroup-class="col-lg-4" disabled/>
+            <x-adminlte-input name="aTask.ibp_prodotto_tipo" label="Tipo Prodotto" error-key="aTask.ibp_prodotto_tipo" wire:model.lazy="aTask.ibp_prodotto_tipo" fgroup-class="col-lg-4" disabled/>
             
             @php
             $model = 'aTask.ibp_data_consegna';
@@ -87,10 +87,10 @@
                 </script>
                 @endif
                 @if ($typeA->attribute->col_type=="string")
-                        <x-adminlte-input name="{{ $model }}" label="{{ $typeA->attribute->label }}" error-key="{{ $model }}" wire:model="{{ $model }}" fgroup-class="col-lg-4"/>           
+                        <x-adminlte-input name="{{ $model }}" label="{{ $typeA->attribute->label }}" error-key="{{ $model }}" wire:model.lazy="{{ $model }}" fgroup-class="col-lg-4"/>           
                 @endif
                 @if ($typeA->attribute->col_type=="text")
-                        <x-adminlte-textarea name="{{ $model }}" label="{{ $typeA->attribute->label }}" error-key="{{ $model }}" wire:model="{{ $model }}" fgroup-class="col-lg-4"/>           
+                        <x-adminlte-textarea name="{{ $model }}" label="{{ $typeA->attribute->label }}" error-key="{{ $model }}" wire:model.lazy="{{ $model }}" fgroup-class="col-lg-4"/>           
                 @endif
                 @if ($index!=0 && ($index % 3)==0)
                     </div>
@@ -101,7 +101,7 @@
         @endforeach
 
         {{-- <div class="form-check">
-            <input class="form-check-input" id="default" name="default" type="checkbox" wire:model="default">
+            <input class="form-check-input" id="default" name="default" type="checkbox" wire:model.lazy="default">
             <label class="form-check-label" for="default"><strong>Imposta come predefinito</strong></label>
         </div> --}}
 

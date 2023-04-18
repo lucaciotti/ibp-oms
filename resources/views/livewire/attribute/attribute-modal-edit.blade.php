@@ -6,10 +6,10 @@
     <!-- No padding will be applied because the component attribute "content-padding" is set to false -->
     <div class="modal-body">
 
-        <x-adminlte-input name="label" label="Nome Attributo" placeholder="Nome Attributo" error-key="label" wire:model="label" />
+        <x-adminlte-input name="label" label="Nome Attributo" placeholder="Nome Attributo" error-key="label" wire:model.lazy="label" />
         
         @if($mode=='insert')
-        <x-adminlte-select name="col_type" label="Tipo Attributo" error-key="col_type" wire:model="col_type">
+        <x-adminlte-select name="col_type" label="Tipo Attributo" error-key="col_type" wire:model.lazy="col_type">
             <option value=''></option>
             <option value='string'>Testo</option>
             <option value='integer'>Numerico semplice</option>
@@ -19,7 +19,7 @@
             <option value='text'>Testo esteso (note)</option>
         </x-adminlte-select>
         @else
-        <x-adminlte-select name="col_type" label="Tipo Attributo" error-key="col_type" wire:model="col_type" disabled>
+        <x-adminlte-select name="col_type" label="Tipo Attributo" error-key="col_type" wire:model.lazy="col_type" disabled>
             <option value=''></option>
             <option value='string'>Testo</option>
             <option value='integer'>Numerico semplice</option>
@@ -31,7 +31,7 @@
         @endif
 
         <div class="form-check">
-            <input class="form-check-input" id="hidden_in_view" name="hidden_in_view" type="checkbox" wire:model="hidden_in_view">
+            <input class="form-check-input" id="hidden_in_view" name="hidden_in_view" type="checkbox" wire:model.lazy="hidden_in_view">
             <label class="form-check-label" for="hidden_in_view"><strong>Nascondi di Default in visualizzazione Tabella</strong></label>
         </div>
 

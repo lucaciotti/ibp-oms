@@ -2,7 +2,7 @@
 <form wire:submit.prevent="save">
     <div class="form-group" style="margin-bottom:5px;">
         <label for="task">File:</label>
-        <input type="file" class="form-control" id="task" placeholder="File Tasks" wire:model="task">
+        <input type="file" class="form-control" id="task" placeholder="File Tasks" wire:model.lazy="task">
         @error('task') <span class="error">{{ $message }}</span> @enderror
     <div>
 
