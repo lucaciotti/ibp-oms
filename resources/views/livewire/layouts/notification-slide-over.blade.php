@@ -1,6 +1,6 @@
 <x-wire-elements-pro::bootstrap.slide-over>
     <x-slot name="title">Lista Notifiche</x-slot>
-    <span wire:poll.visible="getNotificationsList"></span>
+    <span wire:poll.2s.visible="getNotificationsList"></span>
 
     @if ($unreadNotification)
     <h5>Non Lette</h5>

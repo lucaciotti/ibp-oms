@@ -9,7 +9,7 @@
         <x-adminlte-input name="label" label="Nome Attributo" placeholder="Nome Attributo" error-key="label" wire:model.lazy="label" />
         
         @if($mode=='insert')
-        <x-adminlte-select name="col_type" label="Tipo Attributo" error-key="col_type" wire:model.lazy="col_type">
+        <x-adminlte-select name="col_type" label="Tipo Attributo" error-key="col_type" wire:model="col_type">
             <option value=''></option>
             <option value='string'>Testo</option>
             <option value='integer'>Numerico semplice</option>
@@ -19,7 +19,7 @@
             <option value='text'>Testo esteso (note)</option>
         </x-adminlte-select>
         @else
-        <x-adminlte-select name="col_type" label="Tipo Attributo" error-key="col_type" wire:model.lazy="col_type" disabled>
+        <x-adminlte-select name="col_type" label="Tipo Attributo" error-key="col_type" wire:model="col_type" disabled>
             <option value=''></option>
             <option value='string'>Testo</option>
             <option value='integer'>Numerico semplice</option>

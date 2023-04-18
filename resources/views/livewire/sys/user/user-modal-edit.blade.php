@@ -11,7 +11,7 @@
         <x-adminlte-input name="email" label="Email Utente" placeholder="Email Utente" error-key="email" wire:model.lazy="email" />
 
         <x-adminlte-select name="role_name" label="Ruolo Utente" error-key="role_name"
-            wire:model.lazy="role_name" style="text-align: center;">
+            wire:model="role_name" style="text-align: center;">
             @foreach ($roles as $role)
             <option value='{{ $role->name }}'><strong>{{ $role->display_name }}</strong></option>
             @endforeach
