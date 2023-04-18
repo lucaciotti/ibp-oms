@@ -32,9 +32,11 @@
         @endif
 
         {{-- Right sidebar toggler link --}}
+        @role('admin')
         @if(config('adminlte.right_sidebar'))
             @include('adminlte::partials.navbar.menu-item-right-sidebar-toggler')
         @endif
+        @endrole
     </ul>
 
 </nav>
