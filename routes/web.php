@@ -15,9 +15,13 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+// Route::get('/', function () {
+//     return view('auth.login');
+// })->middleware(['auth']);
+
 Route::get('/', function () {
-    return view('auth.login');
-})->middleware(['auth']);
+    return redirect('/login');
+});
 
 Auth::routes();
 
@@ -39,4 +43,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/config/attributes', [App\Http\Controllers\AttributeController::class, 'index'])->name('attributes');
     Route::get('/config/plantypes/{id}/attributes', [App\Http\Controllers\PlanTypeAttributesController::class, 'index'])->name('planTypesAttribute');
     Route::get('/config/plantypes/{id}/planimporttypes', [App\Http\Controllers\PlanImportTypesController::class, 'index'])->name('planImportTypes');
+});
+
+Route::name('user::')->group(function () {
+    Route::resource('users', App\Http\Controllers\UserController::class)->middleware(['auth']);
+    Route::get('/actLike/{id}', [App\Http\Controllers\UserController::class, 'actLike'])->name('actLike')->middleware(['auth']);
+    Route::get('/resetPassword/{id}', [App\Http\Controllers\UserController::class, 'sendResetPassword'])->name('resetPassword');
 });

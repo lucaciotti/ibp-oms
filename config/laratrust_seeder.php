@@ -14,14 +14,19 @@ return [
     'roles_structure' => [
         'admin' => [
             'users' => 'c,r,u,d',
-            'tasks' => 'c,r,u,d'
+            'tasks' => 'c,r,u,d',
+            'config' => 'c,r,u,d',
+            'xlsimport' => 'c,r,u,d',
         ],
         'manager' => [
-            'users' => 'r,u',
-            'tasks' => 'r,u'
+            'users' => 'r',
+            'tasks' => 'c,r,u',
+            'config' => 'c,r,u',
+            'xlsimport' => 'c,r,u',
         ],
         'user' => [
-            'tasks' => 'r,u'
+            'tasks' => 'r,u',
+            'xlsimport' => 'r,d',
         ]
     ],
 

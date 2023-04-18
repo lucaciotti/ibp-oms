@@ -31,16 +31,19 @@ $leftSidebar = [
     [
         'header' => 'Configurazioni',
         'classes'  => 'text-bold text-center',
+        'can'  => ['config-read'],
     ],
     [
         'text'        => ' Tipi Pianificazioni',
         'url'         => 'config/plantypes',
         'icon'        => 'fas fa-paste',
+        'can'  => ['config-read'],
     ],
     [
         'text'        => ' Attributi',
         'url'         => 'config/attributes',
         'icon'        => 'fas fa-sitemap',
+        'can'  => ['config-read'],
     ],
     // [ ==> Spostato in AppServiceProvider
     //     'text' => 'listClients',
