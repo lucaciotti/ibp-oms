@@ -49,6 +49,7 @@
         .main-header {z-index: 38;}
         .main-sidebar {z-index: 38;}
         .control-sidebar{z-index: 37;}
+        #sidebar-overlay {z-index: 37;}
         .brand-link.text-sm .brand-image, .text-sm .brand-link .brand-image { margin-left:0rem}
         .brand-link {padding: .8125rem .5rem .3rem .3rem;}
         a.nav-link i { margin: 0.2rem;}
