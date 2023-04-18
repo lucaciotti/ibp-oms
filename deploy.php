@@ -28,8 +28,8 @@ task('deploy', [
     'artisan:view:cache',
     'artisan:config:cache',
     'artisan:migrate',
-    // 'npm:install',
-    // 'npm:run:prod',
+    'npm:install',
+    'npm:run:prod',
     'deploy:publish',
     'php-fpm:reload',
     // 'supervisor:reload:dbSeed',
@@ -42,7 +42,7 @@ task('deploy', [
 
 task('npm:run:prod', function () {
     cd('{{release_path}}');
-    run('npm run prod');
+    run('npm run build');
 });
 
 task('migrate:pNet', function () {
