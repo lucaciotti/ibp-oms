@@ -7,6 +7,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\PlanFilesTempTask;
 use App\Models\PlanTypeAttribute;
 use Illuminate\Database\Eloquent\Builder;
+use JeroenNoten\LaravelAdminLte\View\Components\Widget\Alert;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 use Session;
@@ -35,7 +36,7 @@ class PlannedTempTaskTable extends DataTableComponent
             ->setDefaultSort('num_row', 'asc')
             ->setPerPageAccepted([25, 50, 75, 100])
             ->setPerPage(25)
-            ->setAdditionalSelects(['id', 'error'])
+            ->setAdditionalSelects(['id', 'error', 'task_id'])
             ->setTrAttributes(function ($row, $index) {
                 if (!empty($row->error)) {
                     return [
@@ -56,6 +57,16 @@ class PlannedTempTaskTable extends DataTableComponent
                         'title' => $row->error,
                     ];
                 }
+                if ($column->getTitle()== "Matricola") {
+                    if($row->task_id!=null){
+                        return [
+                            'class' => 'text-bold btn',
+                            'onclick' => "Livewire.emit('modal.open', 'planned-task.planned-task-modal-edit', {'id': " . $row->task_id . ", 'readOnly': 1});",
+                        ];
+                    } else {
+                        return [];
+                    }
+                }
                 return [];
             });
     }
@@ -69,8 +80,8 @@ class PlannedTempTaskTable extends DataTableComponent
             Column::make('#Riga', 'num_row')
                 ->excludeFromColumnSelect()
                 ->sortable(),
-                BooleanColumn::make('Importati', 'imported')
-                    ->excludeFromColumnSelect(),
+            BooleanColumn::make('Importati', 'imported')
+                ->excludeFromColumnSelect(),
             BooleanColumn::make('Error', 'warning')
                 ->excludeFromColumnSelect(),
         );
@@ -133,7 +144,7 @@ class PlannedTempTaskTable extends DataTableComponent
 
     public function xlsError()
     {   
-        if($this->getSelected()>0){
+        if(count($this->getSelected())>0){
             Session::put('plannedtemptask.xlsExport.task_ids',$this->getSelected());
             return redirect()->route('exportxls_temptasks');
         }

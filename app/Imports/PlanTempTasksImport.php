@@ -12,6 +12,7 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+use Str;
 
 class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows, WithCalculatedFormulas
 {
@@ -66,7 +67,7 @@ class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows, With
                             break;
 
                         default:
-                            $data = strval($row[$cell_num]);
+                            $data = Str::upper(Str::of(strval($row[$cell_num]))->trim());
                             break;
                     }
                     $dataRow[$confRow->attribute->col_name] = $data;

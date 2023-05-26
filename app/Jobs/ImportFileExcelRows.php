@@ -67,6 +67,7 @@ class ImportFileExcelRows implements ShouldQueue
                             $row->task_id = $plannedTask->id;
                             if($plannedTask->audits->last()->user_id != null){
                                 $row->warning = true;
+                                $row->error = 'Matricola già presente e modificata da utente!';
                                 $this->hasWarnings = true;
                             } else {
                                 $row->selected = true;

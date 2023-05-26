@@ -41,10 +41,17 @@ class PlannedTaskTable extends DataTableComponent
             ->setDefaultSort('ibp_data_consegna', 'asc')
             ->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
                 if ($column->getTitle()== "Matricola") {
-                    return [
-                        'class' => 'text-bold btn',
-                        'onclick' => "Livewire.emit('modal.open', 'planned-task.planned-task-modal-edit', {'id': " . $row->id . "});",
-                    ];
+                    if(!$row->completed){
+                        return [
+                            'class' => 'text-bold btn',
+                            'onclick' => "Livewire.emit('modal.open', 'planned-task.planned-task-modal-edit', {'id': " . $row->id . "});",
+                        ];
+                    } else {
+                        return [
+                            'class' => 'text-bold btn',
+                            'onclick' => "Livewire.emit('modal.open', 'planned-task.planned-task-modal-edit', {'id': " . $row->id . ", 'readOnly': 1});",
+                        ];
+                    }
                 }
                 if ($column->getTitle()== "Dt.Modifica") {
                     return [
