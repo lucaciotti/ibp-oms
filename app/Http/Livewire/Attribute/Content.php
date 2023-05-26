@@ -21,9 +21,9 @@ class Content extends DynamicContent
     public function fetchAttributeFromTasksTable() {
         $this->syncJob = true;
         $tasksColumns = (new PlannedTask())->getTableColumns();
-        $attibutes = array_column(Attribute::select('col_name')->get()->toArray(), 'col_name');
+        $attributes = array_column(Attribute::select('col_name')->get()->toArray(), 'col_name');
         foreach ($tasksColumns as $colName => $details) {
-            if (!in_array($colName, $attibutes)){
+            if (!in_array($colName, $attributes)){
                 $attr = new Attribute();
                 $attr->col_name = $colName;
                 $attr->col_type = $details['type'];

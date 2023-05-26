@@ -9,6 +9,7 @@ use Auth;
 use DB;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Validation\Validator;
+use Log;
 use Notification;
 use Schema;
 use Str;
@@ -76,6 +77,9 @@ class AttributeModalEdit extends Modal
                 if (in_array($colName, $tasksColumns) and empty($this->attribute)) {
                     $validator->errors()->add('label', 'Attenzione! Contattare supporto! Inserire altro nome per continuare!');
                 }
+                if(strlen($colName)>20){
+                    $validator->errors()->add('label', 'Attenzione! Nome Attributo troppo lungo per Database!');
+                }
             });
         })->validate();
         if (empty($this->attribute)) {
@@ -122,7 +126,43 @@ class AttributeModalEdit extends Modal
             }
             
         } else {
-            $this->attribute->update($validatedData);
+            
+            try {
+                DB::transaction(function () use ($validatedData) {
+                    $old_name = $this->attribute->col_name;
+                    $new_name = 'ibp_' . Str::snake(preg_replace('/[^\p{L}\p{N}\s]/u', '', $validatedData['label']));
+                    $validatedData['col_name'] = $new_name;
+                    $this->attribute->update($validatedData);
+                    if ($old_name!=$new_name){
+                        Log::info("entrato");
+                        // Migration on TempTask
+                        Schema::table('plan_files_temp_tasks', function (Blueprint $table) use ($new_name, $old_name) {
+                            $table->renameColumn($old_name, $new_name);
+                        });
+                        // Migration on PlannedTask
+                        Schema::table('planned_tasks', function (Blueprint $table) use ($new_name, $old_name) {
+                            $table->renameColumn($old_name, $new_name);
+                        });
+                    }
+                });
+                Notification::send(Auth::user(), new DefaultMessageNotify(
+                    $title = 'Modifica Attributo',
+                    $body = 'Attributo ' . $validatedData['label'] . ' modificato',
+                    $link = 'config/attributes',
+                    $level = 'info'
+                ));
+            } catch (\Throwable $th) {
+                if (!Str::contains($th->getMessage(), 'There is no active transaction')) {
+                    Notification::send(Auth::user(), new DefaultMessageNotify(
+                        $title = 'Modifica Attributo',
+                        $body = 'Attributo ' . $validatedData['label'] . ' errore!' . $th->getMessage(),
+                        $link = 'config/attributes',
+                        $level = 'error'
+                    ));
+                } else {
+                    report($th);
+                }
+            }
         }
 
         $this->close(
