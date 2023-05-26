@@ -11,8 +11,9 @@ use Log;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
+use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 
-class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows
+class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows, WithCalculatedFormulas
 {
     protected $importedfile;
     protected $importType;
@@ -58,7 +59,6 @@ class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows
                             $data = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[$cell_num]));
                             break;
                         case 'integer':
-                            dd($row[$cell_num]);
                             $data = intval($row[$cell_num]);
                             break;
                         case 'boolean':
@@ -75,7 +75,7 @@ class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows
                 return new PlanFilesTempTask($dataRow);
             } catch (\Throwable $th) {
                 report($th);
-                // return false;
+                return false;
             }
         }else{
             ++$this->rowNum;

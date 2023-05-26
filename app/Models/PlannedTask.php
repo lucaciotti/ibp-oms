@@ -22,6 +22,7 @@ class PlannedTask extends Model implements Auditable
     // protected $dates = ['ibp_data_consegna'];
     protected $casts = [
         'ibp_data_consegna' => 'datetime:d-m-Y',
+        'ibp_dt_inizio_prod' => 'datetime:d-m-Y',
     ];
 
 

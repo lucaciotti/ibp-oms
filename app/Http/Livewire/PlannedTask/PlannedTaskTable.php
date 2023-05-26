@@ -20,7 +20,7 @@ class PlannedTaskTable extends DataTableComponent
     public $type_id;
 
     public function mount() {
-        $this->setFilter('date_from', date('Y-m-d', strtotime('-' . date('w') . ' days')));
+        $this->setFilter('date_prod_from', date('Y-m-d', strtotime('-' . date('w') . ' days')));
         $this->setFilter('completed', 'no');
     }
 
@@ -63,7 +63,7 @@ class PlannedTaskTable extends DataTableComponent
 
     public function columns(): array
     {
-        $planAttrs = PlanTypeAttribute::where('type_id', $this->type_id)->with(['attribute'])->get();
+        $planAttrs = PlanTypeAttribute::where('type_id', $this->type_id)->with(['attribute'])->orderBy('order')->get();
         $columns = [];
         array_push(
             $columns,
@@ -127,6 +127,19 @@ class PlannedTaskTable extends DataTableComponent
     public function filters(): array
     {
         return [
+            DateFilter::make('Inizio Data Prod.', 'date_prod_from')
+                ->filter(function (Builder $builder, string $value) {
+                    $builder->where('ibp_dt_inizio_prod', '>=', $value);
+                }),
+
+            DateFilter::make('Fine Data Prod.', 'date_prod_to')
+            ->config([
+                'placeholder' => 'dd-mm-yyyy',
+            ])
+                ->filter(function (Builder $builder, string $value) {
+                    $builder->where('ibp_dt_inizio_prod', '<=', $value);
+                }),
+
             DateFilter::make('Inizio Data Consegna', 'date_from')
                 ->filter(function (Builder $builder, string $value) {
                     $builder->where('ibp_data_consegna', '>=', $value);
@@ -164,7 +177,7 @@ class PlannedTaskTable extends DataTableComponent
                 ])
                 ->filter(function (Builder $builder, string $value) {
                     $valueFilter = ($value=='yes') ? true : (($value=='no') ? false : null);
-                    if($valueFilter!=null) $builder->where('completed', $valueFilter);
+                    $builder->where('completed', $valueFilter);
                 }),
 
 

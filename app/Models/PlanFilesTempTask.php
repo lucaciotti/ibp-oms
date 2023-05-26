@@ -13,4 +13,9 @@ class PlanFilesTempTask extends Model implements Auditable
     use HasFactory;
     
     protected $guarded = ['id'];
+
+    protected $casts = [
+        'ibp_data_consegna' => 'datetime:d-m-Y',
+        'ibp_dt_inizio_prod' => 'datetime:d-m-Y',
+    ];
 }
