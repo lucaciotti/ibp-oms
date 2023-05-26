@@ -9,6 +9,7 @@ use App\Models\PlanTypeAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
+use Session;
 
 class PlannedTempTaskTable extends DataTableComponent
 {
@@ -23,6 +24,11 @@ class PlannedTempTaskTable extends DataTableComponent
             ->where('import_file_id', $this->file_id);
     }
 
+    public function mount()
+    {
+        $this->setFilter('warning', 'yes');
+    }
+
     public function configure(): void
     {
         $this->setPrimaryKey('id')
@@ -31,24 +37,32 @@ class PlannedTempTaskTable extends DataTableComponent
             ->setPerPage(25)
             ->setAdditionalSelects(['id', 'error'])
             ->setTrAttributes(function ($row, $index) {
-                if ($row->warning) {
-                    return [
-                        'style' => 'background-color: rgba(255,153,102, 0.5) !important;',
-                    ];
-                }
                 if (!empty($row->error)) {
                     return [
                         'style' => 'background-color: rgba(204,51,0, 0.5) !important',
                     ];
                 }
+                if ($row->warning) {
+                    return [
+                        'style' => 'background-color: rgba(255,153,102, 0.5) !important;',
+                    ];
+                }
 
+                return [];
+            })
+            ->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
+                if ($column->getTitle() == "Error") {
+                    return [
+                        'title' => $row->error,
+                    ];
+                }
                 return [];
             });
     }
 
     public function columns(): array
     {
-        $planAttrs = PlanTypeAttribute::where('type_id', $this->type_id)->with(['attribute'])->get();
+        $planAttrs = PlanTypeAttribute::where('type_id', $this->type_id)->with(['attribute'])->orderBy('order')->get();
         $columns = [];
         array_push(
             $columns,
@@ -108,5 +122,21 @@ class PlannedTempTaskTable extends DataTableComponent
                 }),
 
         ];
+    }
+
+    public function bulkActions(): array
+    {
+        return [
+            'xlsError' => 'Export Xls (con Errori)',
+        ];
+    }
+
+    public function xlsError()
+    {   
+        if($this->getSelected()>0){
+            Session::put('plannedtemptask.xlsExport.task_ids',$this->getSelected());
+            return redirect()->route('exportxls_temptasks');
+        }
+        // dd($this->getSelected());
     }
 }
