@@ -9,8 +9,11 @@ class ListOfReports extends Modal
     public $tasks_ids;
     public $type_id;
     public $reports = [
-        'plan' => 'Distinta Pianificazioni',
-        'stat' => 'Statistiche',
+        'plan' => 'Distinta Pianificazioni (da completare)',
+        'plan_ended' => 'Pianificazioni Completare',
+        'stat_imp' => 'Statistiche Impianti',
+        'stat_ral' => 'Statistiche RAL',
+        'stat_imb' => 'Statistiche Imballi',
     ];
     public $selectedReport = 'plan';
 

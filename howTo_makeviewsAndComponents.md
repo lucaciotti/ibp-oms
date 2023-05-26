@@ -14,7 +14,9 @@ sail artisan livewire:make PlanImportFile/PlanImportFileModalEdit
 sail artisan make:job ProcessTempTasks
 
 <!-- EXCEL -->
-php artisan make:import UsersImport --model=User
+sail artisan make:import UsersImport --model=User
+
+sail artisan make:export PlannedTaskExport --model=PlannedTask
 
 apt install libfontconfig1 libxrender1
 

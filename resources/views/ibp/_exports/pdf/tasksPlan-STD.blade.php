@@ -84,8 +84,8 @@
                 <td>{{ $task['matricole'][6] ?? '' }}</td>
                 <td>{{ $task['values']['ibp_basamento_opt'] }}</td>
                 <td colspan="2"></td>
-                <th>PRESSORE</th>
                 <td rowspan=3></td>
+                <th>PRESSORE</th>
                 <td rowspan=3>{{ $task['values']['ibp_imballo_note'] }}</td>
             </tr>
             <tr>
