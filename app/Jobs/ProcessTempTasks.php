@@ -53,7 +53,16 @@ class ProcessTempTasks implements ShouldQueue
                     $aRow = $row->toArray();
                     $dataRow['type_id'] = $row->type_id;
                     foreach ($listTypeAttr as $typeAttr) {
-                        $dataRow[$typeAttr->attribute->col_name] = $aRow[$typeAttr->attribute->col_name];
+                        switch ($typeAttr->attribute->col_type) {
+                            case 'date':
+                                $data = Carbon::createFromFormat('d-m-Y', $aRow[$typeAttr->attribute->col_name]);
+                                break;
+
+                            default:
+                                $data = $aRow[$typeAttr->attribute->col_name];
+                                break;
+                        }
+                        $dataRow[$typeAttr->attribute->col_name] = $data;
                     }
                     if (empty($row->task_id)) {
                         PlannedTask::create($dataRow);
