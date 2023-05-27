@@ -7,6 +7,7 @@ use App\Models\PlanFilesTempTask;
 use App\Models\PlanImportFile;
 use App\Models\PlanImportType;
 use App\Models\PlanType;
+use App\Models\User;
 use App\Notifications\DefaultMessageNotify;
 use Auth;
 use DB;
@@ -96,7 +97,19 @@ class PlanImportFileModalEdit extends Modal
             ));
         } catch (\Throwable $th) {
             report($th);
-            // return false;
+            #INVIO NOTIFICA
+            $notifyUsers = User::whereHas('roles', fn ($query) => $query->where('name', 'admin'))->orWhere('id', Auth::user()->id)->get();
+            foreach ($notifyUsers as $user) {
+                Notification::send(
+                    $user,
+                    new DefaultMessageNotify(
+                        $title = 'File di Import - [' . $this->planImportFile->filename . ']!',
+                        $body = 'Errore: [' . $th->getMessage() . ']',
+                        $link = '#',
+                        $level = 'error'
+                    )
+                );
+            }
         }
 
         $this->close(
@@ -122,6 +135,19 @@ class PlanImportFileModalEdit extends Modal
             ));
         } catch (\Throwable $th) {
             report($th);
+            #INVIO NOTIFICA
+            $notifyUsers = User::whereHas('roles', fn ($query) => $query->where('name', 'admin'))->orWhere('id', Auth::user()->id)->get();
+            foreach ($notifyUsers as $user) {
+                Notification::send(
+                    $user,
+                    new DefaultMessageNotify(
+                        $title = 'File di Import - [' . $filename . ']!',
+                        $body = 'Errore: [' . $th->getMessage() . ']',
+                        $link = '#',
+                        $level = 'error'
+                    )
+                );
+            }
         }
 
         $this->close(

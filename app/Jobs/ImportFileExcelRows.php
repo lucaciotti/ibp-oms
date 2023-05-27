@@ -6,6 +6,7 @@ use App\Imports\PlanTempTasksImport;
 use App\Models\PlanFilesTempTask;
 use App\Models\PlanImportFile;
 use App\Models\PlannedTask;
+use App\Models\User;
 use App\Notifications\DefaultMessageNotify;
 use DB;
 use Excel;
@@ -103,6 +104,19 @@ class ImportFileExcelRows implements ShouldQueue
         $this->importedfile->status = 'Errore';
         $this->importedfile->save();
         report($e);
+        #INVIO NOTIFICA
+        $notifyUsers = User::whereHas('roles', fn ($query) => $query->where('name', 'admin'))->orWhere('id', $this->importedfile->userCreated()->id)->get();
+        foreach ($notifyUsers as $user) {
+            Notification::send(
+                $user,
+                new DefaultMessageNotify(
+                    $title = 'Import File - [' . $this->importedfile->filename . ']!',
+                    $body = 'Errore: [' . $e->getMessage() . ']',
+                    $link = '#',
+                    $level = 'error'
+                )
+            );
+        }
         return false;
     }
 }

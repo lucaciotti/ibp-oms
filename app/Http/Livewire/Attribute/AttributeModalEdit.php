@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Attribute;
 
 use App\Models\Attribute;
 use App\Models\PlannedTask;
+use App\Models\User;
 use App\Notifications\DefaultMessageNotify;
 use Auth;
 use DB;
@@ -121,7 +122,20 @@ class AttributeModalEdit extends Modal
                         $level = 'error'
                     ));
                 } else {
-                   report($th);
+                    report($th);
+                    #INVIO NOTIFICA
+                    $notifyUsers = User::whereHas('roles', fn ($query) => $query->where('name', 'admin'))->orWhere('id', Auth::viaRemember()::user()->id)->get();
+                    foreach ($notifyUsers as $user) {
+                        Notification::send(
+                            $user,
+                            new DefaultMessageNotify(
+                                    $title = 'Creazione Attributo - [' . $validatedData['label'] . ']!',
+                                    $body = 'Errore: [' . $th->getMessage() . ']',
+                                    $link = '#',
+                                    $level = 'error'
+                                )
+                        );
+                    }
                 }
             }
             
@@ -161,6 +175,19 @@ class AttributeModalEdit extends Modal
                     ));
                 } else {
                     report($th);
+                    #INVIO NOTIFICA
+                    $notifyUsers = User::whereHas('roles', fn ($query) => $query->where('name', 'admin'))->orWhere('id', Auth::user()->id)->get();
+                    foreach ($notifyUsers as $user) {
+                        Notification::send(
+                            $user,
+                            new DefaultMessageNotify(
+                                $title = 'Modifica Attributo - [' . $validatedData['label'] . ']!',
+                                $body = 'Errore: [' . $th->getMessage() . ']',
+                                $link = '#',
+                                $level = 'error'
+                            )
+                        );
+                    }
                 }
             }
         }

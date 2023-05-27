@@ -112,7 +112,7 @@ class UserController extends Controller
             // $req->session()->flash('status', 'Inviata email a '.$user->email.'!');
         } catch (\Exception $e) {
             Log::error("Invite User error: ". $e->getMessage());
-            // $req->session()->flash('status', 'Errore imprevisto per favore riprovare!');
+            // report($e);
         }
         if(Auth::check()){
             if(Auth::user()->id == $id){

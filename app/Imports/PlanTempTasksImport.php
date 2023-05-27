@@ -6,12 +6,16 @@ use App\Models\PlanFilesTempTask;
 use App\Models\PlanImportFile;
 use App\Models\PlanImportType;
 use App\Models\PlanImportTypeAttribute;
+use App\Models\User;
+use App\Notifications\DefaultMessageNotify;
+use Auth;
 use Carbon\Carbon;
 use Log;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+use Notification;
 use Str;
 
 class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows, WithCalculatedFormulas
@@ -76,6 +80,19 @@ class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows, With
                 return new PlanFilesTempTask($dataRow);
             } catch (\Throwable $th) {
                 report($th);
+                #INVIO NOTIFICA
+                $notifyUsers = User::whereHas('roles', fn ($query) => $query->where('name', 'admin'))->orWhere('id', Auth::user()->id)->get();
+                foreach ($notifyUsers as $user) {
+                    Notification::send(
+                        $user,
+                        new DefaultMessageNotify(
+                            $title = 'File di Import - [' . $this->importedfile->filename . ']!',
+                            $body = 'Errore: [' . $th->getMessage() . ']',
+                            $link = '#',
+                            $level = 'error'
+                        )
+                    );
+                }
                 return false;
             }
         }else{
