@@ -2,9 +2,9 @@
 
 namespace App\Exports;
 
-use App\Models\PlanFilesTempTask;
 use App\Models\PlanImportType;
 use App\Models\PlanImportTypeAttribute;
+use App\Models\PlannedTask;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
@@ -15,7 +15,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class PlannedTempTaskExport implements FromQuery, WithMapping, WithHeadings, ShouldAutoSize, WithColumnFormatting, WithStyles
+class PlannedTaskCompletedExport implements FromQuery, WithMapping, WithHeadings, ShouldAutoSize, WithColumnFormatting, WithStyles
 {
     protected $taskIds;
     protected $importType;
@@ -31,26 +31,24 @@ class PlannedTempTaskExport implements FromQuery, WithMapping, WithHeadings, Sho
 
     public function query()
     {
-        return PlanFilesTempTask::query()->whereIn('id', $this->taskIds);
+        return PlannedTask::query()->whereIn('id', $this->taskIds)->where('completed', true);
     }
 
     public function headings(): array
-    {
+    {   
         $head = [];
+        array_push($head, 'Completato');
         foreach ($this->typeAttribute as $column) {
             array_push($head, $column->attribute->label);
         }
-        array_push($head, 'Importati');
-        array_push($head, 'Errore');
-        array_push($head, 'Tipo Errore');
         return $head;
     }
 
     public function columnFormats(): array
     {
         $format = [];
-        $alphabet = range('A', 'Z');
-        $index = 0;
+        $alphabet = range('B', 'Z');
+        $index=0;
         foreach ($this->typeAttribute as $column) {
             if ($column->attribute->col_type == 'date') {
                 $format[$alphabet[$index]] = NumberFormat::FORMAT_DATE_DDMMYYYY;
@@ -82,22 +80,18 @@ class PlannedTempTaskExport implements FromQuery, WithMapping, WithHeadings, Sho
     public function map($row): array
     {
         $body = [];
+        array_push($body, ($row->completed ? 'Completato' : '-'));
         foreach ($this->typeAttribute as $column) {
             $colname = $column->attribute->col_name;
-            if ($column->attribute->col_type == 'date') {
-                try{
-                    array_push($body, Date::dateTimeToExcel($row->$colname));
-                } catch (\Throwable $th) {
-                    dd($row->$colname);
-                }
+            if($column->attribute->col_type=='date'){
+                array_push($body, Date::dateTimeToExcel($row->$colname));
             } else {
                 array_push($body, $row->$colname);
             }
         }
-        array_push($body, ($row->imported ? 'Importato' : '-'));
-        array_push($body, ($row->warning ? 'Errore' : '-'));
-        array_push($body, $row->error);
         // Date::dateTimeToExcel($invoice->created_at),
         return $body;
     }
+
+
 }

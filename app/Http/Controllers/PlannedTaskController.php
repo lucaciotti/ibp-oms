@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PlannedTaskCompletedExport;
 use App\Exports\PlannedTaskExport;
 use App\Models\PlanType;
 use Carbon\Carbon;
@@ -33,6 +34,17 @@ class PlannedTaskController extends Controller
         $planType = PlanType::find($req->session()->get('plannedtask.plantype.id'));
         $filename = $planType->name . '_Export_' . Carbon::now()->format('YmdHis') . '.xlsx';
         return Excel::download(new PlannedTaskExport($tasks_ids, $import_type_id), $filename);
+    }
+
+    public function exportXls_completed(Request $req){
+        // dd();
+        $tasks_ids = $req->session()->get('plannedtask.xlsExport.task_ids');
+        $import_type_id = $req->session()->get('plannedtask.xlsExport.import_type_id');
+        $req->session()->forget('plannedtask.xlsExport.task_ids');
+        $req->session()->forget('plannedtask.xlsExport.import_type_id');
+        $planType = PlanType::find($req->session()->get('plannedtask.plantype.id'));
+        $filename = $planType->name . '_Export_Completati_' . Carbon::now()->format('YmdHis') . '.xlsx';
+        return Excel::download(new PlannedTaskCompletedExport($tasks_ids, $import_type_id), $filename);
     }
 }
 

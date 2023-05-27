@@ -196,8 +196,9 @@ class PlannedTaskTable extends DataTableComponent
         return [
             'doReport' => 'Stampa Report',
             'xlsExport' => 'Export Xls',
-            'completed' => 'Completati',
-            'notcompleted' => 'Non Completati',
+            'xlsExportCompleted' => 'Export Xls (Completati)',
+            'completed' => '[v] Completati',
+            'notcompleted' => '[x] Non Completati',
         ];
     }
 
@@ -209,6 +210,12 @@ class PlannedTaskTable extends DataTableComponent
     public function xlsExport()
     {
         $this->emit('modal.open', 'xls-export.xls-export-modal', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id]);
+        // dd($this->getSelected());
+    }
+
+    public function xlsExportCompleted()
+    {
+        $this->emit('modal.open', 'xls-export.xls-export-modal', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id, 'completed' => 1]);
         // dd($this->getSelected());
     }
 
