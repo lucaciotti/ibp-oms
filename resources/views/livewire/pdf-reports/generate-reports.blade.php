@@ -5,7 +5,8 @@
 
     <!-- No padding will be applied because the component attribute "content-padding" is set to false -->
     <div class="modal-body pdf">
-        <embed src="{{ asset('tmp_pdf/'.$pdfReport) }}" frameborder="0" width="100%" style="height: calc(100vh - 110px);">
+        {{-- <embed src="{{ asset('storage/tmp_pdf/'.$pdfReport) }}" frameborder="0" width="100%" style="height: calc(100vh - 110px);"> --}}
+        <embed src="{{ asset('storage/tmp_pdf/'.$pdfReport) }}" frameborder="0" width="100%" style="height: calc(100vh - 110px);">
     </div>
 
     <x-slot name="buttons">

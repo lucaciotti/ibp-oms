@@ -66,7 +66,8 @@ class GenerateReports extends Modal
         // dd($data);
         $this->pdfReport = $title . '-' . $subTitle . '_' . Carbon::now()->format('YmdHis') . '.pdf';
         $pdf = PdfReport::A4Landscape($view, $data, $title, $subTitle);
-        $pdf->save(base_path('public/tmp_pdf/' . $this->pdfReport));
+        // $pdf->save(base_path('public/tmp_pdf/' . $this->pdfReport));
+        $pdf->save(storage_path('app/public/tmp_pdf/' . $this->pdfReport));
     }
 
     protected function do_plan_ended_report()
@@ -109,7 +110,8 @@ class GenerateReports extends Modal
         // dd($data);
         $this->pdfReport = $title . '-' . $subTitle . '_' . Carbon::now()->format('YmdHis') . '.pdf';
         $pdf = PdfReport::A4Landscape($view, $data, $title, $subTitle);
-        $pdf->save(base_path('public/tmp_pdf/' . $this->pdfReport));
+        // $pdf->save(base_path('public/tmp_pdf/' . $this->pdfReport));
+        $pdf->save(storage_path('app/public/tmp_pdf/' . $this->pdfReport));
     }
 
     protected function do_stat_imp_report()
@@ -133,7 +135,8 @@ class GenerateReports extends Modal
         // dd($data);
         $this->pdfReport = $title . '-' . $subTitle . '_' . Carbon::now()->format('YmdHis') . '.pdf';
         $pdf = PdfReport::A4Portrait($view, $data, $title, $subTitle);
-        $pdf->save(base_path('public/tmp_pdf/' . $this->pdfReport));
+        // $pdf->save(base_path('public/tmp_pdf/' . $this->pdfReport));
+        $pdf->save(storage_path('app/public/tmp_pdf/' . $this->pdfReport));
     }
 
     protected function do_stat_ral_report(){
@@ -156,7 +159,8 @@ class GenerateReports extends Modal
         // dd($data);
         $this->pdfReport = $title . '-' . $subTitle . '_' . Carbon::now()->format('YmdHis') . '.pdf';
         $pdf = PdfReport::A4Portrait($view, $data, $title, $subTitle);
-        $pdf->save(base_path('public/tmp_pdf/' . $this->pdfReport));
+        // $pdf->save(base_path('public/tmp_pdf/' . $this->pdfReport));
+        $pdf->save(storage_path('app/public/tmp_pdf/' . $this->pdfReport));
     }
 
     protected function do_stat_imb_report()
@@ -180,7 +184,8 @@ class GenerateReports extends Modal
         // dd($data);
         $this->pdfReport = $title . '-' . $subTitle . '_' . Carbon::now()->format('YmdHis') . '.pdf';
         $pdf = PdfReport::A4Portrait($view, $data, $title, $subTitle);
-        $pdf->save(base_path('public/tmp_pdf/' . $this->pdfReport));
+        // $pdf->save(base_path('public/tmp_pdf/' . $this->pdfReport));
+        $pdf->save(storage_path('app/public/tmp_pdf/' . $this->pdfReport));
     }
 
     protected function loadStats($tasks) {
@@ -244,7 +249,8 @@ class GenerateReports extends Modal
     }
 
     public function exitReport(){
-        $delete = unlink(base_path('public/tmp_pdf/' . $this->pdfReport));
+        // $delete = unlink(base_path('public/tmp_pdf/' . $this->pdfReport));
+        $delete = unlink(storage_path('app/public/tmp_pdf/' . $this->pdfReport));
         if($delete){
             $this->close(
                 andForget: [
