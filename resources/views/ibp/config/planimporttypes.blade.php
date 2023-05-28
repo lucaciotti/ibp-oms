@@ -3,9 +3,9 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-<h1>Configurazioni Import Excel</h1>
+<h1>Configurazioni Formati Excel</h1>
 <h6 class="m-0 text-dark">
-    Tipoliogie di import - <strong>{{ $planType->name }}</strong>
+    Tipoliogie di Format - <strong>{{ $planType->name }}</strong>
 </h6>
 @stop
 

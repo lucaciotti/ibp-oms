@@ -2,7 +2,7 @@
     <x-slot:content>
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Lista Tipologie Import</h3>
+                <h3 class="card-title">Lista Tipologie Formati XLS</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -24,7 +24,7 @@
             <div class="card-body">
                 <button class="btn btn-outline-success btn-block"
                     onclick="Livewire.emit('modal.open', 'plan-import-type.plan-import-type-modal-edit', {'type_id': {{ $type_id }}});">
-                    <span class="fa fa-edit"></span> Crea nuovo import
+                    <span class="fa fa-edit"></span> Crea nuovo Format-Xls
                 </button>
             </div>
         </div>
