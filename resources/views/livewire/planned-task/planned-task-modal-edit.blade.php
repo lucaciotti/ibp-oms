@@ -54,7 +54,7 @@
             $value = $aTask[$idEl];
             @endphp
             <div class="form-group col-lg-6">
-                <label>Data Consegna</label>
+                <label>Data Inizio Prod.</label>
                 <div class="input-group date" id="{{ $idEl }}" data-target-input="nearest">
                     <input type="text" class="form-control datetimepicker-input" data-target="#{{ $idEl }}" {{ $disabled }}>
                     <div class="input-group-append" data-target="#{{ $idEl }}" data-toggle="datetimepicker">

@@ -9,10 +9,31 @@
         <x-adminlte-input name="name" label="Nome Tipo Import" placeholder="Nome Tipo Import" error-key="name" wire:model.lazy="name" />
 
         <x-adminlte-input name="description" label="Descrizione" placeholder="Descrizione" error-key="description" wire:model.lazy="description" />
+        
+        <div class="row">
+            <div class="col-lg-6">
+                <label class="mb-0">Utilizzabile in:</label>
+                <div class="form-check">
+                    <input class="form-check-input" id="use_in_export" name="use_in_import" type="checkbox" wire:model.lazy="use_in_import">
+                    <label class="form-check-label" for="use_in_import"><strong>Import</strong></label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" id="use_in_export" name="use_in_export" type="checkbox" wire:model.lazy="use_in_export">
+                    <label class="form-check-label" for="use_in_export"><strong>Export</strong></label>
+                </div>
+            </div>
 
-        <div class="form-check">
-            <input class="form-check-input" id="default" name="default" type="checkbox" wire:model.lazy="default">
-            <label class="form-check-label" for="default"><strong>Imposta come predefinito</strong></label>
+            <div class="col-lg-6">
+                <label class="mb-0">Imposta come formato predefinito in:</label>
+                <div class="form-check">
+                    <input class="form-check-input" id="default_export" name="default_import" type="checkbox" wire:model.lazy="default_import">
+                    <label class="form-check-label" for="default_import"><strong>Import</strong></label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" id="default_export" name="default_export" type="checkbox" wire:model.lazy="default_export">
+                    <label class="form-check-label" for="default_export"><strong>Export</strong></label>
+                </div>
+            </div>
         </div>
 
     </div>
