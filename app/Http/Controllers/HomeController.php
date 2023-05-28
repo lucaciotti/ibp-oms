@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PlannedTask;
+use App\Models\PlanType;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -24,8 +25,26 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $stdplan = PlannedTask::where('type_id', 1)->where('ibp_data_consegna', '>', date('Y-m-d', strtotime('-' . date('w') . ' days')))->where('completed', false)->count();
-        $robotplan = PlannedTask::where('type_id', 2)->where('ibp_data_consegna', '>', date('Y-m-d', strtotime('-' . date('w') . ' days')))->where('completed', false)->count();
-        return view('home',['stdplan'=>$stdplan, 'robotplan' => $robotplan]);
+        $planTiles = [];
+        $colors = ['yellow', 'info',  'teal', 'cyan', 'blue', 'default', 'primary'];
+        $planType = PlanType::get();
+        $indexColor = 0;
+        foreach ($planType as $plan) {
+            $planTile = [];
+            $planTile['id'] = $plan->id;
+            $planTile['title'] = 'Pianificazione '.$plan->name;
+            $planTile['color'] = $colors[$indexColor];
+            $planTile['count'] = PlannedTask::where('type_id', $plan->id)->where('ibp_dt_inizio_prod', '>', date('Y-m-d', strtotime('-' . date('w') . ' days')))->where('completed', false)->count();
+            array_push($planTiles, $planTile);
+            $indexColor++;
+        }
+        $planTiles = array_chunk($planTiles, 2);
+        // dd($planTiles);
+        return view(
+            'home',
+            [
+                'planTiles' => $planTiles
+            ]
+        );
     }
 }

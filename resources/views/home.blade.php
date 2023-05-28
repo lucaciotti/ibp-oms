@@ -14,42 +14,52 @@
 
     <div class="col-lg-12 ">
         <br><br><br>
-        <div class="row">
-            <div class="col-lg-6 col-6 ml-auto">
-                <!-- small box -->
-                <div class="small-box bg-info">
-                    <div class="inner">
-                        <h3>{{ $stdplan }}</h3>
 
-                        <p>Pianificazioni STD</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fa fa-clipboard-list"></i>
-                    </div>
-                    <a href="{{ route('planned_tasks', 1) }}" class="small-box-footer">Visualizza <i
-                            class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <div class="col-lg-6 col-6 ml-auto">
-                <!-- small box -->
-                <div class="small-box bg-yellow">
-                    <div class="inner">
-                        <h3>{{ $robotplan }}</h3>
+        @foreach ($planTiles as $planRow)
+            <div class="row">
+                @if (count($planRow)==2)
+                    @foreach ($planRow as $planTile)
+                    <div class="col-lg-6 col-6 ml-auto">
+                        <div class="small-box bg-{{ $planTile['color'] }}">
+                            <div class="inner">
+                                <h3>{{ $planTile['count'] }}</h3>
 
-                        <p>Pianificazioni ROBOT</p>
+                                <p>{{ $planTile['title'] }}</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-clipboard-list"></i>
+                            </div>
+                            <a href="{{ route('planned_tasks', $planTile['id']) }}" class="small-box-footer">Visualizza <i
+                                    class="fas fa-arrow-circle-right"></i></a>
+                        </div>
                     </div>
-                    <div class="icon">
-                        <i class="fa fa-clipboard-list"></i>
+                    @endforeach
+                @else
+                    <div class="col-lg-3 col-3 ml-auto">
                     </div>
-                    <a href="{{ route('planned_tasks', 2) }}" class="small-box-footer">Visualizza <i
-                            class="fas fa-arrow-circle-right"></i></a>
-                </div>
+                    <div class="col-lg-6 col-6 ml-auto">
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>{{ $planRow[0]['count'] }}</h3>
+
+                                <p>{{ $planRow[0]['title'] }}</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-clipboard-list"></i>
+                            </div>
+                            <a href="{{ route('planned_tasks', $planRow[0]['id']) }}" class="small-box-footer">Visualizza <i
+                                    class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-3 ml-auto">
+                    </div>
+                @endif
             </div>
-        </div>
+        @endforeach
+        
+        <hr>
         <div class="row ">
-            <div class="col-lg-3 col-3 ml-auto">
-            </div>
-            <div class="col-lg-6 col-6 ml-auto">
+            <div class="col-lg-12 col-12 ml-auto">
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
@@ -64,24 +74,6 @@
                             class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            <div class="col-lg-3 col-3 ml-auto">
-            </div>
-            {{-- <div class="col-lg-6 col-6 ml-auto">
-                <!-- small box -->
-                <div class="small-box bg-danger">
-                    <div class="inner">
-                        <h3>#</h3>
-
-                        <p>Imballi</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fa fa-box"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">Visualizza <i
-                            class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div> --}}
-            <!-- ./col -->
         </div>
 </div>
 </div>
