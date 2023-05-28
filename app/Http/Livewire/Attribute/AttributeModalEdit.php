@@ -147,17 +147,19 @@ class AttributeModalEdit extends Modal
                     $new_name = 'ibp_' . Str::snake(preg_replace('/[^\p{L}\p{N}\s]/u', '', $validatedData['label']));
                     $validatedData['col_name'] = $new_name;
                     $this->attribute->update($validatedData);
-                    if ($old_name!=$new_name){
-                        Log::info("entrato");
-                        // Migration on TempTask
-                        Schema::table('plan_files_temp_tasks', function (Blueprint $table) use ($new_name, $old_name) {
-                            $table->renameColumn($old_name, $new_name);
-                        });
-                        // Migration on PlannedTask
-                        Schema::table('planned_tasks', function (Blueprint $table) use ($new_name, $old_name) {
-                            $table->renameColumn($old_name, $new_name);
-                        });
-                    }
+                    // DISABILITO MOMENTANEAMENTE LA MODIFICA DEL NOME
+                    // TODO trovare soluzione per attributi mappati
+                    // if ($old_name!=$new_name){
+                    //     Log::info("entrato");
+                    //     // Migration on TempTask
+                    //     Schema::table('plan_files_temp_tasks', function (Blueprint $table) use ($new_name, $old_name) {
+                    //         $table->renameColumn($old_name, $new_name);
+                    //     });
+                    //     // Migration on PlannedTask
+                    //     Schema::table('planned_tasks', function (Blueprint $table) use ($new_name, $old_name) {
+                    //         $table->renameColumn($old_name, $new_name);
+                    //     });
+                    // }
                 });
                 Notification::send(Auth::user(), new DefaultMessageNotify(
                     $title = 'Modifica Attributo',
