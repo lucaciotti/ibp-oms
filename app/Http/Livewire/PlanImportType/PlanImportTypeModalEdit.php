@@ -14,7 +14,10 @@ class PlanImportTypeModalEdit extends Modal
     public string $type_id;
     public string $name;
     public string $description;
-    public bool $default = false;
+    public bool $default_export = false;
+    public bool $default_import = false;
+    public bool $use_in_import = true;
+    public bool $use_in_export = true;
 
     protected function rules()
     {
@@ -22,13 +25,19 @@ class PlanImportTypeModalEdit extends Modal
             return [
                 'name' => 'required|unique:plan_import_types,name,'.$this->planImportType->id,
                 'description' => 'required',
-                'default' => 'required',
+                'default_export' => 'required',
+                'default_import' => 'required',
+                'use_in_import' => 'required',
+                'use_in_export' => 'required',
             ];
         } else {
             return [
                 'name' => 'required|unique:plan_import_types,name',
                 'description' => 'required',
-                'default' => 'required',
+                'default_export' => 'required',
+                'default_import' => 'required',
+                'use_in_import' => 'required',
+                'use_in_export' => 'required',
             ];
         }
     }
@@ -51,7 +60,10 @@ class PlanImportTypeModalEdit extends Modal
             $this->planImportType = PlanImportType::find($import_type_id);
             $this->name = $this->planImportType->name;
             $this->description = $this->planImportType->description;
-            $this->default = $this->planImportType->default;
+            $this->default_export = $this->planImportType->default_export;
+            $this->default_import = $this->planImportType->default_import;
+            $this->use_in_import = $this->planImportType->use_in_import;
+            $this->use_in_export = $this->planImportType->use_in_export;
         }
     }
 
@@ -63,11 +75,19 @@ class PlanImportTypeModalEdit extends Modal
     public function save()
     {
         $validatedData = $this->validate();
-        if ($this->default) {
+        if ($this->default_export) {
             // Solo uno può essere default
-            $prevDefault = PlanImportType::where('type_id', $this->type_id)->where('default', true)->first();
+            $prevDefault = PlanImportType::where('type_id', $this->type_id)->where('default_export', true)->first();
             if(!empty($prevDefault)){
-                $prevDefault->default = false;
+                $prevDefault->default_export = false;
+                $prevDefault->save();
+            }
+        }
+        if ($this->default_import) {
+            // Solo uno può essere default
+            $prevDefault = PlanImportType::where('type_id', $this->type_id)->where('default_import', true)->first();
+            if (!empty($prevDefault)) {
+                $prevDefault->default_import = false;
                 $prevDefault->save();
             }
         }

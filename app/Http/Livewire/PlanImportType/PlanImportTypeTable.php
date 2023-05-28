@@ -73,7 +73,10 @@ class PlanImportTypeTable extends DataTableComponent
             //     ->label(
             //         fn ($row, Column $column) => $this->getAuditCreatedUser($row, $column)
             //     ),
-            BooleanColumn::make('Predefinito', 'default'),
+            BooleanColumn::make('Import', 'use_in_import'),
+            BooleanColumn::make('Export', 'use_in_export'),
+            BooleanColumn::make('Default Imp.', 'default_import'),
+            BooleanColumn::make('Default Exp.', 'default_export'),
             ButtonGroupColumn::make('')
                 ->buttons([
                     LinkColumn::make('Modifica')

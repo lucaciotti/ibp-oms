@@ -51,8 +51,8 @@ class PlanImportFileModalEdit extends Modal
         $this->force_import = $this->planImportFile->force_import;
 
         $this->planTypes = PlanType::all();        
-        $this->planImportTypes = PlanImportType::where('type_id', $this->type_id)->get();
-        if(empty($this->import_type_id)) $this->import_type_id = $this->planImportTypes->where('default', true)->first()->id;
+        $this->planImportTypes = PlanImportType::where('type_id', $this->type_id)->where('use_in_import', true)->get();
+        if(empty($this->import_type_id)) $this->import_type_id = $this->planImportTypes->where('default_import', true)->first()->id;
     }
 
     public function render()
@@ -67,8 +67,8 @@ class PlanImportFileModalEdit extends Modal
 
     public function updatedTypeId(){
         $this->validate();
-        $this->planImportTypes = PlanImportType::where('type_id', $this->type_id)->get();
-        $this->import_type_id = $this->planImportTypes->where('default', true)->first()->id;
+        $this->planImportTypes = PlanImportType::where('type_id', $this->type_id)->where('use_in_import', true)->get();
+        $this->import_type_id = $this->planImportTypes->where('default_import', true)->first()->id;
     }
 
     public function save(){
