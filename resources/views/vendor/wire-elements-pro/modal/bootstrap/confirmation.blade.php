@@ -4,7 +4,7 @@
 
     <div>
 
-        <p class="px-3 pt-3">{{ $prompt['message'] }}</p>
+        <p class="px-3 pt-3 text-danger text-bold">{{ $prompt['message'] }}</p>
 
         @if($tableData)
             <table class="table border-top mb-0">

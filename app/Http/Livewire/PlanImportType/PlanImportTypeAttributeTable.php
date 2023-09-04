@@ -78,7 +78,11 @@ class PlanImportTypeAttributeTable extends DataTableComponent
             Column::make('')
                 ->label(
                     function ($row) {
-                        $data = '<button class="btn btn-danger btn-xs text-bold" wire:click="unLinkAttrToPlanImportTypeAttribute(' . $row->id . ')"><span class="fa fa-plus mr-1"></span>Elimina</button>&nbsp;';
+                        if(!$row['attribute.required']){
+                            $data = '<button class="btn btn-danger btn-xs text-bold" wire:click="unLinkAttrToPlanImportTypeAttribute(' . $row->id . ')"><span class="fa fa-plus mr-1"></span>Elimina</button>&nbsp;';
+                        } else {
+                            $data = '';
+                        }
                         return $data;
                     }
                 )

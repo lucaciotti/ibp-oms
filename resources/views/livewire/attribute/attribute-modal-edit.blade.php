@@ -35,6 +35,9 @@
             <label class="form-check-label" for="hidden_in_view"><strong>Nascondi di Default in visualizzazione Tabella</strong></label>
         </div>
 
+        <hr>
+        <button type="button" class="btn btn-outline-danger btn-block" wire:click="deleteConfirmation">Cancella Attributo</button>
+
     </div>
 
     <x-slot name="buttons">
