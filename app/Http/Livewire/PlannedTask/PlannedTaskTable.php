@@ -77,6 +77,16 @@ class PlannedTaskTable extends DataTableComponent
             BooleanColumn::make('', 'completed')
             ->excludeFromColumnSelect(),
         );
+        array_push(
+            $columns,
+            Column::make('Data Completato', 'completed_date')
+                    ->searchable()
+                    ->format(
+                        fn ($value, $row, Column $column) => $value->format('d-m-Y')
+                    )
+                    ->deselected()
+                    ->sortable()
+        );
         foreach ($planAttrs as $planAttr) {
             if ($planAttr->attribute->hidden_in_view){
                 if ($planAttr->attribute->col_type == 'date'){
@@ -134,12 +144,12 @@ class PlannedTaskTable extends DataTableComponent
     public function filters(): array
     {
         return [
-            DateFilter::make('Inizio Data Prod.', 'date_prod_from')
+            DateFilter::make('Data Prod. >=', 'date_prod_from')
                 ->filter(function (Builder $builder, string $value) {
                     $builder->where('ibp_dt_inizio_prod', '>=', $value);
                 }),
 
-            DateFilter::make('Fine Data Prod.', 'date_prod_to')
+            DateFilter::make('Data Prod. <=', 'date_prod_to')
             ->config([
                 'placeholder' => 'dd-mm-yyyy',
             ])
@@ -147,12 +157,12 @@ class PlannedTaskTable extends DataTableComponent
                     $builder->where('ibp_dt_inizio_prod', '<=', $value);
                 }),
 
-            DateFilter::make('Inizio Data Consegna', 'date_from')
+            DateFilter::make('Data Consegna >=', 'date_from')
                 ->filter(function (Builder $builder, string $value) {
                     $builder->where('ibp_data_consegna', '>=', $value);
                 }),
 
-            DateFilter::make('Fine Data Consegna', 'date_to')
+            DateFilter::make('Data Consegna <=', 'date_to')
                 ->config([
                     'placeholder' => 'dd-mm-yyyy',
                 ])
@@ -185,6 +195,19 @@ class PlannedTaskTable extends DataTableComponent
                 ->filter(function (Builder $builder, string $value) {
                     $valueFilter = ($value=='yes') ? true : (($value=='no') ? false : null);
                     $builder->where('completed', $valueFilter);
+                }),
+
+            DateFilter::make('Data Completato >=', 'date_complete_from')
+                ->filter(function (Builder $builder, string $value) {
+                    $builder->where('completed_date', '>=', $value);
+                }),
+
+            DateFilter::make('Data Completato <=', 'date_complete_to')
+                ->config([
+                    'placeholder' => 'dd-mm-yyyy',
+                ])
+                ->filter(function (Builder $builder, string $value) {
+                    $builder->where('completed_date', '<=', $value);
                 }),
 
 
