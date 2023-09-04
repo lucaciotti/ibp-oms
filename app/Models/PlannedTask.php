@@ -22,7 +22,7 @@ class PlannedTask extends Model implements Auditable
     // protected $dates = ['ibp_data_consegna'];
     protected $casts = [
         'ibp_data_consegna' => 'datetime:d-m-Y',
-        'ibp_dt_inizio_prod' => 'datetime:d-m-Y',
+        'ibp_data_inizio_prod' => 'datetime:d-m-Y',
         'completed_date' => 'datetime:d-m-Y',
     ];
 
@@ -44,6 +44,7 @@ class PlannedTask extends Model implements Auditable
                 'default' => $detail->getDefault()
             ];
         }
+        // usort($columnsDetails, fn ($a, $b) => $a['required'] <=> $b['required']);
         return $columnsDetails;
     }
 

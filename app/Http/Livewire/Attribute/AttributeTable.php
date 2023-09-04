@@ -5,7 +5,9 @@ namespace App\Http\Livewire\Attribute;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Attribute;
+use Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Laratrust;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
@@ -38,7 +40,7 @@ class AttributeTable extends DataTableComponent
 
     public function columns(): array
     {
-        return [
+        $columns = [
             Column::make("#", "id")
                 ->sortable(),
             Column::make("Nome Attributo", "label")
@@ -88,6 +90,10 @@ class AttributeTable extends DataTableComponent
                     fn ($value, $row, Column $column) => '<span class="fa fa-history pr-1"></span>' . $value->format('d-m-Y')
                 )->html()
                 ->sortable(),
+        ];
+        if(Laratrust::isAbleTo('config-update')){
+            array_push(
+            $columns,
             ButtonGroupColumn::make('')
                 ->buttons([
                     LinkColumn::make('Modifica')
@@ -100,7 +106,9 @@ class AttributeTable extends DataTableComponent
                             ];
                         }),
                 ]),
-        ];
+            );
+        }
+        return $columns;
     }
 
     public function getAuditCreatedUser($row, $column){

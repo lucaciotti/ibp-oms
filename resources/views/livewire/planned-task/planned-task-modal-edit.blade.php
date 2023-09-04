@@ -49,8 +49,8 @@
             </script>
 
             @php
-            $model = 'aTask.ibp_dt_inizio_prod';
-            $idEl = 'ibp_dt_inizio_prod';
+            $model = 'aTask.ibp_data_inizio_prod';
+            $idEl = 'ibp_data_inizio_prod';
             $value = $aTask[$idEl];
             @endphp
             <div class="form-group col-lg-6">

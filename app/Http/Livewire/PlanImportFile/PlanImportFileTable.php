@@ -7,6 +7,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\PlanImportFile;
 use App\Models\PlanType;
 use Illuminate\Database\Eloquent\Builder;
+use Laratrust;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
@@ -52,6 +53,34 @@ class PlanImportFileTable extends DataTableComponent
 
     public function columns(): array
     {
+        $actionColumns = [];
+        if (Laratrust::isAbleTo('xlsimport-update')) {
+            array_push(
+                $actionColumns,
+                LinkColumn::make('Modifica')
+                    ->title(fn ($row) => '<span class="fa fa-edit pr-1"></span>Modifica')
+                    ->location(fn ($row) => '#')
+                    ->attributes(function ($row) {
+                        return [
+                            'class' => 'btn btn-default btn-xs mr-2 ',
+                            'onclick' => "Livewire.emit('modal.open', 'plan-import-file.plan-import-file-modal-edit', {'plan_file_id': " . $row->id . "});"
+                        ];
+                    }),
+            );
+        }
+        array_push(
+            $actionColumns,
+            LinkColumn::make('Download')
+                ->title(fn ($row) => '<span class="fa fa-download pr-1"></span>Download')
+                ->location(fn ($row) => '#')
+                ->attributes(function ($row) {
+                    return [
+                        'class' => 'btn btn-primary btn-xs mr-2 ',
+                        'style' => 'opacity: 85%',
+                        'wire:click' => "exportFile(" . $row->id . ");"
+                    ];
+                }),
+        );
         return [
             Column::make("#", "id")
                 ->sortable(),
@@ -87,27 +116,7 @@ class PlanImportFileTable extends DataTableComponent
                 ->sortable(),
             ButtonGroupColumn::make('')
                 ->unclickable()
-                ->buttons([
-                    LinkColumn::make('Modifica')
-                        ->title(fn ($row) => '<span class="fa fa-edit pr-1"></span>Modifica')
-                        ->location(fn ($row) => '#')
-                        ->attributes(function ($row) {
-                            return [
-                                'class' => 'btn btn-default btn-xs mr-2 ',
-                                'onclick' => "Livewire.emit('modal.open', 'plan-import-file.plan-import-file-modal-edit', {'plan_file_id': " . $row->id . "});"
-                            ];
-                        }),
-                    LinkColumn::make('Download')
-                        ->title(fn ($row) => '<span class="fa fa-download pr-1"></span>Download')
-                        ->location(fn ($row) => '#')
-                        ->attributes(function ($row) {
-                            return [
-                                'class' => 'btn btn-primary btn-xs mr-2 ',
-                                'style' => 'opacity: 85%',
-                                'wire:click' => "exportFile(" . $row->id . ");"
-                            ];
-                        }),
-                ]),
+                ->buttons($actionColumns),
         ];
     }
 

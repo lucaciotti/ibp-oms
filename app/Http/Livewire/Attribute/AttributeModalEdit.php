@@ -76,7 +76,7 @@ class AttributeModalEdit extends Modal
     {
         $tasksColumns = array_keys((new PlannedTask())->getTableColumns());
         $colName = $this->existColumnName('ibp_' . Str::snake(preg_replace('/[^\p{L}\p{N}\s]/u', '', Str::lower($this->label))), $tasksColumns);
-
+        // dd($colName);
         $validatedData = $this->withValidator(function (Validator $validator) use ($colName) {
             $validator->after(function ($validator) use ($colName) {
                 if(strlen($colName)>20 and empty($this->attribute)){
@@ -149,8 +149,8 @@ class AttributeModalEdit extends Modal
                     // $old_name = $this->attribute->col_name;
                     // $new_name = 'ibp_' . Str::snake(preg_replace('/[^\p{L}\p{N}\s]/u', '', $validatedData['label']));
                     // $validatedData['col_name'] = $old_name;
-                    $old_required = $this->attribute->required;
-                    $new_required = $validatedData['required'];
+                    // $old_required = $this->attribute->required;
+                    // $new_required = $validatedData['required'];
                     $this->attribute->update($validatedData);
                     // if ($old_required != $new_required){
                     //     if ($new_required==false){
@@ -223,7 +223,7 @@ class AttributeModalEdit extends Modal
             }
             $n++;
         }
-        return $n;
+        return $colName;
     }
 
     public function delete()

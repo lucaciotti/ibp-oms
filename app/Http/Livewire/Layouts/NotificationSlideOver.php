@@ -72,7 +72,8 @@ class NotificationSlideOver extends SlideOver
     }
 
     public function deleteAllReaded(){
-        $notifications = Auth::user()->notifications->whereNotNull('read_at');
+        // $notifications = Auth::user()->notifications->whereNotNull('read_at');
+        $notifications = Auth::user()->unreadNotifications;
         if (!empty($notifications) and count($notifications) > 0 and $notifications != null) {
             foreach ($notifications as $notification) {
                 $notification->delete();

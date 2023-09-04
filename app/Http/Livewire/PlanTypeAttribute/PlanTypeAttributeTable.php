@@ -6,6 +6,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\PlanTypeAttribute;
 use Illuminate\Database\Eloquent\Builder;
+use Laratrust;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class PlanTypeAttributeTable extends DataTableComponent
@@ -26,17 +27,19 @@ class PlanTypeAttributeTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id')
-            ->setReorderEnabled()
             ->setPerPageAccepted([25, 50, 75, 100])
             ->setAdditionalSelects(['plan_type_attributes.id as id'])
             // ->setHideReorderColumnUnlessReorderingEnabled()
             ->setDefaultReorderSort('order', 'asc')
             ->setPerPage(25);
+        if (Laratrust::isAbleTo('config-update')) {
+            $this->setReorderEnabled();
+        }
     }
 
     public function columns(): array
     {
-        return [
+        $columns = [
             // Column::make("ID", "id")
             //     ->sortable(),
             Column::make('Posizione', "order")
@@ -91,7 +94,12 @@ class PlanTypeAttributeTable extends DataTableComponent
             //     )->html()
             //     ->sortable(),            
             BooleanColumn::make('Obbligatorio', 'attribute.required'),
-            Column::make('')
+        ];
+
+        if (Laratrust::isAbleTo('config-update')) {
+            array_push(
+                $columns,
+                Column::make('')
                 ->label(
                     function ($row) {
                         if (!$row['attribute.required']) {
@@ -103,7 +111,9 @@ class PlanTypeAttributeTable extends DataTableComponent
                     }
                 )
                 ->html(),
-        ];
+            );
+        }
+        return $columns;
     }
 
     public function reorder($items): void

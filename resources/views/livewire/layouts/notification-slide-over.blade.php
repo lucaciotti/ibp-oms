@@ -50,8 +50,8 @@
                 <div class="media-body">
                     <h3 class="dropdown-item-title">
                         {{ $notification['title'] }}
-                        <a href="#" class="float-right text-sm text-secondary"
-                            wire:click="markAsRead('{{$notification['id']}}')"><i class="fa fa-check fa-lg"></i></a>
+                        <a href="#" class="float-right text-sm text-secondary" wire:click="delete('{{$notification['id']}}')"><i
+                                class="fa fa-trash"></i></a>
                     </h3>
                     <p class="text-sm mb-0">{{ $notification['body'] }}</p>
                     <p class="text-sm text-muted float-right pb-0 mb-0"><i class="far fa-clock mr-1"></i>{{
@@ -61,7 +61,7 @@
     
         </div>
         @endforeach
-        <a href="#" class="list-group-item list-group-item-action py-2" style="background: #F0F0F0;" wire:click="markAllAsRead()"><p class="text-sm m-0 text-bold"><em>Segna tutte come lette</em></p></a>    
+        <a href="#" class="list-group-item list-group-item-action py-2" style="background: #F0F0F0;" wire:click="deleteAllReaded()"><p class="text-sm m-0 text-bold"><em>Cancella Notifiche</em></p></a>    
     </div>
     
     <hr class="my-2">    

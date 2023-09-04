@@ -7,6 +7,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\PlannedTask;
 use App\Models\PlanTypeAttribute;
 use Illuminate\Database\Eloquent\Builder;
+use Laratrust;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\DateFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
@@ -146,7 +147,7 @@ class PlannedTaskTable extends DataTableComponent
         return [
             DateFilter::make('Data Prod. >=', 'date_prod_from')
                 ->filter(function (Builder $builder, string $value) {
-                    $builder->where('ibp_dt_inizio_prod', '>=', $value);
+                    $builder->where('ibp_data_inizio_prod', '>=', $value);
                 }),
 
             DateFilter::make('Data Prod. <=', 'date_prod_to')
@@ -154,7 +155,7 @@ class PlannedTaskTable extends DataTableComponent
                 'placeholder' => 'dd-mm-yyyy',
             ])
                 ->filter(function (Builder $builder, string $value) {
-                    $builder->where('ibp_dt_inizio_prod', '<=', $value);
+                    $builder->where('ibp_data_inizio_prod', '<=', $value);
                 }),
 
             DateFilter::make('Data Consegna >=', 'date_from')
@@ -216,13 +217,23 @@ class PlannedTaskTable extends DataTableComponent
 
     public function bulkActions(): array
     {
-        return [
+        $actions = [
             'doReport' => 'Stampa Report',
             'xlsExport' => 'Export Xls',
             'xlsExportCompleted' => 'Export Xls (Completati)',
-            'completed' => '[v] Completati',
-            'notcompleted' => '[x] Non Completati',
         ];
+
+        if (Laratrust::isAbleTo('tasks-update')) {
+            $actions=array_merge(
+                $actions,
+                [
+                'completed' => '[v] Completati',
+                'notcompleted' => '[x] Non Completati',
+                ]
+            );
+        }
+
+        return $actions;
     }
 
     public function doReport()  {
@@ -245,7 +256,7 @@ class PlannedTaskTable extends DataTableComponent
     public function completed()
     {
         foreach ($this->getSelected() as $id) {
-            $tasks = PlannedTask::find($id)->update(['completed' => 1]);
+            $tasks = PlannedTask::find($id)->update(['completed' => 1, 'completed_date' => date('Y-m-d')]);
         }
     }
 

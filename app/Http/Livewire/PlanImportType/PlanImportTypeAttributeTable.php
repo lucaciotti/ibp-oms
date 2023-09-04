@@ -6,6 +6,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\PlanImportTypeAttribute;
 use Illuminate\Database\Eloquent\Builder;
+use Laratrust;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class PlanImportTypeAttributeTable extends DataTableComponent
@@ -26,17 +27,19 @@ class PlanImportTypeAttributeTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id')
-            ->setReorderEnabled()
             ->setPerPageAccepted([25, 50, 75, 100])
             ->setAdditionalSelects(['plan_import_types_attribute.id as id'])
             // ->setHideReorderColumnUnlessReorderingEnabled()
             ->setDefaultReorderSort('cell_num', 'asc')
             ->setPerPage(25);
+        if (Laratrust::isAbleTo('config-update')) {
+            $this->setReorderEnabled();
+        }
     }
 
     public function columns(): array
     {
-        return [
+        $columns = [
             Column::make('# Cella', "cell_num")
                 ->sortable(),
             Column::make("Nome Attributo", "attribute.label")
@@ -75,10 +78,14 @@ class PlanImportTypeAttributeTable extends DataTableComponent
                 )
                 ->sortable(),       
             BooleanColumn::make('Obbligatorio', 'attribute.required'),
-            Column::make('')
+        ];
+        if (Laratrust::isAbleTo('config-update')) {
+            array_push(
+                $columns,
+                Column::make('')
                 ->label(
                     function ($row) {
-                        if(!$row['attribute.required']){
+                        if (!$row['attribute.required']) {
                             $data = '<button class="btn btn-danger btn-xs text-bold" wire:click="unLinkAttrToPlanImportTypeAttribute(' . $row->id . ')"><span class="fa fa-plus mr-1"></span>Elimina</button>&nbsp;';
                         } else {
                             $data = '';
@@ -87,7 +94,9 @@ class PlanImportTypeAttributeTable extends DataTableComponent
                     }
                 )
                 ->html(),
-        ];
+            );
+        }
+        return $columns;
     }
 
     public function reorder($items): void

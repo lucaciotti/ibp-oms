@@ -5,6 +5,7 @@ namespace App\Http\Livewire\PlannedTask;
 use App\Models\PlannedTask;
 use App\Models\PlanTypeAttribute;
 use Carbon\Carbon;
+use Laratrust;
 use Livewire\Component;
 use WireElements\Pro\Components\Modal\Modal;
 
@@ -19,7 +20,7 @@ class PlannedTaskModalEdit extends Modal
     public $typeAttrs;
     
     public $index = 0;
-    public $exclAttribute = ['ibp_plan_matricola', 'ibp_prodotto_tipo', 'ibp_cliente_ragsoc', 'ibp_tipologia', 'ibp_data_consegna', 'ibp_dt_inizio_prod'];
+    public $exclAttribute = ['ibp_plan_matricola', 'ibp_prodotto_tipo', 'ibp_cliente_ragsoc', 'ibp_tipologia', 'ibp_data_consegna', 'ibp_data_inizio_prod'];
 
     public function mount($id, $readOnly=false){
         $this->task_id = $id;
@@ -29,6 +30,10 @@ class PlannedTaskModalEdit extends Modal
         // dd($this->aTask['ibp_data_consegna']);
         $this->typeAttrs = PlanTypeAttribute::where('type_id', $this->task->type_id)->with('attribute')->get();
         $this->title = "Pianificazione [Matricola: ".$this->task->ibp_plan_matricola."]";
+        if (!Laratrust::isAbleTo('tasks-update')) {
+            $this->disabled = 'disabled';
+        }
+
     }
 
     public function updated($propertyName)

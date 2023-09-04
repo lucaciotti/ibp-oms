@@ -5,6 +5,7 @@ namespace App\Http\Livewire\PlanType;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\PlanType;
+use Laratrust;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ComponentColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
@@ -46,7 +47,45 @@ class PlanTypeTable extends DataTableComponent
 
     public function columns(): array
     {
-        return [
+        $actionColumns = [];
+        if (Laratrust::isAbleTo('config-update')) {
+            array_push(
+                $actionColumns,
+                LinkColumn::make('Modifica')
+                ->title(fn ($row) => '<span class="fa fa-edit pr-1"></span>Modifica')
+                ->location(fn ($row) => '#')
+                ->attributes(function ($row) {
+                    return [
+                        'class' => 'btn btn-default btn-xs mr-2 ',
+                        'onclick' => "Livewire.emit('modal.open', 'plan-type.plan-type-modal-edit', {'id': " . $row->id . "});"
+                    ];
+                }),
+            );
+        }
+        array_push(
+            $actionColumns,
+            LinkColumn::make('Attributi')
+                ->title(fn ($row) => '<span class="fa fa-tools pr-1"></span>Attributi')
+                ->location(fn ($row) => 'plantypes/' . $row->id . '/attributes')
+                ->attributes(function ($row) {
+                    return [
+                        'class' => 'btn btn-primary btn-xs mr-2 text-bold',
+                        'style' => 'opacity: 75%'
+                    ];
+                }),
+            LinkColumn::make('Conf. Xls')
+                ->title(fn ($row) => '<span class="fa fa-file-excel pr-1"></span>Conf. Xls')
+                ->location(fn ($row) => 'plantypes/' . $row->id . '/planimporttypes')
+                ->attributes(function ($row) {
+                    return [
+                        'class' => 'btn btn-success btn-xs mr-1 text-bold',
+                        'style' => 'opacity: 85%'
+                    ];
+                }),
+        );
+
+
+        $columns = [
             Column::make("#", "id")
                 ->sortable(),
             Column::make("Nome", "name")
@@ -61,38 +100,11 @@ class PlanTypeTable extends DataTableComponent
                 )->html()
                 ->sortable(),
             ButtonGroupColumn::make('')
-                ->buttons([
-                    LinkColumn::make('Modifica')
-                        ->title(fn ($row) => '<span class="fa fa-edit pr-1"></span>Modifica')
-                        ->location(fn ($row) => '#')
-                        ->attributes(function ($row) {
-                            return [
-                                'class' => 'btn btn-default btn-xs mr-2 ',
-                                'onclick' => "Livewire.emit('modal.open', 'plan-type.plan-type-modal-edit', {'id': " . $row->id . "});"
-                            ];
-                        }),
-                    LinkColumn::make('Attributi')
-                        ->title(fn ($row) => '<span class="fa fa-tools pr-1"></span>Attributi')
-                        ->location(fn ($row) => 'plantypes/'.$row->id.'/attributes')
-                        ->attributes(function ($row) {
-                            return [
-                                'class' => 'btn btn-primary btn-xs mr-2 text-bold',
-                                'style' => 'opacity: 75%'
-                            ];
-                        }),
-                    LinkColumn::make('Conf. Xls')
-                        ->title(fn ($row) => '<span class="fa fa-file-excel pr-1"></span>Conf. Xls')
-                        ->location(fn ($row) => 'plantypes/'.$row->id. '/planimporttypes')
-                        ->attributes(function ($row) {
-                            return [
-                                'class' => 'btn btn-success btn-xs mr-1 text-bold',
-                                'style' => 'opacity: 85%'
-                            ];
-                        }),
-                ]),
+                ->buttons($actionColumns),
 
             // Column::make("Updated at", "updated_at")
             //     ->sortable(),
         ];
+        return $columns;
     }
 }

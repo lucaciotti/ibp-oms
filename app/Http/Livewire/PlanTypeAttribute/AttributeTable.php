@@ -7,6 +7,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Attribute;
 use App\Models\PlanTypeAttribute;
 use Illuminate\Database\Eloquent\Builder;
+use Laratrust;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class AttributeTable extends DataTableComponent
@@ -35,7 +36,7 @@ class AttributeTable extends DataTableComponent
 
     public function columns(): array
     {
-        return [
+        $columns = [
             Column::make("#", "id")
                 ->sortable(),
             Column::make("Nome Attributo", "label")
@@ -75,15 +76,21 @@ class AttributeTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             BooleanColumn::make('Obbligatorio', 'required'),
-            Column::make('')
-                ->label(
-                    function ($row) {
-                        $data = '<button class="btn btn-success btn-xs text-bold" wire:click="linkAttrToPlanType('.$row->id.')"><span class="fa fa-plus mr-1"></span>Associa</button>&nbsp;'; 
-                        return $data;
-                    }
-                )
-                ->html(),
         ];
+        if (Laratrust::isAbleTo('config-update')) {
+            array_push(
+                $columns,
+                Column::make('')
+                    ->label(
+                        function ($row) {
+                            $data = '<button class="btn btn-success btn-xs text-bold" wire:click="linkAttrToPlanImportTypeAttribute(' . $row->id . ')"><span class="fa fa-plus mr-1"></span>Associa</button>&nbsp;';
+                            return $data;
+                        }
+                    )
+                    ->html(),
+            );
+        }
+        return $columns;
     }
 
     public function linkAttrToPlanType($attr_id){

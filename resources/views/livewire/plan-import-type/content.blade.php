@@ -22,10 +22,12 @@
         <div class="card">
             <!-- /.card-header -->
             <div class="card-body">
+                @permission('config-create')
                 <button class="btn btn-outline-success btn-block"
                     onclick="Livewire.emit('modal.open', 'plan-import-type.plan-import-type-modal-edit', {'type_id': {{ $type_id }}});">
                     <span class="fa fa-edit"></span> Crea nuovo Format-Xls
                 </button>
+                @endpermission
             </div>
         </div>
     </x-slot:extraContent>

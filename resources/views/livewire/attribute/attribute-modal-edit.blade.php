@@ -34,10 +34,10 @@
             <input class="form-check-input" id="hidden_in_view" name="hidden_in_view" type="checkbox" wire:model.lazy="hidden_in_view">
             <label class="form-check-label" for="hidden_in_view"><strong>Nascondi di Default in visualizzazione Tabella</strong></label>
         </div>
-
+        @if($mode!='insert')
         <hr>
         <button type="button" class="btn btn-outline-danger btn-block" wire:click="deleteConfirmation">Cancella Attributo</button>
-
+        @endif
     </div>
 
     <x-slot name="buttons">

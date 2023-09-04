@@ -50,10 +50,10 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             Log::error($e);
-            Mail::raw($e->getMessage(), function ($message) use ($e) {
-                $message->to('luca.ciotti@gmail.com')
-                ->subject('IBP_OMS - App Error! [' . $e->getFile() . ']');
-            });
+            // Mail::raw($e->getMessage(), function ($message) use ($e) {
+            //     $message->to('luca.ciotti@gmail.com')
+            //     ->subject('IBP_OMS - App Error! [' . $e->getFile() . ']');
+            // });
         });
     }
 }

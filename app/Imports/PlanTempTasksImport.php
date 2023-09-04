@@ -15,10 +15,11 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Notification;
 use Str;
 
-class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows, WithCalculatedFormulas
+class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows, WithCalculatedFormulas, WithMultipleSheets 
 {
     protected $importedfile;
     protected $importType;
@@ -42,7 +43,15 @@ class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows, With
     {
         return $this->rules;
     }
-    
+
+    public function sheets(): array
+    {
+        return [
+            0 => $this
+        ];
+    }
+
+
     /**
     * @param array $row
     *
@@ -93,12 +102,13 @@ class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows, With
                         return false;
                     }
                 }
-                Log::info($dataRow);
+                // Log::info($dataRow);
                 return new PlanFilesTempTask($dataRow);
             } catch (\Throwable $th) {
                 report($th);
                 #INVIO NOTIFICA
-                $notifyUsers = User::whereHas('roles', fn ($query) => $query->where('name', 'admin'))->orWhere('id', Auth::user()->id)->get();
+                Log::info(Auth::user());
+                $notifyUsers = User::whereHas('roles', fn ($query) => $query->where('name', 'admin'))->orWhere('id', $this->importedfile->userCreated()->id)->get();
                 foreach ($notifyUsers as $user) {
                     Notification::send(
                         $user,

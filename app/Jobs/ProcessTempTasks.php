@@ -44,52 +44,69 @@ class ProcessTempTasks implements ShouldQueue
     public function handle()
     {
         Log::info('ProcessTempTasks Job Started');
+        try {
+            DB::transaction(function () {
+                $tempRows = $this->importedfile->planfiletemptasks;
+                $listTypeAttr = PlanTypeAttribute::where('type_id', $this->importedfile->plantype->id)->with('attribute')->get();
+                foreach ($tempRows as $row) {
+                    $dataRow = [];
+                    if ($row->selected) {
+                        $aRow = $row->toArray();
+                        $dataRow['type_id'] = $row->type_id;
+                        foreach ($listTypeAttr as $typeAttr) {
+                            switch ($typeAttr->attribute->col_type) {
+                                case 'date':
+                                    $data = Carbon::createFromFormat('d-m-Y', $aRow[$typeAttr->attribute->col_name]);
+                                    break;
 
-        DB::transaction(function () {
-            $tempRows = $this->importedfile->planfiletemptasks;
-            $listTypeAttr = PlanTypeAttribute::where('type_id', $this->importedfile->plantype->id)->with('attribute')->get();
-            foreach ($tempRows as $row) {
-                $dataRow = [];
-                if ($row->selected) {
-                    $aRow = $row->toArray();
-                    $dataRow['type_id'] = $row->type_id;
-                    foreach ($listTypeAttr as $typeAttr) {
-                        switch ($typeAttr->attribute->col_type) {
-                            case 'date':
-                                $data = Carbon::createFromFormat('d-m-Y', $aRow[$typeAttr->attribute->col_name]);
-                                break;
-
-                            default:
-                                $data = $aRow[$typeAttr->attribute->col_name];
-                                break;
+                                default:
+                                    $data = $aRow[$typeAttr->attribute->col_name];
+                                    break;
+                            }
+                            $dataRow[$typeAttr->attribute->col_name] = $data;
                         }
-                        $dataRow[$typeAttr->attribute->col_name] = $data;
+                        if (empty($row->task_id)) {
+                            PlannedTask::create($dataRow);
+                        } else {
+                            PlannedTask::find($row->task_id)->update($dataRow);
+                        }
+                        $row->selected = false;
+                        $row->imported = true;
+                        $row->date_last_import = Carbon::now();
+                        $row->save();
                     }
-                    if (empty($row->task_id)) {
-                        PlannedTask::create($dataRow);
-                    } else {
-                        PlannedTask::find($row->task_id)->update($dataRow);
-                    }
-                    $row->selected = false;
-                    $row->imported = true;
-                    $row->date_last_import = Carbon::now();
-                    $row->save();
                 }
-            }
-            $this->importedfile->date_last_import = Carbon::now();
-            $this->importedfile->status = ($this->hasWarnings) ? 'Verificare' : 'Processato';
-            $this->importedfile->save();
-            Notification::send(
-                $this->importedfile->userCreated(),
-                new DefaultMessageNotify(
-                    $title = 'File di Import - Processato!',
-                    $body = 'Righe del file [' . $this->importedfile->filename . '] processate correttamente!',
-                    $link = '#',
-                    $level = 'info'
+                $this->importedfile->date_last_import = Carbon::now();
+                $this->importedfile->status = ($this->hasWarnings) ? 'Verificare' : 'Processato';
+                $this->importedfile->save();
+                Notification::send(
+                    $this->importedfile->userCreated(),
+                    new DefaultMessageNotify(
+                        $title = 'File di Import - Processato!',
+                        $body = 'Righe del file [' . $this->importedfile->filename . '] processate correttamente!',
+                        $link = '#',
+                        $level = 'info'
+                        )
+                    );
+            });  
+            Log::info('ProcessTempTasks Job Ended');
+        } catch (\Throwable $th) {
+            report($th);
+            #INVIO NOTIFICA
+            $notifyUsers = User::whereHas('roles', fn ($query) => $query->where('name', 'admin'))->orWhere('id', Auth::user()->id)->get();
+            foreach ($notifyUsers as $user) {
+                Notification::send(
+                    $user,
+                    new DefaultMessageNotify(
+                        $title = 'File di Import - [' . $this->importedfile->filename . ']!',
+                        $body = 'Errore: [' . $th->getMessage() . ']',
+                        $link = '#',
+                        $level = 'error'
                     )
                 );
-        });  
-        Log::info('ProcessTempTasks Job Ended');
+            }
+            return false;
+        }
     }
 
 

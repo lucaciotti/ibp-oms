@@ -24,9 +24,15 @@ return [
             'config' => 'c,r,u',
             'xlsimport' => 'c,r,u',
         ],
-        'user' => [
+        'production' => [
+            'users' => 'r',
             'tasks' => 'r,u',
-            'xlsimport' => 'r,d',
+            'config' => 'r',
+            'xlsimport' => 'r',
+        ],
+        'user' => [
+            'tasks' => 'r',
+            'xlsimport' => 'r',
         ]
     ],
 

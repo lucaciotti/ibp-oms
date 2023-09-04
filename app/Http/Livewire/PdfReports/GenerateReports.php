@@ -53,7 +53,7 @@ class GenerateReports extends Modal
                 array_push($tasks, $aTask);
             }
         }
-
+        // dd($tasks);
         $title = "Pianificazioni_da_Elaborare_" . $planName;
         $subTitle = str_replace('/', '-', $dtMin."_".$dtMax);
         $view = 'ibp._exports.pdf.tasksPlan-'. $planName;

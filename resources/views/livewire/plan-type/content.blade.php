@@ -22,10 +22,12 @@
         <div class="card">
             <!-- /.card-header -->
             <div class="card-body">
+                @permission('config-create')
                 <button class="btn btn-outline-success btn-block"
                     onclick="Livewire.emit('modal.open', 'plan-type.plan-type-modal-edit');">
                     <span class="fa fa-edit"></span> Crea nuovo piano
                 </button>
+                @endpermission
             </div>
         </div>
     </x-slot:extraContent>

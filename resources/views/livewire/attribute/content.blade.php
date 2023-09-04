@@ -22,10 +22,13 @@
         <div class="card">
             <!-- /.card-header -->
             <div class="card-body">
+                @permission('config-create')
                 <button class="btn btn-outline-success btn-block"
                     onclick="Livewire.emit('modal.open', 'attribute.attribute-modal-edit');">
                     <span class="fa fa-edit"></span> Crea nuovo attributo
                 </button>
+                @endpermission
+                @role('admin')
                 <hr>
                 @if (!$syncJob)
                     <button class="btn btn-outline-warning btn-block" wire:click='fetchAttributeFromTasksTable'>
@@ -36,6 +39,7 @@
                         <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading...
                     </button>
                 @endif
+                @endrole
             </div>
         </div>
     </x-slot:extraContent>

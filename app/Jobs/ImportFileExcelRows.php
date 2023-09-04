@@ -111,7 +111,7 @@ class ImportFileExcelRows implements ShouldQueue
                 $user,
                 new DefaultMessageNotify(
                     $title = 'Import File - [' . $this->importedfile->filename . ']!',
-                    $body = 'Errore: [' . $e->getMessage() . ']',
+                    $body = 'Errore: File di Importazione Non corretto!',
                     $link = '#',
                     $level = 'error'
                 )

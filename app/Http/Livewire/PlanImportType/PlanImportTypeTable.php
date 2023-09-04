@@ -6,6 +6,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\PlanImportType;
 use Illuminate\Database\Eloquent\Builder;
+use Laratrust;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
@@ -49,6 +50,34 @@ class PlanImportTypeTable extends DataTableComponent
 
     public function columns(): array
     {
+        $actionColumns = [];
+        if (Laratrust::isAbleTo('config-update')) {
+            array_push(
+                $actionColumns,
+                LinkColumn::make('Modifica')
+                    ->title(fn ($row) => '<span class="fa fa-edit pr-1"></span>Modifica')
+                    ->location(fn ($row) => '#')
+                    ->attributes(function ($row) {
+                        return [
+                            'class' => 'btn btn-default btn-xs mr-2',
+                            'onclick' => "Livewire.emit('modal.open', 'plan-import-type.plan-import-type-modal-edit', {'type_id': " . $this->type_id . ",'import_type_id': " . $row->id . "});"
+                        ];
+                    }),
+            );
+        }
+        array_push(
+            $actionColumns,
+            LinkColumn::make('Conf.Colonne')
+            ->title(fn ($row) => '<span class="fa fa-table pr-1"></span>Colonne')
+            ->location(fn ($row) => '#')
+                ->attributes(function ($row) {
+                    return [
+                        'class' => 'btn btn-warning btn-xs mr-2',
+                        'style' => 'opacity: 85%',
+                        'onclick' => "Livewire.emit('modal.open', 'plan-import-type.plan-import-type-attribute-modal', {'type_id': " . $this->type_id . ",'import_type_id': " . $row->id . "});",
+                    ];
+                }),
+        );
         return [
             Column::make("Id", "id")
                 ->sortable(),
@@ -78,27 +107,7 @@ class PlanImportTypeTable extends DataTableComponent
             BooleanColumn::make('Default Imp.', 'default_import'),
             BooleanColumn::make('Default Exp.', 'default_export'),
             ButtonGroupColumn::make('')
-                ->buttons([
-                    LinkColumn::make('Modifica')
-                        ->title(fn ($row) => '<span class="fa fa-edit pr-1"></span>Modifica')
-                        ->location(fn ($row) => '#')
-                        ->attributes(function ($row) {
-                            return [
-                                'class' => 'btn btn-default btn-xs mr-2',
-                                'onclick' => "Livewire.emit('modal.open', 'plan-import-type.plan-import-type-modal-edit', {'type_id': ".$this->type_id. ",'import_type_id': " . $row->id . "});"
-                            ];
-                        }),
-                    LinkColumn::make('Conf.Colonne')
-                        ->title(fn ($row) => '<span class="fa fa-table pr-1"></span>Colonne')
-                        ->location(fn ($row) => '#')
-                        ->attributes(function ($row) {
-                            return [
-                                'class' => 'btn btn-warning btn-xs mr-2',
-                                'style' => 'opacity: 85%',
-                                'onclick' => "Livewire.emit('modal.open', 'plan-import-type.plan-import-type-attribute-modal', {'type_id': " . $this->type_id . ",'import_type_id': " . $row->id . "});",
-                            ];
-                        }),
-                ]),
+                ->buttons($actionColumns),
         ];
     }
 

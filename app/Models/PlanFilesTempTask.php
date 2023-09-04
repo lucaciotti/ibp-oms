@@ -16,6 +16,6 @@ class PlanFilesTempTask extends Model implements Auditable
 
     protected $casts = [
         'ibp_data_consegna' => 'datetime:d-m-Y',
-        'ibp_dt_inizio_prod' => 'datetime:d-m-Y',
+        'ibp_data_inizio_prod' => 'datetime:d-m-Y',
     ];
 }

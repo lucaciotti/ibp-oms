@@ -41,10 +41,12 @@
         <div class="card">
             <!-- /.card-header -->
             <div class="card-body">
+                @permission('xlsimport-create')
                 <button class="btn btn-outline-success btn-block"
                     onclick="Livewire.emit('modal.open', 'plan-import-file.plan-import-file-modal');">
                     <span class="fa fa-edit"></span> Importa Pianificazioni
                 </button>
+                @endpermission
             </div>
         </div>
     </x-slot:extraContent>
