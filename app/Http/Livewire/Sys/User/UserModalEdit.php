@@ -6,8 +6,12 @@ use App;
 use App\Mail\InviteUser;
 use App\Models\Role;
 use App\Models\User;
+use App\Notifications\DefaultMessageNotify;
+use Auth;
 use Hash;
+use Log;
 use Mail;
+use Notification;
 use Password;
 use Str;
 use WireElements\Pro\Components\Modal\Modal;
@@ -94,12 +98,22 @@ class UserModalEdit extends Modal
             
             $token = Password::getRepository()->create($this->user);
             // $mail = (new InviteUser($token, $user->id))->onQueue('emails');
-            if (App::environment(['local', 'staging'])) {
-                // Mail::to('ibpoms@lucaciotti.space')->bcc(['luca.ciotti@gmail.com'])->queue($mail);
-                Mail::to('ibpoms@lucaciotti.space')->cc(['luca.ciotti@gmail.com'])->send(new InviteUser($token, $this->user->id));
-            } else {
-                // Mail::to($this->user->email)->bcc(['luca.ciotti@gmail.com'])->queue($mail);
-                Mail::to($this->user->email)->cc(['luca.ciotti@gmail.com'])->send(new InviteUser($token, $this->user->id));
+            try{
+                if (App::environment(['local', 'staging'])) {
+                    // Mail::to('ibpoms@lucaciotti.space')->bcc(['luca.ciotti@gmail.com'])->queue($mail);
+                    Mail::to('ibpoms@lucaciotti.space')->cc(['luca.ciotti@gmail.com'])->send(new InviteUser($token, $this->user->id));
+                } else {
+                    // Mail::to($this->user->email)->bcc(['luca.ciotti@gmail.com'])->queue($mail);
+                    Mail::to($this->user->email)->cc(['luca.ciotti@gmail.com'])->send(new InviteUser($token, $this->user->id));
+                }
+            } catch (\Exception $e) {
+                Log::error("Attenzione! Mail di Invito non inviata a causa di configurazioni SMTP!");
+                Notification::send(Auth::user(), new DefaultMessageNotify(
+                    $title = 'Creazione Utenti',
+                    $body = 'Attenzione Mail non inviata ad Utente a causa di configurazioni SMTP',
+                    $link = 'config/users',
+                    $level = 'warning'
+                ));
             }
         } else {
             $this->user->update($validatedData);
