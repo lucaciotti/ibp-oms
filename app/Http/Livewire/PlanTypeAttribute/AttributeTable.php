@@ -83,7 +83,7 @@ class AttributeTable extends DataTableComponent
                 Column::make('')
                     ->label(
                         function ($row) {
-                            $data = '<button class="btn btn-success btn-xs text-bold" wire:click="linkAttrToPlanImportTypeAttribute(' . $row->id . ')"><span class="fa fa-plus mr-1"></span>Associa</button>&nbsp;';
+                            $data = '<button class="btn btn-success btn-xs text-bold" wire:click="linkAttrToPlanType(' . $row->id . ')"><span class="fa fa-plus mr-1"></span>Associa</button>&nbsp;';
                             return $data;
                         }
                     )
