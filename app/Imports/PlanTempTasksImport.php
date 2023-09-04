@@ -75,6 +75,23 @@ class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows, With
                             break;
                     }
                     $dataRow[$confRow->attribute->col_name] = $data;
+                    // Log::info($confRow);
+                    // Log::info($confRow->attribute->col_name. ' = '. $row[$cell_num]);
+                    if ($confRow->attribute->required && empty($row[$cell_num])) {
+                        $notifyUsers = User::where('id', Auth::user()->id)->get();
+                        foreach ($notifyUsers as $user) {
+                            Notification::send(
+                                $user,
+                                new DefaultMessageNotify(
+                                    $title = 'File di Import - [' . $this->importedfile->filename . ']!',
+                                    $body = 'Errore: Attenzione la colonna' . $confRow->cell_num . ' deve contenere: ' . $confRow->attribute->label . 'e non deve essere vuota!',
+                                    $link = '#',
+                                    $level = 'error'
+                                )
+                            );
+                        }
+                        return false;
+                    }
                 }
                 Log::info($dataRow);
                 return new PlanFilesTempTask($dataRow);
