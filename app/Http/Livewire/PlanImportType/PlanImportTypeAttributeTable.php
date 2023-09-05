@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\PlanImportType;
 
+use App\Models\PlanImportType;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\PlanImportTypeAttribute;
@@ -14,10 +15,12 @@ class PlanImportTypeAttributeTable extends DataTableComponent
     protected $model = PlanImportTypeAttribute::class;
 
     public $import_type_id;
+    public $is_import;
     public $orderRows = [];
 
     public function builder(): Builder
     {
+        $this->is_import = PlanImportType::find($this->import_type_id)->use_in_import;
         return PlanImportTypeAttribute::query()
             ->where('import_type_id', $this->import_type_id)
             ->with(['attribute'])
@@ -85,10 +88,14 @@ class PlanImportTypeAttributeTable extends DataTableComponent
                 Column::make('')
                 ->label(
                     function ($row) {
-                        if (!$row['attribute.required']) {
-                            $data = '<button class="btn btn-danger btn-xs text-bold" wire:click="unLinkAttrToPlanImportTypeAttribute(' . $row->id . ')"><span class="fa fa-plus mr-1"></span>Elimina</button>&nbsp;';
+                        if ($this->is_import){
+                            if (!$row['attribute.required']) {
+                                $data = '<button class="btn btn-danger btn-xs text-bold" wire:click="unLinkAttrToPlanImportTypeAttribute(' . $row->id . ')"><span class="fa fa-plus mr-1"></span>Elimina</button>&nbsp;';
+                            } else {
+                                $data = '';
+                            }
                         } else {
-                            $data = '';
+                            $data = '<button class="btn btn-danger btn-xs text-bold" wire:click="unLinkAttrToPlanImportTypeAttribute(' . $row->id . ')"><span class="fa fa-plus mr-1"></span>Elimina</button>&nbsp;';
                         }
                         return $data;
                     }

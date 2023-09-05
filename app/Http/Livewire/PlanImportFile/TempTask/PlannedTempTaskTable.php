@@ -87,20 +87,46 @@ class PlannedTempTaskTable extends DataTableComponent
         );
         foreach ($planAttrs as $planAttr) {
             if ($planAttr->attribute->hidden_in_view) {
-                array_push(
-                    $columns,
-                    Column::make($planAttr->attribute->label, $planAttr->attribute->col_name)
-                        ->searchable()
-                        ->deselected()
-                        ->sortable()
-                );
+                if ($planAttr->attribute->col_type == 'date') {
+                    array_push(
+                        $columns,
+                        Column::make($planAttr->attribute->label, $planAttr->attribute->col_name)
+                            ->searchable()
+                            ->format(
+                                fn ($value, $row, Column $column) => $value->format('d-m-Y')
+                            )
+                            ->deselected()
+                            ->sortable()
+                    );
+                } else {
+                    array_push(
+                        $columns,
+                        Column::make($planAttr->attribute->label, $planAttr->attribute->col_name)
+                            ->searchable()
+                            ->deselected()
+                            ->sortable()
+                    );
+                }
             } else {
-                array_push(
-                    $columns,
-                    Column::make($planAttr->attribute->label, $planAttr->attribute->col_name)
-                        ->searchable()
-                        ->sortable()
-                );
+                if ($planAttr->attribute->col_type == 'date') {
+                    array_push(
+                        $columns,
+                        Column::make($planAttr->attribute->label, $planAttr->attribute->col_name)
+                            ->searchable()
+                            ->format(
+                                fn ($value, $row, Column $column) => $value->format('d-m-Y')
+                            )
+                            ->deselected()
+                            ->sortable()
+                    );
+                } else {
+                    array_push(
+                        $columns,
+                        Column::make($planAttr->attribute->label, $planAttr->attribute->col_name)
+                            ->searchable()
+                            ->sortable()
+                    );
+                }
             }
         }
         // dd($columns);

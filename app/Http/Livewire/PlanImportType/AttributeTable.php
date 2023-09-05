@@ -25,14 +25,15 @@ class AttributeTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Attribute::query()
-                ->whereHas('planTypeAttribute', fn ($query) => $query->where('type_id', $this->type_id))
-                ->whereDoesntHave('planImportTypeAttribute', fn ($query) => $query->where('import_type_id', $this->import_type_id));
+        return PlanTypeAttribute::query()->where('type_id', $this->type_id)
+                ->whereHas( 'attribute', fn ($query) => $query->whereDoesntHave('planImportTypeAttribute', fn ($query) => $query->where('import_type_id', $this->import_type_id)))
+                ->with(['attribute'])->orderBy('order');
     }
 
     public function configure(): void
     {
         $this->setPrimaryKey('id')
+            ->setAdditionalSelects(['attributes.id as attribute_id'])
             ->setPerPage(25)
             ->setPerPageAccepted([25, 50, 75, 100]);
     }
@@ -40,15 +41,15 @@ class AttributeTable extends DataTableComponent
     public function columns(): array
     {
         $columns = [
-            Column::make("#", "id")
+            Column::make("#", "order")
                 ->sortable(),
-            Column::make("Nome Attributo", "label")
+            Column::make("Nome Attributo", "attribute.label")
                 ->searchable()
                 ->format(
                     fn ($value, $row, Column $column) => '<strong>'.$value.'</strong>'
                 )->html()
                 ->sortable(),
-            Column::make("Tipo di dato", "col_type")
+            Column::make("Tipo di dato", "attribute.col_type")
                 ->format(
                     function ($value, $row, Column $column) {
                         switch ($value) {
@@ -78,7 +79,7 @@ class AttributeTable extends DataTableComponent
                 )
                 ->searchable()
                 ->sortable(),
-            BooleanColumn::make('Obbligatorio', 'required'),
+            BooleanColumn::make('Obbligatorio', 'attribute.required'),
         ];
         if (Laratrust::isAbleTo('config-update')) {
             array_push(
@@ -86,7 +87,7 @@ class AttributeTable extends DataTableComponent
                 Column::make('')
                 ->label(
                     function ($row) {
-                        $data = '<button class="btn btn-success btn-xs text-bold" wire:click="linkAttrToPlanImportTypeAttribute(' . $row->id . ')"><span class="fa fa-plus mr-1"></span>Associa</button>&nbsp;';
+                        $data = '<button class="btn btn-success btn-xs text-bold" wire:click="linkAttrToPlanImportTypeAttribute(' . $row->attribute_id . ')"><span class="fa fa-plus mr-1"></span>Associa</button>&nbsp;';
                         return $data;
                     }
                 )
