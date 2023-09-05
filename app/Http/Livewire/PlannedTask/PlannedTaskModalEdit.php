@@ -28,7 +28,7 @@ class PlannedTaskModalEdit extends Modal
         $this->task = PlannedTask::find($id)->makeHidden(['type_id', 'completed']);
         $this->aTask = $this->task->toArray();
         // dd($this->aTask['ibp_data_consegna']);
-        $this->typeAttrs = PlanTypeAttribute::where('type_id', $this->task->type_id)->with('attribute')->get();
+        $this->typeAttrs = PlanTypeAttribute::where('type_id', $this->task->type_id)->with('attribute')->orderBy('order')->get();
         $this->title = "Pianificazione [Matricola: ".$this->task->ibp_plan_matricola."]";
         if (!Laratrust::isAbleTo('tasks-update')) {
             $this->disabled = 'disabled';
@@ -67,7 +67,7 @@ class PlannedTaskModalEdit extends Modal
         return [
             // Set the modal size to 2xl, you can choose between:
             // xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, 7xl
-            'size' => '4xl',
+            'size' => '7xl',
         ];
     }
 }
