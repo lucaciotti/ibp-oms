@@ -83,7 +83,7 @@ class PlannedTaskTable extends DataTableComponent
             Column::make('Data Completato', 'completed_date')
                     ->searchable()
                     ->format(
-                        fn ($value, $row, Column $column) => $value->format('d-m-Y')
+                        fn ($value, $row, Column $column) => ($value!=null) ? $value->format('d-m-Y') : ""
                     )
                     ->deselected()
                     ->sortable()
@@ -263,7 +263,7 @@ class PlannedTaskTable extends DataTableComponent
     public function notcompleted()
     {
         foreach ($this->getSelected() as $id) {
-            $tasks = PlannedTask::find($id)->update(['completed' => 0]);
+            $tasks = PlannedTask::find($id)->update(['completed' =>0, 'completed_date' => null]);
         }
     }
 }
