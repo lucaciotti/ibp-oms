@@ -37,6 +37,7 @@ class PlannedTempTaskTable extends DataTableComponent
             ->setPerPageAccepted([25, 50, 75, 100])
             ->setPerPage(25)
             ->setAdditionalSelects(['id', 'error', 'task_id'])
+            ->setFilterLayoutSlideDown()
             ->setTrAttributes(function ($row, $index) {
                 if (!empty($row->error)) {
                     return [
