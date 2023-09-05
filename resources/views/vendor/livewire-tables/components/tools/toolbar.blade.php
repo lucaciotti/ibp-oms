@@ -590,15 +590,47 @@
             <div class="container">
                 <div class="row">
                     @foreach($component->getFilters() as $filter)
-                        @if($filter->isVisibleInMenus())
-                            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                                <label for="{{ $component->getTableName() }}-filter-{{ $filter->getKey() }}"
-                                    class="d-block">
-                                    {{ $filter->getName() }}
-                                </label>
-
-                                {{ $filter->render($component) }}
-                            </div>
+                        @if($filter->isVisibleInMenus() && !array_key_exists('position', $filter->getConfigs()))
+                            @if (array_key_exists('half-space', $filter->getConfigs()))
+                                <div class="col-6 col-sm-3 col-md-2 col-lg-2 mb-2">
+                                    <label for="{{ $component->getTableName() }}-filter-{{ $filter->getKey() }}" class="d-block">
+                                        {{ $filter->getName() }}
+                                    </label>
+                                
+                                    {{ $filter->render($component) }}
+                                </div>
+                            @else
+                                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                                    <label for="{{ $component->getTableName() }}-filter-{{ $filter->getKey() }}" class="d-block">
+                                        {{ $filter->getName() }}
+                                    </label>
+                                
+                                    {{ $filter->render($component) }}
+                                </div>
+                            @endif                            
+                        @endif
+                    @endforeach
+                </div>
+                <hr>
+                <div class="row">
+                    @foreach($component->getFilters() as $filter)
+                        @if($filter->isVisibleInMenus() && array_key_exists('position', $filter->getConfigs()))
+                        @if (array_key_exists('half-space', $filter->getConfigs()))
+                                <div class="col-6 col-sm-3 col-md-2 col-lg-2 mb-2">
+                                    <label for="{{ $component->getTableName() }}-filter-{{ $filter->getKey() }}" class="d-block">
+                                        {{ $filter->getName() }}
+                                    </label>
+                                    {{ $filter->render($component) }}
+                                </div>
+                            @else
+                                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                                    <label for="{{ $component->getTableName() }}-filter-{{ $filter->getKey() }}" class="d-block">
+                                        {{ $filter->getName() }}
+                                    </label>
+                                
+                                    {{ $filter->render($component) }}
+                                </div>
+                            @endif
                         @endif
                     @endforeach
                 </div>

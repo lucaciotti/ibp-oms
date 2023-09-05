@@ -145,38 +145,44 @@ class PlannedTaskTable extends DataTableComponent
     public function filters(): array
     {
         return [
-            DateFilter::make('Data Prod. >=', 'date_prod_from')
-                ->filter(function (Builder $builder, string $value) {
-                    $builder->where('ibp_data_inizio_prod', '>=', $value);
-                }),
-
-            DateFilter::make('Data Prod. <=', 'date_prod_to')
-            ->config([
-                'placeholder' => 'dd-mm-yyyy',
-            ])
-                ->filter(function (Builder $builder, string $value) {
-                    $builder->where('ibp_data_inizio_prod', '<=', $value);
-                }),
-
-            DateFilter::make('Data Consegna >=', 'date_from')
-                ->filter(function (Builder $builder, string $value) {
-                    $builder->where('ibp_data_consegna', '>=', $value);
-                }),
-
-            DateFilter::make('Data Consegna <=', 'date_to')
-                ->config([
-                    'placeholder' => 'dd-mm-yyyy',
-                ])
-                ->filter(function (Builder $builder, string $value) {
-                    $builder->where('ibp_data_consegna', '<=', $value);
-                }),
-
             TextFilter::make('Matricola', 'ibp_plan_matricola')
                 ->config([
                     'placeholder' => 'Cerca Matricola',
                 ])
                 ->filter(function (Builder $builder, string $value) {
                     $builder->where('ibp_plan_matricola', 'like', '%' . $value . '%');
+                }),
+
+            DateFilter::make('Data Prod. [>=]', 'date_prod_from')
+            ->config([
+                'half-space' => true,
+            ])
+                ->filter(function (Builder $builder, string $value) {
+                    $builder->where('ibp_data_inizio_prod', '>=', $value);
+                }),
+
+            DateFilter::make('Data Prod. [<=]', 'date_prod_to')
+            ->config([
+                'half-space' => true,
+            ])
+                ->filter(function (Builder $builder, string $value) {
+                    $builder->where('ibp_data_inizio_prod', '<=', $value);
+                }),
+
+            DateFilter::make('Data Consegna [>=]', 'date_from')
+                ->config([
+                    'half-space' => true,
+                ])
+                ->filter(function (Builder $builder, string $value) {
+                    $builder->where('ibp_data_consegna', '>=', $value);
+                }),
+
+            DateFilter::make('Data Consegna [<=]', 'date_to')
+            ->config([
+                'half-space' => true,
+            ])
+                ->filter(function (Builder $builder, string $value) {
+                    $builder->where('ibp_data_consegna', '<=', $value);
                 }),
 
             TextFilter::make('Cliente', 'ibp_cliente_ragsoc')
@@ -188,24 +194,32 @@ class PlannedTaskTable extends DataTableComponent
                 }),
 
             SelectFilter::make('Completato', 'completed')
+                ->config([
+                    'position' => 'bottom',
+                ])
                 ->options([
                     '' => 'Tutti',
                     'yes' => 'Si',
                     'no' => 'No',
                 ])
                 ->filter(function (Builder $builder, string $value) {
-                    $valueFilter = ($value=='yes') ? true : (($value=='no') ? false : null);
+                    $valueFilter = ($value == 'yes') ? true : (($value == 'no') ? false : null);
                     $builder->where('completed', $valueFilter);
                 }),
 
-            DateFilter::make('Data Completato >=', 'date_complete_from')
+            DateFilter::make('Data Completato [>=]', 'date_complete_from')
+                ->config([
+                    'position' => 'bottom',
+                'half-space' => true,
+                ])
                 ->filter(function (Builder $builder, string $value) {
                     $builder->where('completed_date', '>=', $value);
                 }),
 
-            DateFilter::make('Data Completato <=', 'date_complete_to')
+            DateFilter::make('Data Completato [<=]', 'date_complete_to')
                 ->config([
-                    'placeholder' => 'dd-mm-yyyy',
+                    'position' => 'bottom',
+                'half-space' => true,
                 ])
                 ->filter(function (Builder $builder, string $value) {
                     $builder->where('completed_date', '<=', $value);
