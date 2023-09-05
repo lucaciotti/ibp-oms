@@ -24,9 +24,9 @@ $ralHelper = new RALHelper();
 <p class="page">
     @if ($firstPage)
 <div class="row" style="text-align: center">
-    <h1>Pianificazione {{ $planName }}</h1>
-    <h3>Periodo: {{ $dtMin }} - {{ $dtMax }}</h3>
-    <br>
+    <h2>Pianificazione {{ $planName }}</h2>
+    <h4>Periodo: {{ $dtMin }} - {{ $dtMax }}</h4>
+    <hr>
 </div>
 @php
 $firstPage=false;
@@ -36,7 +36,7 @@ $firstPage=false;
 @foreach ($tasks as $task)
 @php
 $ralRGB = $ralHelper->getRGB($task['values']['ibp_ral_guscio']);
-$ralRGB2 = $ralHelper->getRGB($task['values']['ibp_ral_basamcol']);
+$ralRGB2 = $ralHelper->getRGB($task['values']['ibp_ral_colbraccio']);
 @endphp
 <div class="row">
     <table>
@@ -84,10 +84,10 @@ $ralRGB2 = $ralHelper->getRGB($task['values']['ibp_ral_basamcol']);
             <td>{{ $task['matricole'][5] ?? '' }}</td>
             <td>{{ $task['values']['ibp_impianto'] }}</td>
             <td style="background-color: rgb({{ $ralRGB2 }}); opacity:75%;"></td>
-            <th>{{ $task['values']['ibp_ral_basamcol'] }}</th>
+            <th>{{ $task['values']['ibp_ral_colbraccio'] }}</th>
             <th>BATTERIA</th>
             <td>{{ $task['values']['ibp_carrello_opt_2'] }}</td>
-            <td>{{ $task['values']['ibp_dim_imballo_2'] }}</td>
+            <td>{{ $task['values']['ibp_dim_imballo2'] }}</td>
         </tr>
         <tr>
             <td>{{ $task['matricole'][2] ?? '' }}</td>
