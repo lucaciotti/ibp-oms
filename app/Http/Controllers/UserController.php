@@ -100,8 +100,8 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         try{
             $token = Password::getRepository()->create($user);
-            $user->isActive = 0;
-            $user->save();
+            // $user->isActive = 0;
+            // $user->save();
             // $user->sendPasswordResetNotification($token);
             if (App::environment(['local', 'staging'])) {
                 Mail::to('ibpoms@lucaciotti.space')->cc(['luca.ciotti@gmail.com'])->send(new InviteUser($token, $user->id));
