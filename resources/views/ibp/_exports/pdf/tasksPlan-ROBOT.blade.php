@@ -51,69 +51,69 @@ $ralRGB2 = $ralHelper->getRGB($task['values']['ibp_ral_colbraccio']);
         <col width='20%'>
         <col width='5%'>
         <tr>
-            <th colspan=2 rowspan="2">{{ $task['values']['ibp_cliente_ragsoc'] }}</th>
-            <th>{{ $task['values']['ibp_prodotto_tipo'] }}</th>
+            <th colspan=2 rowspan="2">{{ $task['values']['ibp_cliente_ragsoc'] ?? '' }}</th>
+            <th>{{ $task['values']['ibp_prodotto_tipo'] ?? '' }}</th>
             <th colspan="2">RAL GUSCIO</th>
             @if (!empty($task['values']['ibp_colonna']))<th>COLONNA</th>@else<th>BRACCIO</th>@endif
             <th>CARRELLO</th>
-            {{-- <th>{{ $task['values']['ibp_carrello'] }}</th> --}}
+            {{-- <th>{{ $task['values']['ibp_carrello'] ?? '' }}</th> --}}
             <th>IMBALLO</th>
             <th>NOTE</th>
             <th>Qta</th>
         </tr>
         <tr>
-            <td>{{ $task['values']['ibp_n_programmi'] }}</td>
-            <td style="background-color: rgb({{ $ralRGB }}); opacity:75%;"></td><th>{{ $task['values']['ibp_ral_guscio'] }}</th>
-            @if (!empty($task['values']['ibp_colonna']))<td>{{ $task['values']['ibp_colonna'] }}</td>@else<td>{{ $task['values']['ibp_braccio'] }}</td>@endif
-            <td>{{ $task['values']['ibp_carrello'] }}</td>
-            <td>{{ $task['values']['ibp_imballo_tipo'] }}</td>
-            <td rowspan=6>{{ $task['values']['ibp_plan_note'] }}</td>
-            <th rowspan=6>{{ $task['qta'] }}</th>
+            <td>{{ $task['values']['ibp_n_programmi'] ?? '' }}</td>
+            <td style="background-color: rgb({{ $ralRGB }}); opacity:75%;"></td><th>{{ $task['values']['ibp_ral_guscio'] ?? '' }}</th>
+            @if (!empty($task['values']['ibp_colonna']))<td>{{ $task['values']['ibp_colonna'] ?? '' }}</td>@else<td>{{ $task['values']['ibp_braccio'] ?? '' }}</td>@endif
+            <td>{{ $task['values']['ibp_carrello'] ?? '' }}</td>
+            <td>{{ $task['values']['ibp_imballo_tipo'] ?? '' }}</td>
+            <td rowspan=6>{{ $task['values']['ibp_plan_note'] ?? '' }}</td>
+            <th rowspan=6>{{ $task['qta'] ?? '' }}</th>
         </tr>
         <tr>
             <td>{{ $task['matricole'][0] ?? '' }}</td>
             <td>{{ $task['matricole'][4] ?? '' }}</td>
             <th>IMPIANTO</th>
             <th colspan="2">RAL BAS - COL</th>
-            <td>{{ $task['values']['ibp_colonna_opt'] }}</td>
-            <td>{{ $task['values']['ibp_carrello_opt'] }}</td>
-            <td>{{ $task['values']['ibp_imballo_dim'] }}</td>
+            <td>{{ $task['values']['ibp_colonna_opt'] ?? '' }}</td>
+            <td>{{ $task['values']['ibp_carrello_opt'] ?? '' }}</td>
+            <td>{{ $task['values']['ibp_imballo_dim'] ?? '' }}</td>
         </tr>
         <tr>
             <td>{{ $task['matricole'][1] ?? '' }}</td>
             <td>{{ $task['matricole'][5] ?? '' }}</td>
-            <td>{{ $task['values']['ibp_impianto'] }}</td>
+            <td>{{ $task['values']['ibp_impianto'] ?? '' }}</td>
             <td style="background-color: rgb({{ $ralRGB2 }}); opacity:75%;"></td>
-            <th>{{ $task['values']['ibp_ral_colbraccio'] }}</th>
+            <th>{{ $task['values']['ibp_ral_colbraccio'] ?? '' }}</th>
             <th>BATTERIA</th>
-            <td>{{ $task['values']['ibp_carrello_opt_2'] }}</td>
-            <td>{{ $task['values']['ibp_dim_imballo2'] }}</td>
+            <td>{{ $task['values']['ibp_carrello_opt_2'] ?? '' }}</td>
+            <td>{{ $task['values']['ibp_dim_imballo2'] ?? '' }}</td>
         </tr>
         <tr>
             <td>{{ $task['matricole'][2] ?? '' }}</td>
             <td>{{ $task['matricole'][6] ?? '' }}</td>
-            <td>{{ $task['values']['ibp_opt2'] }}</td>
+            <td>{{ $task['values']['ibp_opt2'] ?? '' }}</td>
             <th colspan="2">ADESIVI</th>
-            <td>{{ $task['values']['ibp_batteria'] }}</td>
-            <td>{{ $task['values']['ibp_carrello_opt_3'] }}</td>
-            <td>{{ $task['values']['ibp_imballo_note'] }}</td>
+            <td>{{ $task['values']['ibp_batteria'] ?? '' }}</td>
+            <td>{{ $task['values']['ibp_carrello_opt_3'] ?? '' }}</td>
+            <td>{{ $task['values']['ibp_imballo_note'] ?? '' }}</td>
         </tr>
         <tr>
             <td>{{ $task['matricole'][3] ?? '' }}</td>
             <td>{{ $task['matricole'][7] ?? '' }}</td>
-            <td>{{ $task['values']['ibp_opt3'] }}</td>
-            <td colspan="2">{{ $task['values']['ibp_adesivi'] }}</td>
+            <td>{{ $task['values']['ibp_opt3'] ?? '' }}</td>
+            <td colspan="2">{{ $task['values']['ibp_adesivi'] ?? '' }}</td>
             <th>RUOTA TASTATRICE</th>
-            <td>{{ $task['values']['ibp_opt4_carrello'] }}</td>
-            <td>{{ $task['values']['ibp_note_imballo2'] }}</td>
+            <td>{{ $task['values']['ibp_opt4_carrello'] ?? '' }}</td>
+            <td>{{ $task['values']['ibp_note_imballo2'] ?? '' }}</td>
         </tr>
         <tr>
-            <td colspan="2">{{ $task['values']['ibp_note_imp'] }}</td>
-            <td>{{ $task['values']['ibp_opt4'] }}</td>
-            <td colspan="2">{{ $task['values']['ibp_documenti'] }}</td>
-            <td>{{ $task['values']['ibp_ruota_tastatrice'] }}</td>
-            <td>{{ $task['values']['ibp_opt5_carrello'] }}</td>
-            <td>{{ $task['values']['ibp_note_imballo3'] }}</td>
+            <td colspan="2">{{ $task['values']['ibp_note_imp'] ?? '' }}</td>
+            <td>{{ $task['values']['ibp_opt4'] ?? '' }}</td>
+            <td colspan="2">{{ $task['values']['ibp_documenti'] ?? '' }}</td>
+            <td>{{ $task['values']['ibp_ruota_tastatrice'] ?? '' }}</td>
+            <td>{{ $task['values']['ibp_opt5_carrello'] ?? '' }}</td>
+            <td>{{ $task['values']['ibp_note_imballo3'] ?? '' }}</td>
         </tr>
     </table>
 </div>
