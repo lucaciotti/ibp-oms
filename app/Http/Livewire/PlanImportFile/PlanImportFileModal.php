@@ -48,8 +48,8 @@ class PlanImportFileModal extends Modal
         } else {
             $this->type_id = $this->planTypes->first()->id;
         }
-        $this->planImportTypes = PlanImportType::where('type_id', $this->type_id)->get();
-        $this->import_type_id = $this->planImportTypes->first()->id;
+        $this->getPlanImportTypes();
+        if (empty($this->import_type_id)) $this->getDefaultPlanImportTypes();
     }
 
     public function updated($propertyName)
@@ -70,9 +70,20 @@ class PlanImportFileModal extends Modal
         
     }
 
-    public function updatedTypeId(){
-        $this->validate();
-        $this->planImportTypes = PlanImportType::where('type_id', $this->type_id)->get();
+    public function updatedTypeId()
+    {
+        $this->getPlanImportTypes();
+        $this->getDefaultPlanImportTypes();
+    }
+
+    private function getPlanImportTypes()
+    {
+        $this->planImportTypes = PlanImportType::where('type_id', $this->type_id)->where('use_in_import', true)->get();
+    }
+
+    private function getDefaultPlanImportTypes()
+    {
+        $this->import_type_id = $this->planImportTypes->where('default_import', true)->first()->id;
     }
 
     public function render()
