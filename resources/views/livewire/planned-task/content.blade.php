@@ -30,6 +30,13 @@
             </div>
 
             <div class="card-body">
+                @if ($refresh_table)
+                <div class="text-danger text-bold text-center pt-2 pb-2" style="background-color: lightgrey; font-size:medium;">
+                    Attenzione: Nuove Pianificazioni Importate! 
+                    <br> 
+                    <button class="btn btn-sm btn-outline-danger" onclick="Livewire.emit('refreshDatatable');" >Aggiorna la tabella</button>
+                </div>
+                @endif
                 <div style="">
                     <livewire:planned-task.planned-task-table />
                 </div>

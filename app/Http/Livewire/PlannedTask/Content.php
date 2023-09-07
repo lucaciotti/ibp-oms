@@ -10,6 +10,14 @@ class Content extends DynamicContent
 {
     public $plantypes;
     public $plantype_id;
+    public $refresh_table;
+
+    public $listeners = [
+        'dynamic-content.collapse' => 'collapse',
+        'dynamic-content.expande' => 'expande',
+        'refreshNewPlannedTask' => 'tableHasToBeRefreshed',
+        'refreshDatatable' => 'tableRefreshed',
+    ];
 
     public function mount(){
         if (!Session::has('plannedtask.plantype.id')) {
@@ -28,5 +36,13 @@ class Content extends DynamicContent
     public function updatedPlantypeId(){
         Session::put('plannedtask.plantype.id', $this->plantype_id);
         $this->emit('refreshDatatable');
+    }
+
+    public function tableHasToBeRefreshed(){
+        $this->refresh_table = true;
+    }
+    
+    public function tableRefreshed(){
+        $this->refresh_table = false;
     }
 }

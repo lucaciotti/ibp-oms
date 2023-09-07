@@ -25,7 +25,7 @@ class XlsExportModal extends Modal
         $this->completed = $completed;
         if($completed) $this->title = 'Seleziona Xls Format (COMPLETATI)';
         $this->importTypes = PlanImportType::where('type_id', $type_id)->where('use_in_export', true)->get();
-        $this->import_type_id = $this->importTypes->where('default_export', true)->first()->id;
+        $this->import_type_id = ($this->importTypes->where('default_export', true)->count()>0) ? $this->importTypes->where('default_export', true)->first()->id : (($this->importTypes->count()>0) ? $this->importTypes->first()->id : null);
     }
 
     public function render()

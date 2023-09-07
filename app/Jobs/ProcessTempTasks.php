@@ -82,9 +82,9 @@ class ProcessTempTasks implements ShouldQueue
                 Notification::send(
                     $this->importedfile->userCreated(),
                     new DefaultMessageNotify(
-                        $title = 'File di Import - Processato!',
-                        $body = 'Righe del file [' . $this->importedfile->filename . '] processate correttamente!',
-                        $link = '#',
+                        $title = 'Nuove Pianificazioni - '. $this->importedfile->plantype->name .' - Importate!',
+                        $body = 'File [' . $this->importedfile->name . '] processato correttamente!',
+                        $link = $this->importedfile->plantype->id,
                         $level = 'info'
                         )
                     );

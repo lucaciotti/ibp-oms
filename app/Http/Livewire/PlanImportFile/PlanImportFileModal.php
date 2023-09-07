@@ -8,6 +8,7 @@ use App\Models\PlanImportType;
 use App\Models\PlanType;
 use App\Notifications\DefaultMessageNotify;
 use Auth;
+use Carbon\Carbon;
 use Livewire\WithFileUploads;
 use Notification;
 use WireElements\Pro\Components\Modal\Modal;
@@ -21,6 +22,7 @@ class PlanImportFileModal extends Modal
     public $file;
     public $type_id;
     public $import_type_id;
+    public $name = '';
     public bool $force_import = false;
 
     public $file_extension;
@@ -36,6 +38,7 @@ class PlanImportFileModal extends Modal
         'file_extension' => 'required|in:xlsx,xls',
         'filename' => 'required',
         'type_id' => 'required',
+        'name' => 'required',
         'import_type_id' => 'required',
         'force_import' => 'required',
     ];
@@ -60,7 +63,6 @@ class PlanImportFileModal extends Modal
     public function updatedFile(){
         // dd($this->file->getClientOriginalName());
         $this->file_extension = strtolower($this->file->getClientOriginalExtension());
-        $this->filename = $this->file->getClientOriginalName();
         $this->validate();
         if($this->file){
             $this->file_placeolder = $this->file->getClientOriginalName();
@@ -74,6 +76,20 @@ class PlanImportFileModal extends Modal
     {
         $this->getPlanImportTypes();
         $this->getDefaultPlanImportTypes();
+    }
+
+    private function buildFileName()
+    {   
+        $date = Carbon::now();
+        // return 'Plan_' . $this->planTypes->where('id', $this->type_id)->first()->name . '_' . $date->format('Ymd') . '_' . $date->format('Hmi').'.'. $this->file_extension;
+        
+        return $this->file->getClientOriginalName();
+    }
+
+    private function buildImportName()
+    {
+        $date = Carbon::now();
+        return $this->planTypes->where('id', $this->type_id)->first()->name . '_' . $date->format('Ymd') . '_' . $date->format('Hmi');
     }
 
     private function getPlanImportTypes()
@@ -92,10 +108,12 @@ class PlanImportFileModal extends Modal
     }
 
     public function save(){
+        $this->filename = $this->buildFileName();
+        $this->name = $this->buildImportName();
         $validatedData = $this->validate();
         $this->path = $this->file->store('plan_import_file');
         $extradata = [
-            'status' => 'uploaded',
+            'status' => 'File Caricato',
             'path' => $this->path,
         ];
         // dd(array_merge($validatedData, $extradata));

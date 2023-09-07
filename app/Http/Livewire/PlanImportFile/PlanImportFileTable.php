@@ -16,6 +16,15 @@ class PlanImportFileTable extends DataTableComponent
 {
     protected $model = PlanImportFile::class;
 
+    protected function getListeners()
+    {
+        return [
+            'refreshNewPlannedTask' => '$refresh',
+            'refreshImportFile' => '$refresh'
+        ];
+    }
+
+
     public function builder(): Builder
     {
         return PlanImportFile::query()
@@ -27,7 +36,7 @@ class PlanImportFileTable extends DataTableComponent
     {
         $this->setPrimaryKey('id')
             // ->setDebugEnabled()
-            ->setAdditionalSelects(['plan_import_files.import_type_id as import_type_id'])
+            ->setAdditionalSelects(['plan_import_files.import_type_id as import_type_id','plan_import_files.name as name_import'])
             ->setEagerLoadAllRelationsEnabled()
             ->setPerPageAccepted([25, 50, 75, 100])
             ->setPerPage(25)
@@ -84,19 +93,22 @@ class PlanImportFileTable extends DataTableComponent
         return [
             Column::make("#", "id")
                 ->sortable(),
-            Column::make("Piano")
+            Column::make("Name")
                 ->label(
-                    fn ($row, Column $column) => $this->getPlanTypeName($row, $column)
-                )
-                ->searchable()
-                ->sortable(),
-            Column::make("File Name", "filename")
-                ->format(
-                    fn ($value, $row, Column $column) => '<strong>' . $value . '</strong>'
+                    fn ($row, Column $column) => '<strong>' . $this->getPlanName($row, $column) . '</strong>'
                 )->html()
                 ->searchable()
                 ->sortable(),
+            // Column::make("Piano")
+            //     ->label(
+            //         fn ($row, Column $column) => $this->getPlanTypeName($row, $column)
+            //     )
+            //     ->searchable()
+            //     ->sortable(),
             Column::make("Tipo Import", "planimporttype.name")
+                ->searchable()
+                ->sortable(),
+            Column::make("FileName", "filename")
                 ->searchable()
                 ->sortable(),
             Column::make("Stato", "status")
@@ -129,10 +141,18 @@ class PlanImportFileTable extends DataTableComponent
     {
         return $row->audits()->first()->user->name;
     }
+
     private function getPlanTypeName($row, $column)
     {
         // dd($row);
         // $plantype = PlanType::whereHas('planimporttype', fn ($query) => $query->where('id', $row->import_type_id))->first();
         return $row->plantype->name;
+    }
+
+    private function getPlanName($row, $column)
+    {
+        // dd($row);
+        return (!empty($row->name_import)) ? $row->name_import : $row->plantype->name.'_'.$row->updated_at->format('Ymd_Hmi');
+
     }
 }

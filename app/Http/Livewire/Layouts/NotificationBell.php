@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire\Layouts;
 
+use Arr;
 use Auth;
 use Livewire\Component;
+use Str;
 
 class NotificationBell extends Component
 {
@@ -15,7 +17,8 @@ class NotificationBell extends Component
         'icon_color'  => 'dark',
     ];
     public $openedSlideOver = false;
-    private $previousCount = 0;
+    public $previousCount;
+    public $notificationList = [];
 
     protected $listeners = [
         'notification-slide-over-open' => 'toogleSlideOverOpened',
@@ -24,6 +27,7 @@ class NotificationBell extends Component
     
     public function mount($menuItem) {
         $this->item = $menuItem;
+        $this->previousCount = 0;
         $this->getNotifications();
     }
 
@@ -36,6 +40,7 @@ class NotificationBell extends Component
     public function getNotifications($force=false){
         $notificationsCount = count(Auth::user()->unreadNotifications);
         if ($this->previousCount != $notificationsCount or $force) {
+            // dd($this->previousCount != $notificationsCount);
             $this->previousCount = $notificationsCount;
             $this->notifyLabel = [
                 'label'       => $notificationsCount,
@@ -43,6 +48,7 @@ class NotificationBell extends Component
                 'icon_color'  => 'dark',
             ];
             $this->emit('notifyUpdated');
+            $this->handleTableRefresh();
         }
     }
 
@@ -62,5 +68,22 @@ class NotificationBell extends Component
         $this->emit('slide-over.close', 'layouts.notification-slide-over');
         $this->openedSlideOver = false;
         $this->getNotifications(true);
+    }
+
+    private function handleTableRefresh(){
+        $notifications = Auth::user()->unreadNotifications;
+        if (!empty($notifications) and count($notifications) > 0 and $notifications != null) {
+            foreach ($notifications as $notification) {
+                if (!in_array($notification->id, $this->notificationList)){
+                    $item['title'] = Arr::has($notification->data, 'title') ? $notification->data['title'] : '';
+                    if (Str::startsWith($item['title'], 'Nuove Pianificazioni')) {
+                        $this->emit('refreshNewPlannedTask');
+                    } else {
+                        $this->emit('refreshImportFile');
+                    }
+                    array_push($this->notificationList, $notification->id);
+                }
+            }
+        }
     }
 }
