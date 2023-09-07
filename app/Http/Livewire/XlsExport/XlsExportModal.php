@@ -12,6 +12,7 @@ class XlsExportModal extends Modal
 {
     public $tasks_ids;
     public $type_id;
+    public $order_tasks;
     public $importTypes;
     public $completed;
 
@@ -19,10 +20,11 @@ class XlsExportModal extends Modal
 
     public $title = 'Seleziona Xls Format';
 
-    public function mount($tasks_ids, $type_id, $completed=false) {
+    public function mount($tasks_ids, $type_id, $completed=false, $order_tasks=null) {
         $this->tasks_ids = $tasks_ids;
         $this->type_id = $type_id;
         $this->completed = $completed;
+        $this->order_tasks = $order_tasks;
         if($completed) $this->title = 'Seleziona Xls Format (COMPLETATI)';
         $this->importTypes = PlanImportType::where('type_id', $type_id)->where('use_in_export', true)->get();
         $this->import_type_id = ($this->importTypes->where('default_export', true)->count()>0) ? $this->importTypes->where('default_export', true)->first()->id : (($this->importTypes->count()>0) ? $this->importTypes->first()->id : null);

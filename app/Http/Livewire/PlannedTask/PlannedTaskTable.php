@@ -251,19 +251,19 @@ class PlannedTaskTable extends DataTableComponent
     }
 
     public function doReport()  {
-        $this->emit('modal.open', 'pdf-reports.list-of-reports', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id]);
-        // dd($this->getSelected());
+        // dd($this->getSorts());
+        $this->emit('modal.open', 'pdf-reports.list-of-reports', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id, 'order_tasks' => $this->getSorts()]);
     }
 
     public function xlsExport()
     {
-        $this->emit('modal.open', 'xls-export.xls-export-modal', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id]);
+        $this->emit('modal.open', 'xls-export.xls-export-modal', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id, 'order_tasks' => $this->getSorts()]);
         // dd($this->getSelected());
     }
 
     public function xlsExportCompleted()
     {
-        $this->emit('modal.open', 'xls-export.xls-export-modal', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id, 'completed' => 1]);
+        $this->emit('modal.open', 'xls-export.xls-export-modal', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id, 'completed' => 1, 'order_tasks' => $this->getSorts()]);
         // dd($this->getSelected());
     }
 

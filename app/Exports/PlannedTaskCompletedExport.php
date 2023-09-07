@@ -38,6 +38,7 @@ class PlannedTaskCompletedExport implements FromQuery, WithMapping, WithHeadings
     {   
         $head = [];
         array_push($head, 'Completato');
+        array_push($head, 'Data Completato');
         foreach ($this->typeAttribute as $column) {
             array_push($head, $column->attribute->label);
         }
@@ -81,6 +82,7 @@ class PlannedTaskCompletedExport implements FromQuery, WithMapping, WithHeadings
     {
         $body = [];
         array_push($body, ($row->completed ? 'Completato' : '-'));
+        array_push($body, ($row->completed ? Date::dateTimeToExcel($row->completed_date) : '-'));
         foreach ($this->typeAttribute as $column) {
             $colname = $column->attribute->col_name;
             if($column->attribute->col_type=='date'){

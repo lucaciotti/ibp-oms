@@ -8,6 +8,7 @@ class ListOfReports extends Modal
 {
     public $tasks_ids;
     public $type_id;
+    public $order_tasks;
     public $reports = [
         'plan' => 'Distinta di Produzione (da completare)',
         'plan_ended' => 'Pianificazioni Completare',
@@ -24,7 +25,8 @@ class ListOfReports extends Modal
         return view('livewire.pdf-reports.list-of-reports');
     }
 
-    public function doReport(){
-        $this->emit('modal.open', 'pdf-reports.generate-reports', ['reportKey' => $this->selectedReport, 'tasks_ids' => $this->tasks_ids, 'type_id' => $this->type_id], ['force' => true]);
+    public function doReport()
+    {
+        $this->emit('modal.open', 'pdf-reports.generate-reports', ['reportKey' => $this->selectedReport, 'tasks_ids' => $this->tasks_ids, 'type_id' => $this->type_id, 'order_tasks' => $this->order_tasks], ['force' => true]);
     }
 }
