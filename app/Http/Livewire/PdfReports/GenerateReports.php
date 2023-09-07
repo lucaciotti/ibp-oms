@@ -15,6 +15,8 @@ class GenerateReports extends Modal
 {
     public $tasks_ids;
     public $type_id;
+    public $reportKey;
+    public $order_tasks;
     
     public $reports = [
         'plan' => 'Distinta Pianificazioni (da completare)',
@@ -36,6 +38,21 @@ class GenerateReports extends Modal
         $columns = Arr::pluck(Attribute::select('col_name')->whereHas('planTypeAttribute', fn ($query) => $query->where('type_id', $this->type_id))->where('col_name', '!=', 'ibp_plan_matricola')->get()->toArray(), 'col_name');
         $n_of_columns = count($columns);
         $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->where('completed', false)->groupBy($columns)->orderBy('ibp_data_consegna')->orderBy('ibp_cliente_ragsoc')->get();
+        // if (!$this->order_tasks) {
+        //     $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->where('completed', false);
+        //     foreach ($this->order_tasks as $key => $value) {
+        //         if(!in_array($key, $columns)){
+        //             $tasksWithSameValues->addSelect($key);
+        //             // $tasksWithSameValues->addSelect(DB::raw('MAX(' . $key . ') as max_' . $key));
+        //         }
+        //         $tasksWithSameValues->orderBy($key, $value);
+        //     }
+        //     $tasksWithSameValues = $tasksWithSameValues->get();
+        //     dd($tasksWithSameValues);
+        // } else {
+        //     $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->where('completed', false)->groupBy($columns)->orderBy('ibp_data_consegna')->orderBy('ibp_cliente_ragsoc')->get();
+        //     dd($tasksWithSameValues);
+        // }
         $tasks = [];
         foreach ($tasksWithSameValues as $task) {
             $aWhere = [];
@@ -79,6 +96,7 @@ class GenerateReports extends Modal
 
         $columns = Arr::pluck(Attribute::select('col_name')->whereHas('planTypeAttribute', fn ($query) => $query->where('type_id', $this->type_id))->where('col_name', '!=', 'ibp_plan_matricola')->get()->toArray(), 'col_name');
         $n_of_columns = count($columns);
+        array_push($columns, 'completed_date');
         $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->where('completed', true)->groupBy($columns)->orderBy('ibp_data_consegna')->orderBy('ibp_cliente_ragsoc')->get();
         $tasks = [];
         foreach ($tasksWithSameValues as $task) {
@@ -100,7 +118,7 @@ class GenerateReports extends Modal
 
         $title = "Pianificazioni_Completate_" . $planName;
         $subTitle = str_replace('/', '-', $dtMin . "_" . $dtMax);
-        $view = 'ibp._exports.pdf.tasksPlan-' . $planName;
+        $view = 'ibp._exports.pdf.tasksPlanEnded-' . $planName;
         $data = [
             'planName' => $planName,
             'dtMin' => $dtMin,
@@ -234,9 +252,12 @@ class GenerateReports extends Modal
         return $arrayOfValues;
     }
 
-    public function mount($tasks_ids, $reportKey){
-
+    public function mount($tasks_ids, $reportKey, $type_id, $order_tasks)
+    {
         $this->tasks_ids = $tasks_ids;
+        $this->reportKey = $reportKey;
+        $this->type_id = $type_id;
+        $this->order_tasks = $order_tasks;
         $reportCall = 'do_'.$reportKey.'_report';
         if (is_callable([$this, $reportCall])) {
             $this->$reportCall();
