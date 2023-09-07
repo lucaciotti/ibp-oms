@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Exceptions\ImportFileException;
 use App\Models\PlanFilesTempTask;
 use App\Models\PlanImportFile;
 use App\Models\PlanImportType;
@@ -16,10 +17,11 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Notification;
 use Str;
 
-class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows, WithCalculatedFormulas, WithMultipleSheets 
+class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows, WithCalculatedFormulas, WithMultipleSheets, SkipsOnError
 {
     protected $importedfile;
     protected $importType;
@@ -65,65 +67,58 @@ class PlanTempTasksImport implements ToModel, WithStartRow, SkipsEmptyRows, With
                 'type_id' => $this->importType->type_id,
                 'num_row' => ++$this->rowNum,
             ];
-            try {
-                foreach ($this->typeAttribute as $confRow) {
-                    $cell_num = $confRow->cell_num-1;
-                    switch ($confRow->attribute->col_type) {
-                        case 'date':
-                            $data = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[$cell_num]));
-                            break;
-                        case 'integer':
-                            $data = intval($row[$cell_num]);
-                            break;
-                        case 'boolean':
-                            $data = (bool)$row[$cell_num];
-                            break;
+            foreach ($this->typeAttribute as $confRow) {
+                $cell_num = $confRow->cell_num-1;
+                switch ($confRow->attribute->col_type) {
+                    case 'date':
+                        $data = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[$cell_num]));
+                        break;
+                    case 'integer':
+                        $data = intval($row[$cell_num]);
+                        break;
+                    case 'boolean':
+                        $data = (bool)$row[$cell_num];
+                        break;
 
-                        default:
-                            $data = Str::upper(Str::of(strval($row[$cell_num]))->trim());
-                            break;
-                    }
-                    $dataRow[$confRow->attribute->col_name] = $data;
-                    // Log::info($confRow);
-                    // Log::info($confRow->attribute->col_name. ' = '. $row[$cell_num]);
-                    if ($confRow->attribute->required && empty($row[$cell_num])) {
-                        $notifyUsers = User::where('id', Auth::user()->id)->get();
-                        foreach ($notifyUsers as $user) {
-                            Notification::send(
-                                $user,
-                                new DefaultMessageNotify(
-                                    $title = 'File di Import - [' . $this->importedfile->filename . ']!',
-                                    $body = 'Errore: Attenzione la colonna' . $confRow->cell_num . ' deve contenere: ' . $confRow->attribute->label . 'e non deve essere vuota!',
-                                    $link = '#',
-                                    $level = 'error'
-                                )
-                            );
-                        }
-                        return false;
+                    default:
+                        $data = Str::upper(Str::of(strval($row[$cell_num]))->trim());
+                        break;
+                }
+
+                // Controllo MATRICOLA -> unico dato che deve essere sempre corretto
+                if($confRow->attribute->col_name=='ibp_plan_matricola'){
+                    if(!preg_match('/S\d{6}/',$data)) {
+                        throw new ImportFileException('Attenzione la colonna ' . $confRow->cell_num . ' alla riga '.$this->rowNum.' deve contenere: "' . $confRow->attribute->label . '" con valore valido e non deve essere vuota!');    
                     }
                 }
-                // Log::info($dataRow);
-                return new PlanFilesTempTask($dataRow);
-            } catch (\Throwable $th) {
-                report($th);
-                #INVIO NOTIFICA
-                Log::info(Auth::user());
-                $notifyUsers = User::whereHas('roles', fn ($query) => $query->where('name', 'admin'))->orWhere('id', $this->importedfile->userCreated()->id)->get();
-                foreach ($notifyUsers as $user) {
-                    Notification::send(
-                        $user,
-                        new DefaultMessageNotify(
-                            $title = 'File di Import - [' . $this->importedfile->filename . ']!',
-                            $body = 'Errore: [' . $th->getMessage() . ']',
-                            $link = '#',
-                            $level = 'error'
-                        )
-                    );
+                if ($confRow->attribute->required && empty($row[$cell_num])) {
+                    // Log::error('Attenzione la colonna ' . $confRow->cell_num . ' alla riga ' . $this->rowNum . ' deve contenere: ' . $confRow->attribute->label . ' e non deve essere vuota!');
+                    throw new ImportFileException('Attenzione la colonna ' . $confRow->cell_num . ' alla riga '.$this->rowNum.' deve contenere: "' . $confRow->attribute->label . '" e non deve essere vuota!');
                 }
-                return false;
+
+                $dataRow[$confRow->attribute->col_name] = $data;
             }
-        }else{
+            return new PlanFilesTempTask($dataRow);
+        } else {
             ++$this->rowNum;
+        }
+    }
+
+    public function onError(\Throwable $th)
+    {
+        report($th);
+        #INVIO NOTIFICA
+        $notifyUsers = User::whereHas('roles', fn ($query) => $query->where('name', 'admin'))->orWhere('id', $this->importedfile->userCreated()->id)->get();
+        foreach ($notifyUsers as $user) {
+            Notification::send(
+                $user,
+                new DefaultMessageNotify(
+                    $title = 'File di Import - [' . $this->importedfile->filename . ']!',
+                    $body = 'Errore: [' . $th->getMessage() . ']',
+                    $link = '#',
+                    $level = 'error'
+                )
+            );
         }
     }
 
