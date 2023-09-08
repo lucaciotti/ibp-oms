@@ -79,15 +79,28 @@ class ProcessTempTasks implements ShouldQueue
                 $this->importedfile->date_last_import = Carbon::now();
                 $this->importedfile->status = ($this->hasWarnings) ? 'Verificare' : 'Processato';
                 $this->importedfile->save();
-                Notification::send(
-                    $this->importedfile->userCreated(),
-                    new DefaultMessageNotify(
-                        $title = 'Nuove Pianificazioni - '. $this->importedfile->plantype->name .' - Importate!',
-                        $body = 'File [' . $this->importedfile->name . '] processato correttamente!',
-                        $link = $this->importedfile->plantype->id,
-                        $level = 'info'
+                // Notification::send(
+                //     $this->importedfile->userCreated(),
+                //     new DefaultMessageNotify(
+                //         $title = 'Nuove Pianificazioni - '. $this->importedfile->plantype->name .' - Importate!',
+                //         $body = 'File [' . $this->importedfile->name . '] processato correttamente!',
+                //         $link = $this->importedfile->plantype->id,
+                //         $level = 'info'
+                //         )
+                //     );
+                // La Notifica di import Nuove Pianificazioni è da inviare a tutti
+                $notifyUsers = User::all();
+                foreach ($notifyUsers as $user) {
+                    Notification::send(
+                        $user,
+                        new DefaultMessageNotify(
+                            $title = 'Nuove Pianificazioni - '. $this->importedfile->plantype->name .' - Importate!',
+                            $body = 'File [' . $this->importedfile->name . '] processato correttamente!',
+                            $link = $this->importedfile->plantype->id,
+                            $level = 'info'
                         )
                     );
+                }
             });  
             Log::info('ProcessTempTasks Job Ended');
         } catch (\Throwable $th) {
