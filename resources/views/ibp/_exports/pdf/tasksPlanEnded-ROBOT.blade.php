@@ -9,23 +9,23 @@
         border-collapse: collapse;
         text-align: center;
         border-style: groove;
-        height: 20px;
-        vertical-align: center;
+        height: 25px;
+        vertical-align: middle;
     }
 </style>
 
 @php
 $firstPage=true;
-$chunkTasks = array_chunk($tasks, 5);
+// $chunkTasks = array_chunk($tasks, 5);
 $ralHelper = new RALHelper();
 @endphp
 
-@foreach ($chunkTasks as $tasks)
-<p class="page">
+{{-- @foreach ($chunkTasks as $tasks)
+<p class="page"> --}}
     @if ($firstPage)
 <div class="row" style="text-align: center">
     <h2>Pianificazione {{ $planName }}</h2>
-    <h4>Periodo: {{ $dtMin }} - {{ $dtMax }}</h4>
+    <h4>Periodo Produzione: {{ $dtMin }} - {{ $dtMax }}</h4>
     <hr>
 </div>
 @php
@@ -38,17 +38,17 @@ $firstPage=false;
 $ralRGB = $ralHelper->getRGB($task['values']['ibp_ral_guscio']);
 $ralRGB2 = $ralHelper->getRGB($task['values']['ibp_ral_colbraccio']);
 @endphp
-<div class="row">
-    <table>
-        <col width='5%'>
-        <col width='5%'>
+<div class="row element-that-contains-table" style="padding-top: 5pt;">
+    <table style="font-size: medium; font-weight:600;">
+        <col width='8%'>
+        <col width='8%'>
         <col width='10%'>
         <col width='3%'>
         <col width='7%'>
         <col width='15%'>
+        <col width='12%'>
         <col width='15%'>
-        <col width='15%'>
-        <col width='20%'>
+        <col width='18%'>
         <col width='5%'>
         <tr>
             <th colspan=2 rowspan="2">{{ $task['values']['ibp_cliente_ragsoc'] ?? '' }}</th>
@@ -63,7 +63,7 @@ $ralRGB2 = $ralHelper->getRGB($task['values']['ibp_ral_colbraccio']);
         </tr>
         <tr>
             <td>{{ $task['values']['ibp_n_programmi'] ?? '' }}</td>
-            <td style="background-color: rgb({{ $ralRGB }}); opacity:75%;"></td><th>{{ $task['values']['ibp_ral_guscio'] ?? '' }}</th>
+            <td style="background-color: rgb({{ $ralRGB }}); opacity:75%;"></td><td>{{ $task['values']['ibp_ral_guscio'] ?? '' }}</td>
             @if (!empty($task['values']['ibp_colonna']))<td>{{ $task['values']['ibp_colonna'] ?? '' }}</td>@else<td>{{ $task['values']['ibp_braccio'] ?? '' }}</td>@endif
             <td>{{ $task['values']['ibp_carrello'] ?? '' }}</td>
             <td>{{ $task['values']['ibp_imballo_tipo'] ?? '' }}</td>
@@ -84,7 +84,7 @@ $ralRGB2 = $ralHelper->getRGB($task['values']['ibp_ral_colbraccio']);
             <td>{{ $task['matricole'][5] ?? '' }}</td>
             <td>{{ $task['values']['ibp_impianto'] ?? '' }}</td>
             <td style="background-color: rgb({{ $ralRGB2 }}); opacity:75%;"></td>
-            <th>{{ $task['values']['ibp_ral_colbraccio'] ?? '' }}</th>
+            <td>{{ $task['values']['ibp_ral_colbraccio'] ?? '' }}</td>
             <th>BATTERIA</th>
             <td>{{ $task['values']['ibp_carrello_opt_2'] ?? '' }}</td>
             <td>{{ $task['values']['ibp_dim_imballo2'] ?? '' }}</td>
@@ -122,7 +122,7 @@ $ralRGB2 = $ralHelper->getRGB($task['values']['ibp_ral_colbraccio']);
 </div>
 @endforeach
 
-</p>
-@endforeach
+{{-- </p>
+@endforeach --}}
 
 @endsection

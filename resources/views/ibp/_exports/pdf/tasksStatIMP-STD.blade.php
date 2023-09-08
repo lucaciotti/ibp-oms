@@ -23,7 +23,7 @@
     @if ($firstPage)
         <div class="row" style="text-align: center">
             <h1>Statistiche IMPIANTI {{ $planName }}</h1>
-            <h3>Periodo: {{ $dtMin }} - {{ $dtMax }}</h3>
+            <h3>Periodo Produzione: {{ $dtMin }} - {{ $dtMax }}</h3>
             <br>
         </div>
         @php

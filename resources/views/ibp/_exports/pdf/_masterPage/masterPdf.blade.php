@@ -13,6 +13,11 @@
                 page-break-after: always;
                 }
              */
+            @media print {
+                .element-that-contains-table {
+                    overflow: visible !important;
+                }
+            }
             p.page { page-break-after: always; }
             p.page:last-child { page-break-after: avoid; }
             div.row { font-size: 9pt; }
@@ -34,10 +39,12 @@
             table tr:nth-child(even) { background-color: #f2f2f2; }
             table tr.danger { background-color: red; }
             table tr.warning { background-color: orange; }
+            table thead { display: table-header-group; }
+            table tbody { display: table-header-group; } 
+            table tbody th { background-color: lightgrey; }
             table tbody td.green { background-color: #cef2bc; }
             table tbody td.orange { background-color: #f0d45e; }
             table tbody td.red { background-color: #ffb3b3; }
-            table thead { display: table-header-group; }
             table tfoot { background-color: darkgrey; display: table-header-group; }
             table tfoot th.orange { background-color: #f0d45e; }
             div.contentTitle { 

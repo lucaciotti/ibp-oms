@@ -23,7 +23,7 @@
     @if ($firstPage)
         <div class="row" style="text-align: center">
             <h1>Statistiche IMBALLI {{ $planName }}</h1>
-            <h3>Periodo: {{ $dtMin }} - {{ $dtMax }}</h3>
+            <h3>Periodo Produzione: {{ $dtMin }} - {{ $dtMax }}</h3>
             <br>
         </div>
         @php
@@ -35,7 +35,7 @@
         <h2>Tipologia Imballi + Misure</h2>
         <table>
             <tr height="20px">
-                <th></th>
+                <td></td>
                 @foreach ($stats['imb_tipo'] as $item)
                     <th width='50px'>{{ $item }}</th>
                 @endforeach
@@ -44,19 +44,28 @@
             @foreach ($stats['imb_dim'] as $imb_dim)
             <tr>
                 <th width='100px'>{{ $imb_dim }}</th>
-                @foreach ($stats['imb_tipo'] as $item)
-                <th>{{ $tasks->where('ibp_imballo_dim', $imb_dim)->where('ibp_imballo_tipo', $item)->count() }}</th>
-                @endforeach
-                <th>{{ $tasks->where('ibp_imballo_dim', $imb_dim)->count() }}</th>
+                @if ($imb_dim!='790 X 1540 X H 1135')
+                    @foreach ($stats['imb_tipo'] as $item)
+                    <td>{{ $tasks->where('ibp_imballo_dim', $imb_dim)->where('ibp_imballo_tipo', $item)->count() }}</td>
+                    @endforeach
+                    <td>{{ $tasks->where('ibp_imballo_dim', $imb_dim)->count() }}</td>
+                @else
+                    @foreach ($stats['imb_tipo'] as $item)
+                    <td>{{ $tasks->where('ibp_imballo_dim', $imb_dim)->where('ibp_imballo_tipo', $item)->count() + $tasks->filter(function ($task) { return Str::startsWith($task->ibp_imballo_tipo, '*'); })->where('ibp_imballo_tipo', $item)->count() }}</td>
+                    @endforeach
+                    <td>{{ $tasks->where('ibp_imballo_dim', $imb_dim)->count() + $tasks->filter(function ($task) { return Str::startsWith($task->ibp_imballo_tipo, '*'); })->count() }}</td>
+                @endif
             </tr>
             @endforeach
-            <tr>
-                <th>TOTALE</th>
-                @foreach ($stats['imb_tipo'] as $item)
-                <th>{{ $tasks->where('ibp_imballo_tipo', $item)->count() }}</th>
-                @endforeach
-                <th>{{ $tasks->count() }}</th>
-            </tr>
+            <tfoot>
+                <tr>
+                    <th>TOTALE</th>
+                    @foreach ($stats['imb_tipo'] as $item)
+                    <th>{{ $tasks->where('ibp_imballo_tipo', $item)->count() }}</th>
+                    @endforeach
+                    <th>{{ $tasks->count() }}</th>
+                </tr>
+            </tfoot>
         </table>
     </div>
 

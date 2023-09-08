@@ -23,7 +23,7 @@
     @if ($firstPage)
         <div class="row" style="text-align: center">
             <h1>Statistiche IMPIANTI {{ $planName }}</h1>
-            <h3>Periodo: {{ $dtMin }} - {{ $dtMax }}</h3>
+            <h3>Periodo Produzione: {{ $dtMin }} - {{ $dtMax }}</h3>
             <br>
         </div>
         @php
@@ -152,7 +152,7 @@
         <h2>Impianto Voltaggio + Batteria</h2>
         <table>
             <tr height="20px">
-                <th></th>
+                <td></td>
                 @foreach ($stats['batteria'] as $item)
                 <th width='50px'>{{ $item }}</th>
                 @endforeach
@@ -162,9 +162,9 @@
             <tr>
                 <th width='100px'>{{ $impianto }}</th>
                 @foreach ($stats['batteria'] as $item)
-                <th>{{ $tasks->where('ibp_impianto', $impianto)->where('ibp_batteria', $item)->count() }}</th>
+                <td>{{ $tasks->where('ibp_impianto', $impianto)->where('ibp_batteria', $item)->count() }}</td>
                 @endforeach
-                <th>{{ $tasks->where('ibp_impianto', $impianto)->count() }}</th>
+                <td>{{ $tasks->where('ibp_impianto', $impianto)->count() }}</td>
             </tr>
             @endforeach
             <tr>

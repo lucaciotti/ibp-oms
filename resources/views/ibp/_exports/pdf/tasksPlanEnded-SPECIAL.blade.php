@@ -9,8 +9,8 @@
         border-collapse: collapse;
         text-align: center;
         border-style: groove;
-        height: 20px;
-        vertical-align: center;
+        height: 25px;
+        vertical-align: middle;
     }
 </style>
 
@@ -20,12 +20,12 @@
     $ralHelper = new RALHelper();
 @endphp
 
-@foreach ($chunkTasks as $tasks)
-    <p class="page">
+{{-- @foreach ($chunkTasks as $tasks)
+    <p class="page"> --}}
     @if ($firstPage)
         <div class="row" style="text-align: center">
             <h2>Pianificazione {{ $planName }}</h2>
-            <h4>Periodo: {{ $dtMin }} - {{ $dtMax }}</h4>
+            <h4>Periodo Produzione: {{ $dtMin }} - {{ $dtMax }}</h4>
             <hr>
         </div>
         @php
@@ -38,17 +38,17 @@
     $ralRGB = $ralHelper->getRGB($task['values']['ibp_ral']);
     $ralRGB2 = $ralHelper->getRGB($task['values']['ibp_ral_basamcol']);
     @endphp
-    <div class="row">
-        <table>
-            <col width='5%'>
-            <col width='5%'>
+    <div class="row element-that-contains-table" style="padding-top: 5pt;">
+        <table style="font-size: medium; font-weight:600;">
+            <col width='8%'>
+            <col width='8%'>
             <col width='10%'>
             <col width='3%'>
             <col width='7%'>
             <col width='15%'>
+            <col width='12%'>
             <col width='15%'>
-            <col width='15%'>
-            <col width='20%'>
+            <col width='18%'>
             <col width='5%'>
             <tr>
                 <th colspan=2 rowspan="2">{{ $task['values']['ibp_cliente_ragsoc'] ?? '' }}</th>
@@ -63,7 +63,7 @@
             </tr>
             <tr>
                 <td>{{ $task['values']['ibp_n_programmi'] ?? '' }}</td>
-                <td style="background-color: rgb({{ $ralRGB }}); opacity:75%;"></td><th>{{ $task['values']['ibp_ral'] ?? '' }}</th>
+                <td style="background-color: rgb({{ $ralRGB }}); opacity:75%;"></td><td>{{ $task['values']['ibp_ral'] ?? '' }}</td>
                 <td>{{ $task['values']['ibp_colonna'] ?? '' }}</td>
                 <td>{{ $task['values']['ibp_carrello'] ?? '' }}</td>
                 <td>{{ $task['values']['ibp_imballo_tipo'] ?? '' }}</td>
@@ -83,7 +83,7 @@
                 <td>{{ $task['matricole'][1] ?? '' }}</td>
                 <td>{{ $task['matricole'][5] ?? '' }}</td>
                 <td>{{ $task['values']['ibp_basamento'] ?? '' }}</td>
-                <td style="background-color: rgb({{ $ralRGB2 }}); opacity:75%;"></td><th>{{ $task['values']['ibp_ral_basamcol'] ?? '' }}</th>
+                <td style="background-color: rgb({{ $ralRGB2 }}); opacity:75%;"></td><td>{{ $task['values']['ibp_ral_basamcol'] ?? '' }}</td>
                 <td>{{ $task['values']['ibp_opt2_colonna'] ?? '' }}</td>
                 <td>{{ $task['values']['ibp_carrello_opt_2'] ?? '' }}</td>
                 <td>{{ $task['values']['ibp_imballo_note'] ?? '' }}</td>
@@ -121,7 +121,7 @@
     </div>
     @endforeach
     
-    </p>
-@endforeach
+    {{-- </p>
+@endforeach --}}
 
 @endsection

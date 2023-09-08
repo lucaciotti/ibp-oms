@@ -23,7 +23,7 @@
     @if ($firstPage)
         <div class="row" style="text-align: center">
             <h1>Statistiche IMBALLI {{ $planName }}</h1>
-            <h3>Periodo: {{ $dtMin }} - {{ $dtMax }}</h3>
+            <h3>Periodo Produzione: {{ $dtMin }} - {{ $dtMax }}</h3>
             <br>
         </div>
         @php
@@ -35,7 +35,7 @@
         <h2>Tipologia Imballi + Misure</h2>
         <table>
             <tr height="20px">
-                <th></th>
+                <td></td>
                 @foreach ($stats['imb_tipo'] as $item)
                     <th width='50px'>{{ $item }}</th>
                 @endforeach
@@ -45,11 +45,12 @@
             <tr>
                 <th width='100px'>{{ $imb_dim }}</th>
                 @foreach ($stats['imb_tipo'] as $item)
-                <th>{{ $tasks->where('ibp_imballo_dim', $imb_dim)->where('ibp_imballo_tipo', $item)->count() }}</th>
+                <td>{{ $tasks->where('ibp_imballo_dim', $imb_dim)->where('ibp_imballo_tipo', $item)->count() }}</td>
                 @endforeach
                 <th>{{ $tasks->where('ibp_imballo_dim', $imb_dim)->count() }}</th>
             </tr>
             @endforeach
+            <tfoot>
             <tr>
                 <th>TOTALE</th>
                 @foreach ($stats['imb_tipo'] as $item)
@@ -57,6 +58,7 @@
                 @endforeach
                 <th>{{ $tasks->count() }}</th>
             </tr>
+            </tfoot>
         </table>
     </div>
 
