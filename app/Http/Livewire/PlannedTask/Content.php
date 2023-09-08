@@ -36,6 +36,7 @@ class Content extends DynamicContent
     public function updatedPlantypeId(){
         Session::put('plannedtask.plantype.id', $this->plantype_id);
         $this->emit('refreshDatatable');
+        $this->emit('clearSelected');
     }
 
     public function tableHasToBeRefreshed(){

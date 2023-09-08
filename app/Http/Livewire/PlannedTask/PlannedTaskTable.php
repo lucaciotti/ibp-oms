@@ -20,6 +20,13 @@ class PlannedTaskTable extends DataTableComponent
 
     public $type_id;
 
+    protected function getListeners()
+    {
+        return [
+            'clearSelected' => 'clearSelected',
+        ];
+    }
+
     public function mount() {
         $this->setFilter('date_prod_from', date('Y-m-d', strtotime('-' . date('w') . ' days')));
         $this->setFilter('completed', 'no');
@@ -233,6 +240,7 @@ class PlannedTaskTable extends DataTableComponent
     {
         $actions = [
             'doReport' => 'Stampa Report',
+            'hr1' => '---------------------------',
             'xlsExport' => 'Export Xls',
             'xlsExportCompleted' => 'Export Xls (Completati)',
         ];
@@ -241,8 +249,19 @@ class PlannedTaskTable extends DataTableComponent
             $actions=array_merge(
                 $actions,
                 [
+                'hr2' => '---------------------------',
                 'completed' => '[v] Completati',
                 'notcompleted' => '[x] Non Completati',
+                ]
+            );
+        }
+
+        if (Laratrust::isAbleTo('tasks-delete')) {
+            $actions = array_merge(
+                $actions,
+                [
+                    'hr3' => '---------------------------',
+                    'delete' => 'Cancella Pianificazioni',
                 ]
             );
         }
@@ -279,5 +298,10 @@ class PlannedTaskTable extends DataTableComponent
         foreach ($this->getSelected() as $id) {
             $tasks = PlannedTask::find($id)->update(['completed' =>0, 'completed_date' => null]);
         }
+    }
+
+    public function delete()
+    {
+        $this->emit('modal.open', 'planned-task.planned-task-modal-delete', ['tasks_ids' => $this->getSelected(),]);
     }
 }
