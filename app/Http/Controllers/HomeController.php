@@ -34,7 +34,7 @@ class HomeController extends Controller
             $planTile['id'] = $plan->id;
             $planTile['title'] = 'Pianificazione '.$plan->name;
             $planTile['color'] = $colors[$indexColor];
-            $planTile['count'] = PlannedTask::where('type_id', $plan->id)->where('ibp_data_inizio_prod', '>', date('Y-m-d', strtotime('-' . date('w') . ' days')))->where('completed', false)->count();
+            $planTile['count'] = PlannedTask::where('type_id', $plan->id)->where('completed', false)->count();
             array_push($planTiles, $planTile);
             $indexColor++;
         }

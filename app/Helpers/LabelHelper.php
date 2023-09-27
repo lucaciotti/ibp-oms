@@ -18,6 +18,7 @@ class LabelHelper {
         'date_last_import' => 'Dt.Ultimo Import',
         'force_import' => 'Forza Importazione',
         'completed' => 'Completato',
+        'completed_date' => 'Data Completato',
     ];
 
     public function __construct()
