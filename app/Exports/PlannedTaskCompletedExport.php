@@ -48,8 +48,9 @@ class PlannedTaskCompletedExport implements FromQuery, WithMapping, WithHeadings
     public function columnFormats(): array
     {
         $format = [];
-        $alphabet = range('B', 'Z');
+        $alphabet = range('C', 'Z');
         $index=0;
+        $format['B'] = NumberFormat::FORMAT_DATE_DDMMYYYY;
         foreach ($this->typeAttribute as $column) {
             if ($column->attribute->col_type == 'date') {
                 $format[$alphabet[$index]] = NumberFormat::FORMAT_DATE_DDMMYYYY;
