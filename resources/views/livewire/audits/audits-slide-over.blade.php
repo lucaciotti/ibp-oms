@@ -6,6 +6,26 @@
     @endphp
     <div class="list-group">
         @foreach ($logs as $log)
+            @php
+                $skip = false;
+                if($log->event=='updated'){
+                    foreach ($log->new_values as $key => $value) {
+                        if(stripos($key, 'data')){
+                            $old_val = $log->old_values[$key];
+                            $new_val = (new Carbon\Carbon(date('d-m-Y',strtotime($value))))->format('d-m-Y');
+                            $old_val = (!empty($old_val)) ? (new Carbon\Carbon(date('d-m-Y',strtotime($old_val))))->format('d-m-Y') : $old_val;
+                            if ($new_val == $old_val){
+                                $skip = true;
+                            } else {
+                                $skip = false;
+                            }
+                        } else {
+                            $skip = false;
+                        }
+                    }
+                }
+            @endphp
+            @if (!$skip)
             <div class="list-group-item list-group-item-action">
                 <div class="media">
                     @if ($log->event=='created')
@@ -29,7 +49,17 @@
             
                     <div class="media-body">
                         <h3 class="dropdown-item-title">
-                            {{ $message }} <em><small> - da: {{ $log->user->name ?? 'Sistema' }}</small></em>
+                            {{ $message }} 
+                            <em>
+                                <small> 
+                                    - da: 
+                                    @if ($log->user)
+                                        <strong>{{ $log->user->name ?? 'Import XLS' }}</strong>
+                                    @else
+                                        Import XLS
+                                    @endif 
+                                </small>
+                            </em>
                             {{-- <a href="#" class="float-right text-sm text-secondary" wire:click="">
                                 <i class="fa fa-check fa-lg"></i></a> --}}
                         </h3>
@@ -45,7 +75,9 @@
                                             $old_val = (!empty($old_val)) ? (new Carbon\Carbon(date('d-m-Y',strtotime($old_val))))->format('d-m-Y') : $old_val;
                                         }
                                     @endphp
-                                    <strong>{{ $labelHelper->getLabel($key) }} : </strong> {{ $old_val ?? 'None' }} => {{ $new_val }}<br>
+                                    @if ($new_val!=$old_val)
+                                        <strong>{{ $labelHelper->getLabel($key) }} : </strong> {{ $old_val ?? 'None' }} => {{ $new_val }}<br>
+                                    @endif
                                 @endforeach
                             </p>
                         @endif
@@ -55,6 +87,7 @@
                 </div>
             
             </div>
+            @endif
         @endforeach
         
         {{-- <a href="#" class="list-group-item list-group-item-action py-2" style="background: #F0F0F0;" wire:click="markAllAsRead()"><p class="text-sm m-0 text-bold"><em>Segna tutte come lette</em></p></a>     --}}
