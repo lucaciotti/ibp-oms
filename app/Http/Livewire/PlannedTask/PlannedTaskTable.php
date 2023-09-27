@@ -28,7 +28,7 @@ class PlannedTaskTable extends DataTableComponent
     }
 
     public function mount() {
-        $this->setFilter('date_prod_from', date('Y-m-d', strtotime('-' . date('w') . ' days')));
+        // $this->setFilter('date_prod_from', date('Y-m-d', strtotime('-' . date('w') . ' days')));
         $this->setFilter('completed', 'no');
     }
 
