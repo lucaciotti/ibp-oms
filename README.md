@@ -1,14 +1,14 @@
-Todo
+TODO
 v Gestire generazione PDF Export Completati -> inserendo Data Completato
-v Se ImportXls errore  
+v ImportXls sistemare errori
 v Salvare Nome import come: PianificazioneROBOT_06092023_0928
 v Aggiornamento automatico tabella PlannedTask dopo import
+v Gestire report PDF con ordinamento imposto da utente su tabella
+v Report PIanificazione con scritte più grandi - Non leggibile!
+v Modifica Report Colore (Ral/Colonna)
+v Possibilità di Cancellare le pianificazioni per utente Admin
 
-v Gestire report PDF con ordine imposto da utente su tabella
 - Sistemare Report Statistici
-- Possibilità di Cancellare le pianificazioni per utente Admin
-v Report con scritte più grandi - Non leggibile
-v Modifica Report Colore (Ral/Colonna con 2 colori 7015 e 5010??)
 v Report Stat Robot -> Ral Colonna/Braccio (anzichè Ral Colonna/Basamento)
 - Report Robot Imballi -> gestire:
     v SE il campo “IMBALLO” inizia con *785… 

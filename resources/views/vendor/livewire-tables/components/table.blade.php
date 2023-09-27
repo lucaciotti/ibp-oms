@@ -53,7 +53,7 @@
         </table>
     </div>
 @elseif ($theme === 'bootstrap-4' || $theme === 'bootstrap-5')
-    <div {{ 
+    <div style="height: 75vh;" {{ 
         $attributes->merge($customAttributes['wrapper'])
             ->class(['table-responsive' => $customAttributes['wrapper']['default'] ?? true])
             ->except('default')
@@ -63,7 +63,7 @@
                 ->class(['table table-striped' => $customAttributes['table']['default'] ?? true])
                 ->except('default')
         }}>
-            <thead {{
+            <thead style="position: sticky; top: 0; background: white; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4); z-index: 1;" {{
                 $attributes->merge($customAttributes['thead'])
                     ->class(['' => $customAttributes['thead']['default'] ?? true])
                     ->except('default')

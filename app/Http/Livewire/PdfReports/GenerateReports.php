@@ -17,6 +17,7 @@ class GenerateReports extends Modal
     public $type_id;
     public $reportKey;
     public $order_tasks;
+    public $filter_on_tasks;
     public $planName;
     
     public $reports = [
@@ -30,11 +31,22 @@ class GenerateReports extends Modal
     public $title = 'Report PDF';
     public $pdfReport;
 
-    protected function do_plan_report(){
+    protected function do_plan_report() 
+    {
         
         $planName = Str::upper((PlanType::select('name')->find($this->type_id))->name);
-        $dtMin = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->min('ibp_data_inizio_prod')))->format('d/m/Y');
-        $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->max('ibp_data_inizio_prod')))->format('d/m/Y');
+
+        // Costruisco le date di riferimento report
+        if (array_key_exists('date_prod_from', $this->filter_on_tasks)){
+            $dtMin = (new Carbon($this->filter_on_tasks['date_prod_from']))->format('d/m/Y');
+        } else {
+            $dtMin = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->min('ibp_data_inizio_prod')))->format('d/m/Y');
+        }
+        if (array_key_exists('date_prod_to', $this->filter_on_tasks)) {
+            $dtMax = (new Carbon($this->filter_on_tasks['date_prod_to']))->format('d/m/Y');
+        } else {
+            $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->max('ibp_data_inizio_prod')))->format('d/m/Y');
+        }
 
         $columns = Arr::pluck(Attribute::select('col_name')->whereHas('planTypeAttribute', fn ($query) => $query->where('type_id', $this->type_id))->where('col_name', '!=', 'ibp_plan_matricola')->get()->toArray(), 'col_name');
         $n_of_columns = count($columns);
@@ -62,6 +74,7 @@ class GenerateReports extends Modal
             $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->where('completed', false)->groupBy($columns)->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc')->get();
         }
         $tasks = [];
+        $sum_total_tasks = 0;
         foreach ($tasksWithSameValues as $task) {
             $aWhere = [];
             foreach ($columns as $column) {
@@ -75,6 +88,7 @@ class GenerateReports extends Modal
                     'values' => $task->toArray(),
                     'qta' => count($aMat),
                 ];
+                $sum_total_tasks += count($aMat);
                 array_push($tasks, $aTask);
             }
         }
@@ -87,6 +101,7 @@ class GenerateReports extends Modal
             'dtMin' => $dtMin,
             'dtMax' => $dtMax,
             'tasks' => $tasks,
+            'total_tasks' => $sum_total_tasks,
         ];
         // dd($data);
         $this->pdfReport = $title . '-' . $subTitle . '_' . Carbon::now()->format('YmdHis') . '.pdf';
@@ -99,14 +114,24 @@ class GenerateReports extends Modal
     {
 
         $planName = Str::upper((PlanType::select('name')->find($this->type_id))->name);
-        $dtMin = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', true)->min('ibp_data_inizio_prod')))->format('d/m/Y');
-        $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', true)->max('ibp_data_inizio_prod')))->format('d/m/Y');
+        // Costruisco le date di riferimento report
+        if (array_key_exists('date_prod_from', $this->filter_on_tasks)) {
+            $dtMin = (new Carbon($this->filter_on_tasks['date_complete_from']))->format('d/m/Y');
+        } else {
+            $dtMin = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->min('ibp_data_inizio_prod')))->format('d/m/Y');
+        }
+        if (array_key_exists('date_prod_to', $this->filter_on_tasks)) {
+            $dtMax = (new Carbon($this->filter_on_tasks['date_complete_to']))->format('d/m/Y');
+        } else {
+            $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->max('ibp_data_inizio_prod')))->format('d/m/Y');
+        }
 
         $columns = Arr::pluck(Attribute::select('col_name')->whereHas('planTypeAttribute', fn ($query) => $query->where('type_id', $this->type_id))->where('col_name', '!=', 'ibp_plan_matricola')->get()->toArray(), 'col_name');
         $n_of_columns = count($columns);
         array_push($columns, 'completed_date');
         $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->where('completed', true)->groupBy($columns)->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc')->get();
         $tasks = [];
+        $sum_total_tasks = 0;
         foreach ($tasksWithSameValues as $task) {
             $aWhere = [];
             foreach ($columns as $column) {
@@ -120,6 +145,7 @@ class GenerateReports extends Modal
                     'values' => $task->toArray(),
                     'qta' => count($aMat),
                 ];
+                $sum_total_tasks += count($aMat);
                 array_push($tasks, $aTask);
             }
         }
@@ -132,6 +158,7 @@ class GenerateReports extends Modal
             'dtMin' => $dtMin,
             'dtMax' => $dtMax,
             'tasks' => $tasks,
+            'total_tasks' => $sum_total_tasks,
         ];
         // dd($data);
         $this->pdfReport = $title . '-' . $subTitle . '_' . Carbon::now()->format('YmdHis') . '.pdf';
@@ -143,8 +170,17 @@ class GenerateReports extends Modal
     protected function do_stat_imp_report()
     {
         $planName = Str::upper((PlanType::select('name')->find($this->type_id))->name);
-        $dtMin = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->min('ibp_data_inizio_prod')))->format('d/m/Y');
-        $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->max('ibp_data_inizio_prod')))->format('d/m/Y');
+        // Costruisco le date di riferimento report
+        if (array_key_exists('date_prod_from', $this->filter_on_tasks)) {
+            $dtMin = (new Carbon($this->filter_on_tasks['date_prod_from']))->format('d/m/Y');
+        } else {
+            $dtMin = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->min('ibp_data_inizio_prod')))->format('d/m/Y');
+        }
+        if (array_key_exists('date_prod_to', $this->filter_on_tasks)) {
+            $dtMax = (new Carbon($this->filter_on_tasks['date_prod_to']))->format('d/m/Y');
+        } else {
+            $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->max('ibp_data_inizio_prod')))->format('d/m/Y');
+        }
 
         $tasks = PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->get();
 
@@ -167,8 +203,17 @@ class GenerateReports extends Modal
 
     protected function do_stat_ral_report(){
         $planName = Str::upper((PlanType::select('name')->find($this->type_id))->name);
-        $dtMin = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->min('ibp_data_inizio_prod')))->format('d/m/Y');
-        $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->max('ibp_data_inizio_prod')))->format('d/m/Y');
+        // Costruisco le date di riferimento report
+        if (array_key_exists('date_prod_from', $this->filter_on_tasks)) {
+            $dtMin = (new Carbon($this->filter_on_tasks['date_prod_from']))->format('d/m/Y');
+        } else {
+            $dtMin = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->min('ibp_data_inizio_prod')))->format('d/m/Y');
+        }
+        if (array_key_exists('date_prod_to', $this->filter_on_tasks)) {
+            $dtMax = (new Carbon($this->filter_on_tasks['date_prod_to']))->format('d/m/Y');
+        } else {
+            $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->max('ibp_data_inizio_prod')))->format('d/m/Y');
+        }
 
         $tasks = PlannedTask::select('ibp_ral', 'ibp_ral_basamcol', 'ibp_ral_guscio', 'ibp_ral_colbraccio', 'ibp_basamento', 'ibp_colonna', 'ibp_prodotto_tipo', 'ibp_carrello', 'ibp_braccio')->whereIn('id', $this->tasks_ids)->where('completed', false)->get();
 
@@ -193,8 +238,17 @@ class GenerateReports extends Modal
     {
         $planName = Str::upper((PlanType::select('name')->find($this->type_id))->name);
         $this->planName = $planName;
-        $dtMin = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->min('ibp_data_inizio_prod')))->format('d/m/Y');
-        $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->max('ibp_data_inizio_prod')))->format('d/m/Y');
+        // Costruisco le date di riferimento report
+        if (array_key_exists('date_prod_from', $this->filter_on_tasks)) {
+            $dtMin = (new Carbon($this->filter_on_tasks['date_prod_from']))->format('d/m/Y');
+        } else {
+            $dtMin = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->min('ibp_data_inizio_prod')))->format('d/m/Y');
+        }
+        if (array_key_exists('date_prod_to', $this->filter_on_tasks)) {
+            $dtMax = (new Carbon($this->filter_on_tasks['date_prod_to']))->format('d/m/Y');
+        } else {
+            $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->max('ibp_data_inizio_prod')))->format('d/m/Y');
+        }
 
         $tasks = PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->get();
 
@@ -260,16 +314,12 @@ class GenerateReports extends Modal
     }
 
     protected function getUniqueFromCollection($collect, $key){
-        $arrayOfValues = Arr::pluck($collect->where($key, '!=', '')->unique($key)->sortBy($key)->toArray(), $key);
-        if($key=='ibp_imballo_dim' && $this->planName=='ROBOT') {
-            $arrayOfValues = array_filter($arrayOfValues, static function ($element) {
-                return !Str::startsWith($element, '*');
-            });
-            if(!in_array('790 X 1540 X H 1135', $arrayOfValues)){
-                array_push($arrayOfValues, '790 X 1540 X H 1135');
-            }
-            sort($arrayOfValues);
+        if ($key == 'ibp_imballo_dim' && $this->planName == 'ROBOT') {
+            $arrayOfValues = $this->buildImbRobot();
+        } else {
+            $arrayOfValues = Arr::pluck($collect->where($key, '!=', '')->unique($key)->sortBy($key)->toArray(), $key);
         }
+        
         // $aMapped = Arr::map($arrayOfValues, function (string $value, string $key) {
         //     return Str::upper($value);
         // });
@@ -277,12 +327,42 @@ class GenerateReports extends Modal
         return $arrayOfValues;
     }
 
-    public function mount($tasks_ids, $reportKey, $type_id, $order_tasks)
+    private function buildImbRobot() {
+        // 700 X 1500 = alla somma di tutti i (750 X 1500) + (785 X 1535 X h 2200 ) + ( 785 X 1530 X h 1160 )
+        // 790 X 1540 X h 1135 = alla somma di tutti i ( 790 X 1540 X h 1135 )
+        // 790 X 1540 X h 1235 = alla somma di tutti i ( 790 X 1540 X h 1235 )
+        // 860 X 1760 = alla somma di tutti i ( 860 X 1760 )
+        // 900 X 1800 X h 1235 = alla somma di tutti i (900 X 1800 X h 1235 )
+        // 780 X 2600 X h 800 = alla somma di tutti i ( *780 X 3000 X h 800 ) + ( *780 X 3500 X h 800 ) + ( 780 X 2600 X h 800 ) + ( 780 X 3000 X h 800 ) + ( 780 X 3500 X h 800 )
+        // Prolunga 780 X 2600 = alla somma di tutti i ( *780 X 3000 X h 800 ) + ( *780 X 3500 X h 800 ) + ( 780 X 3000 X h 800 ) + ( 780 X 3500 X h 800 )
+        
+        $arrayOfValues = [
+            '700 X 1500',
+            '790 X 1540 X H 1135',
+            '790 X 1540 X H 1235',
+            '860 X 1760',
+            '900 X 1800 X H 1235',
+            '780 X 2600 X H 800',
+            '*Prolunga 780 X 2600'
+        ];
+        // $arrayOfValues = array_filter($arrayOfValues, static function ($element) {
+        //     return !Str::startsWith($element, '*');
+        // });
+        // if (!in_array('790 X 1540 X H 1135', $arrayOfValues)) {
+        //     array_push($arrayOfValues, '790 X 1540 X H 1135');
+        // }
+        // sort($arrayOfValues);
+
+        return $arrayOfValues;
+    }
+
+    public function mount($tasks_ids, $reportKey, $type_id, $configs)
     {
         $this->tasks_ids = $tasks_ids;
         $this->reportKey = $reportKey;
         $this->type_id = $type_id;
-        $this->order_tasks = $order_tasks;
+        $this->order_tasks = (array_key_exists('order', $configs)) ? $configs['order'] : [];
+        $this->filter_on_tasks = (array_key_exists('filters', $configs)) ? $configs['filters'] : [];
         $reportCall = 'do_'.$reportKey.'_report';
         if (is_callable([$this, $reportCall])) {
             $this->$reportCall();

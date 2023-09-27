@@ -88,11 +88,9 @@ class PlannedTaskTable extends DataTableComponent
         array_push(
             $columns,
             Column::make('Data Completato', 'completed_date')
-                    ->searchable()
                     ->format(
-                        fn ($value, $row, Column $column) => ($value!=null) ? $value->format('d-m-Y') : ""
+                        fn ($value, $row, Column $column) => ($value != null) ? $value->format('d-m-Y') : ""
                     )
-                    ->deselected()
                     ->sortable()
         );
         foreach ($planAttrs as $planAttr) {
@@ -100,7 +98,6 @@ class PlannedTaskTable extends DataTableComponent
                 if ($planAttr->attribute->col_type == 'date'){
                     array_push($columns, 
                         Column::make($planAttr->attribute->label, $planAttr->attribute->col_name)
-                            ->searchable()
                             ->format(
                                 fn ($value, $row, Column $column) => $value->format('d-m-Y')
                             )
@@ -120,11 +117,9 @@ class PlannedTaskTable extends DataTableComponent
                     array_push(
                         $columns,
                         Column::make($planAttr->attribute->label, $planAttr->attribute->col_name)
-                            ->searchable()
                             ->format(
                                 fn ($value, $row, Column $column) => $value->format('d-m-Y')
                             )
-                            ->deselected()
                             ->sortable()
                     );
                 } else {
@@ -270,20 +265,26 @@ class PlannedTaskTable extends DataTableComponent
     }
 
     public function doReport()  {
-        // dd($this->getSorts());
-        $this->emit('modal.open', 'pdf-reports.list-of-reports', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id, 'order_tasks' => $this->getSorts()]);
+        $this->emit('modal.open', 'pdf-reports.list-of-reports', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id, 'configs' => $this->buildTasksConfig()]);
     }
 
     public function xlsExport()
     {
-        $this->emit('modal.open', 'xls-export.xls-export-modal', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id, 'order_tasks' => $this->getSorts()]);
+        $this->emit('modal.open', 'xls-export.xls-export-modal', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id, 'configs' => $this->buildTasksConfig()]);
         // dd($this->getSelected());
     }
 
     public function xlsExportCompleted()
     {
-        $this->emit('modal.open', 'xls-export.xls-export-modal', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id, 'completed' => 1, 'order_tasks' => $this->getSorts()]);
+        $this->emit('modal.open', 'xls-export.xls-export-modal', ['tasks_ids' => $this->getSelected(), 'type_id' => $this->type_id, 'completed' => 1, 'configs' => $this->buildTasksConfig()]);
         // dd($this->getSelected());
+    }
+
+    private function buildTasksConfig(){
+        return [
+            'order' => $this->getSorts(),
+            'filters' => $this->getAppliedFiltersWithValues(),
+        ];
     }
 
     public function completed()

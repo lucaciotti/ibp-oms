@@ -33,18 +33,69 @@
 
     <div class="row">
         <h2>Impianti</h2>
+        @foreach ($stats['prods'] as $item)
         <table>
+            <thead>
+                <tr height="20px">
+                    <th width='20%' rowspan="2"></th>
+                    <th colspan="6">{{ $item }}</th>
+                </tr>
+                <tr height="20px">
+                    <th width='12.5%'>TASTI</th>
+                    <th width='12.5%'>TOUCH</th>
+                    <th width='12.5%'>FREEZER</th>
+                    <th width='12.5%'>INOX</th>
+                    <th width='12.5%'>SCAMBIO<br>SEGNALI</th>
+                    <th width='17.5%'>TOT.</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($stats['colonne'] as $col)
+                <tr>
+                    <th>{{ $col }}</th>
+                    <th>{{ $tasks->where('ibp_colonna', $col)->where('ibp_prodotto_tipo', $item)->count() }}</th>
+                    <th>{{ $tasks->where('ibp_colonna', $col)->where('ibp_prodotto_tipo', $item.' TOUCH')->count() }}</th>
+                    <td>
+                        {{ $tasks->where('ibp_colonna', $col)
+                            ->filter(function ($task) use ($item) { return false !== stripos($task->ibp_prodotto_tipo, $item); })
+                            ->filter(function ($task) use ($item) { return stripos($task->ibp_basamento_opt, 'FREEZER')!==false || stripos($task->ibp_opt2_basamento, 'FREEZER')!==false || stripos($task->ibp_opt3_basamento, 'FREEZER')!==false; })
+                            ->count() }}
+                    </td>
+                    <td>
+                        {{ $tasks->where('ibp_colonna', $col)
+                            ->filter(function ($task) use ($item) { return false !== stripos($task->ibp_prodotto_tipo, $item); })
+                            ->filter(function ($task) use ($item) { return stripos($task->ibp_carrello_opt, 'INOX')!==false || stripos($task->ibp_carrello_opt_2, 'INOX')!==false || stripos($task->ibp_carrello_opt_3, 'INOX')!==false; })
+                            ->count() }}
+                    </td>
+                    <td>
+                        {{ $tasks->where('ibp_colonna', $col)
+                            ->filter(function ($task) use ($item) { return false !== stripos($task->ibp_prodotto_tipo, $item); })
+                            ->filter(function ($task) use ($item) { return false !== stripos($task->ibp_plan_note,'SCAMBIO SEGNAL'); })->count() }}
+                    </td>
+                    <th>
+                        {{ $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item) { return false !== stripos($task->ibp_prodotto_tipo, $item); })->count() }}
+                    </th>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <br>
+        @endforeach
+        {{-- <table>
             <thead>
                 <tr height="20px">
                     <th width='150px' rowspan="2"></th>
                     @foreach ($stats['prods'] as $item)
-                    <th colspan="3">{{ $item }}</th>
+                    <th colspan="6">{{ $item }}</th>
                     @endforeach
                 </tr>
                 <tr height="20px">
                     @foreach ($stats['prods'] as $item)
                     <th >TASTI</th>
                     <th >TOUCH</th>
+                    <th >FREEZER</th>
+                    <th >INOX</th>
+                    <th >SCAMBIO <br>SEGNALI</th>
                     <th >TOT.</th>
                     @endforeach
                 </tr>
@@ -54,14 +105,17 @@
             <tr>
                 <th>{{ $col }}</th>
                 @foreach ($stats['prods'] as $item)
-                <td>{{ $tasks->where('ibp_colonna', $col)->where('ibp_prodotto_tipo', $item)->count() }}</td>
-                <td>{{ $tasks->where('ibp_colonna', $col)->where('ibp_prodotto_tipo', $item.' TOUCH')->count() }}</td>
+                <th>{{ $tasks->where('ibp_colonna', $col)->where('ibp_prodotto_tipo', $item)->count() }}</th>
+                <th>{{ $tasks->where('ibp_colonna', $col)->where('ibp_prodotto_tipo', $item.' TOUCH')->count() }}</th>
+                <td>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item) { return false !== stripos($task, $item); })->filter(function ($task) use ($item) { return false !== stripos($task, 'FREEZER'); })->count() }}</td>
+                <td>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item) { return false !== stripos($task, $item); })->filter(function ($task) use ($item) { return false !== stripos($task, 'INOX'); })->count() }}</td>
+                <td>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item) { return false !== stripos($task, $item); })->filter(function ($task) use ($item) { return false !== stripos($task, 'SCAMBIO SEGNALI'); })->count() }}</td>
                 <th>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item) { return false !== stripos($task, $item); })->count() }}</th>
                 @endforeach
             </tr>
             @endforeach
             </tbody>
-        </table>
+        </table> --}}
     </div>
     
     <div>
@@ -73,9 +127,10 @@
         <table>
             <thead>
                 <tr>
-                    <th width='20%'>CARRELLO</th>
+                    <th width='10%'>CARRELLO</th>
                     <th width='10%'>TOTALE</th>
                     <th width='10%'>Opt. INOX</th>
+                    <th width='10%'>Opt. FREEZER</th>
                     <th width='10%'>Opt. KIT SOFFIO</th>
                     <th width='10%'>Opt. STRINGIF. AUTO</th>
                     <th width='10%'>Opt. STRINGIF. MAN.</th>
@@ -94,6 +149,13 @@
                             $tasks->where('ibp_carrello', $cart)
                             ->filter(function ($task){ return stripos($task->ibp_carrello_opt, 'INOX')!==false || stripos($task->ibp_carrello_opt_2, 'INOX')!==false || stripos($task->ibp_carrello_opt_3, 'INOX')!==false; })
                             ->count() 
+                        }}
+                    </td>
+                    <td>
+                        {{
+                        $tasks->where('ibp_carrello', $cart)
+                        ->filter(function ($task) use ($item) { return stripos($task->ibp_basamento_opt, 'FREEZER')!==false || stripos($task->ibp_opt2_basamento, 'FREEZER')!==false || stripos($task->ibp_opt3_basamento, 'FREEZER')!==false; })
+                        ->count()
                         }}
                     </td>
                     <td>

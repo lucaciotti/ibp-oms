@@ -60,6 +60,16 @@
                 @endforeach
             </tr>
             @endforeach
+            @foreach ($stats['braccio'] as $braccio)
+            <tr>
+                <th>{{ $braccio }}</th>
+                @foreach ($stats['prods'] as $item)
+                <td>{{ $tasks->where('ibp_braccio', $braccio)->where('ibp_prodotto_tipo', $item)->count() }}</td>
+                <td>{{ $tasks->where('ibp_braccio', $braccio)->where('ibp_prodotto_tipo', $item.' TOUCH')->count() }}</td>
+                <th>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) use ($item) { return false !== stripos($task, $item); })->count() }}</th>
+                @endforeach
+            </tr>
+            @endforeach
             </tbody>
         </table>
     </div>

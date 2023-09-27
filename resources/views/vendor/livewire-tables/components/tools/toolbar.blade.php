@@ -486,7 +486,7 @@
                                         href="#"
                                         wire:click="{{ $action }}"
                                         wire:key="bulk-action-{{ $action }}-{{ $component->getTableName() }}"
-                                        {{-- class="dropdown-item text-bold" --}} @class(['dropdown-item text-bold', 'text-danger' => Str::startsWith($action,'delete')])
+                                        @class(['dropdown-item text-bold', 'text-danger' => Str::startsWith($action,'delete')])
                                     >
                                         {{ $title }}
                                     </a>

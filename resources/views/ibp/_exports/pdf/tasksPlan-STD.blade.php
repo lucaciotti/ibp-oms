@@ -25,7 +25,10 @@
     @if ($firstPage)
         <div class="row" style="text-align: center">
             <h1>Pianificazione {{ $planName }}</h1>
-            <h2>Periodo Produzione: {{ $dtMin }} - {{ $dtMax }}</h2>
+            <h2>Periodo Produzione: {{ $dtMin }} - {{ $dtMax }}</h2>{{--
+            <hr> --}}
+            <br>
+            <h2 style="text-align: right;"><i><u>Totale Macchine:</u></i> {{ $total_tasks }}</h2>
             <hr>
         </div>
         @php
@@ -49,7 +52,7 @@
             <col width='12%'>
             <col width='15%'>
             <col width='18%'>
-            <col width='5%'>
+            {{-- <col width='5%'> --}}
             <tr>
                 <th colspan=2 rowspan="2">{{ $task['values']['ibp_cliente_ragsoc'] ?? '' }}</th>
                 <th>{{ $task['values']['ibp_prodotto_tipo'] ?? '' }}</th>
@@ -59,7 +62,7 @@
                 {{-- <th>{{ $task['values']['ibp_carrello'] ?? '' }}</th> --}}
                 <th>IMBALLO</th>
                 <th>NOTE</th>
-                <th>Qta</th>
+                {{-- <th>Qta</th> --}}
             </tr>
             <tr>
                 <td>{{ $task['values']['ibp_n_programmi'] ?? '' }}</td>
@@ -68,7 +71,7 @@
                 <td>{{ $task['values']['ibp_carrello'] ?? '' }}</td>
                 <td>{{ $task['values']['ibp_imballo_tipo'] ?? '' }}</td>
                 <td rowspan=6>{{ $task['values']['ibp_plan_note'] ?? '' }}</td>
-                <th rowspan=6>{{ $task['qta'] ?? '' }}</th>
+                {{-- <th rowspan=6>{{ $task['qta'] ?? '' }}</th> --}}
             </tr>
             <tr>
                 <td>{{ $task['matricole'][0] ?? '' }}</td>

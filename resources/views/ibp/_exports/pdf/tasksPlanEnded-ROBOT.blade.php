@@ -22,15 +22,18 @@ $ralHelper = new RALHelper();
 
 {{-- @foreach ($chunkTasks as $tasks)
 <p class="page"> --}}
-    @if ($firstPage)
-<div class="row" style="text-align: center">
-    <h2>Pianificazione {{ $planName }}</h2>
-    <h4>Periodo Produzione: {{ $dtMin }} - {{ $dtMax }}</h4>
-    <hr>
-</div>
-@php
-$firstPage=false;
-@endphp
+@if ($firstPage)
+    <div class="row" style="text-align: center">
+        <h2>Pianificazione {{ $planName }}</h2>
+        <h4>Periodo Produzione: {{ $dtMin }} - {{ $dtMax }}</h4>{{--
+        <hr> --}}
+        <br>
+        <h2 style="text-align: right;"><i><u>Totale Macchine:</u></i> {{ $total_tasks }}</h2>
+        <hr>
+    </div>
+    @php
+    $firstPage=false;
+    @endphp
 @endif
 
 @foreach ($tasks as $task)
@@ -49,7 +52,7 @@ $ralRGB2 = $ralHelper->getRGB($task['values']['ibp_ral_colbraccio']);
         <col width='12%'>
         <col width='15%'>
         <col width='18%'>
-        <col width='5%'>
+        {{-- <col width='5%'> --}}
         <tr>
             <th colspan=2 rowspan="2">{{ $task['values']['ibp_cliente_ragsoc'] ?? '' }}</th>
             <th>{{ $task['values']['ibp_prodotto_tipo'] ?? '' }}</th>
@@ -59,7 +62,7 @@ $ralRGB2 = $ralHelper->getRGB($task['values']['ibp_ral_colbraccio']);
             {{-- <th>{{ $task['values']['ibp_carrello'] ?? '' }}</th> --}}
             <th>IMBALLO</th>
             <th>NOTE</th>
-            <th>Qta</th>
+            {{-- <th>Qta</th> --}}
         </tr>
         <tr>
             <td>{{ $task['values']['ibp_n_programmi'] ?? '' }}</td>
@@ -68,7 +71,7 @@ $ralRGB2 = $ralHelper->getRGB($task['values']['ibp_ral_colbraccio']);
             <td>{{ $task['values']['ibp_carrello'] ?? '' }}</td>
             <td>{{ $task['values']['ibp_imballo_tipo'] ?? '' }}</td>
             <td rowspan=6>{{ $task['values']['ibp_plan_note'] ?? '' }}</td>
-            <th rowspan=6>{{ $task['qta'] ?? '' }}</th>
+            {{-- <th rowspan=6>{{ $task['qta'] ?? '' }}</th> --}}
         </tr>
         <tr>
             <td>{{ $task['matricole'][0] ?? '' }}</td>
