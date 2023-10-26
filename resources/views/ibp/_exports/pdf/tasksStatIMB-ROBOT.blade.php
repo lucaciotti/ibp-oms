@@ -206,8 +206,7 @@
                 @foreach ($stats['imb_tipo'] as $item)
                 <td>
                     {{
-                    $tasks->where('ibp_imballo_tipo', $item)->filter(function ($task) { return in_array($task->ibp_colonna, ['H
-                    2500', 'H 3000', 'H 3500']); })->count()
+                    $tasks->where('ibp_imballo_tipo', $item)->filter(function ($task) { return in_array($task->ibp_colonna, ['H 2500', 'H 3000', 'H 3500']); })->count()
                     }}
                 </td>
                 @endforeach
@@ -223,8 +222,7 @@
                 @foreach ($stats['imb_tipo'] as $item)
                 <td>
                     {{
-                    $tasks->where('ibp_imballo_tipo', $item)->filter(function ($task) { return in_array($task->ibp_colonna, ['H
-                    3000', 'H 3500']); })->count()
+                    $tasks->where('ibp_imballo_tipo', $item)->filter(function ($task) { return in_array($task->ibp_colonna, ['H 3000', 'H 3500']); })->count()
                     }}
                 </td>
                 @endforeach
