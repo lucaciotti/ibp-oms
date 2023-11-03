@@ -73,7 +73,7 @@
                     <td>
                         {{ 
                             $tasks->where('ibp_imballo_tipo', $item)->filter(function ($task) { return strpos($task->ibp_imballo_dim, '790 X 1540 X H 1135')!==false; })->count() +
-                            $tasks->where('ibp_imballo_tipo', $item)->filter(function ($task) { return Str::startsWith($task->ibp_imballo_tipo, '*785'); })->count()
+                            $tasks->where('ibp_imballo_tipo', $item)->filter(function ($task) { return Str::startsWith($task->ibp_imballo_tipo, '*'); })->count()
                         }}
                     </td>
                     @endforeach
