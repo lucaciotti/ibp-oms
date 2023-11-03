@@ -54,16 +54,16 @@
                     <td>
                         {{ 
                             $tasks->where('ibp_imballo_tipo', $item)->filter(function ($task) { return strpos($task->ibp_imballo_dim, '750 X 1500')!==false; })->count() + 
-                            $tasks->where('ibp_imballo_tipo', $item)->filter(function ($task) { return strpos($task->ibp_imballo_dim, '785 X 1535 X H 2200')!==false; })->count() +
-                            $tasks->where('ibp_imballo_tipo', $item)->filter(function ($task) { return strpos($task->ibp_imballo_dim, '785 X 1530 X H 1160')!==false; })->count()
+                            $tasks->where('ibp_imballo_tipo', $item)->filter(function ($task) { return strpos($task->ibp_imballo_dim, '785 X 1535 X H 2200')!==false and !Str::startsWith($task->ibp_imballo_tipo, '*'); })->count() +
+                            $tasks->where('ibp_imballo_tipo', $item)->filter(function ($task) { return strpos($task->ibp_imballo_dim, '785 X 1530 X H 1160')!==false and !Str::startsWith($task->ibp_imballo_tipo, '*'); })->count()
                         }}
                     </td>
                     @endforeach
                     <td>
                         {{ 
                             $tasks->filter(function ($task) { return strpos($task->ibp_imballo_dim, '750 X 1500')!==false; })->count() + 
-                            $tasks->filter(function ($task) { return strpos($task->ibp_imballo_dim, '785 X 1535 X H 2200')!==false; })->count() +
-                            $tasks->filter(function ($task) { return strpos($task->ibp_imballo_dim, '785 X 1530 X H 1160')!==false; })->count()
+                            $tasks->filter(function ($task) { return strpos($task->ibp_imballo_dim, '785 X 1535 X H 2200')!==false and !Str::startsWith($task->ibp_imballo_tipo, '*'); })->count() +
+                            $tasks->filter(function ($task) { return strpos($task->ibp_imballo_dim, '785 X 1530 X H 1160')!==false and !Str::startsWith($task->ibp_imballo_tipo, '*'); })->count()
                         }}
                     </td>
                 @endif
@@ -80,7 +80,7 @@
                     <td>
                         {{ 
                             $tasks->filter(function ($task) { return strpos($task->ibp_imballo_dim, '790 X 1540 X H 1135')!==false; })->count() +
-                            $tasks->filter(function ($task) { return Str::startsWith($task->ibp_imballo_tipo, '*785'); })->count()
+                            $tasks->filter(function ($task) { return Str::startsWith($task->ibp_imballo_tipo, '*'); })->count()
                         }}
                     </td>
                 @endif
