@@ -38,7 +38,7 @@
                     <div class="col-lg-3 col-3 ml-auto">
                     </div>
                     <div class="col-lg-6 col-6 ml-auto">
-                        <div class="small-box bg-info">
+                        <div class="small-box bg-{{ $planRow[0]['color'] }}">
                             <div class="inner">
                                 <h3>{{ $planRow[0]['count'] }}</h3>
 
@@ -59,19 +59,38 @@
         
         <hr>
         <div class="row ">
-            <div class="col-lg-12 col-12 ml-auto">
+            <div class="col-lg-6 col-6 ml-auto">
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>&NonBreakingSpace;</h3>
+                        <h3>Importa</h3>
 
-                        <p>Importa Xls</p>
+                        <p>Pianificazioni da XLS</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-file-excel"></i>
                     </div>
                     <a href="{{ route('plan_xls') }}" class="small-box-footer">Visualizza <i
                             class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-6 ml-auto">
+                <!-- small box -->
+                <div class="small-box" style="background-color: rgb(222, 190, 132)">
+                    <div class="inner">
+                        <h3>Exporta</h3>
+
+                        <p>Pianificazioni in XLS</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-download"></i>
+                    </div>
+                    {{-- <button class="btn btn-primary btn-block"
+                    onclick="Livewire.emit('modal.open', 'xls-export.xls-all-export-modal');">
+                    <span class="fa fa-download"></span> Tutte le pianificazioni in Excel
+                    </button> --}}
+                    <a href="#" class="small-box-footer" onclick="Livewire.emit('modal.open', 'xls-export.xls-all-export-modal');">Visualizza <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
         </div>

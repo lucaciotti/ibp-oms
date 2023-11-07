@@ -56,6 +56,14 @@
                 @endpermission
             </div>
         </div>
+        <div class="card">
+            <div class="card-body">
+                <button class="btn btn-primary btn-block"
+                    onclick="Livewire.emit('modal.open', 'xls-export.xls-all-export-modal');">
+                    <span class="fa fa-download"></span> Tutte le pianificazioni in Excel
+                </button>
+            </div>
+        </div>
     </x-slot:extraContent>
 
 </x-layouts.dynamic-content>

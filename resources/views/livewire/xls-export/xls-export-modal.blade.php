@@ -17,6 +17,6 @@
 
     <x-slot name="buttons">
         <button type="button" class="btn btn-default float-left" wire:click="$emit('modal.close')">Cancella</button>
-        <button type="submit" class="btn btn-primary">Genera Report</button>
+        <button type="submit" class="btn btn-primary">Download Xls</button>
     </x-slot>
 </x-wire-elements-pro::bootstrap.modal>

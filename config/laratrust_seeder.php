@@ -17,22 +17,26 @@ return [
             'tasks' => 'c,r,u,d',
             'config' => 'c,r,u,d',
             'xlsimport' => 'c,r,u,d',
+            'completed' => 'c,r,u,d',
         ],
         'manager' => [
             'users' => 'r',
             'tasks' => 'c,r,u',
             'config' => 'c,r,u',
             'xlsimport' => 'c,r,u',
+            'completed' => 'c,r,u',
         ],
         'production' => [
             'users' => 'r',
             'tasks' => 'r,u',
             'config' => 'r',
             'xlsimport' => 'r',
+            'completed' => 'r',
         ],
         'user' => [
             'tasks' => 'r',
             'xlsimport' => 'r',
+            'completed' => 'r',
         ]
     ],
 

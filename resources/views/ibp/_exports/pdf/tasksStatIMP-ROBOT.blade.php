@@ -116,14 +116,18 @@
                     <td>
                         {{
                             $tasks->where('ibp_carrello', $cart)
-                            ->filter(function ($task){ return stripos($task->ibp_carrello_opt, 'STRINGIF. AUTO')!==false || stripos($task->ibp_carrello_opt_2, 'STRINGIF. AUTO')!==false || stripos($task->ibp_carrello_opt_3, 'STRINGIF. AUTO')!==false; })
+                            ->filter(function ($task){ return (stripos($task->ibp_carrello_opt, 'STRINGIF')!==false && stripos($task->ibp_carrello_opt, 'AUTO'))
+                                || (stripos($task->ibp_carrello_opt_2, 'STRINGIF')!==false && stripos($task->ibp_carrello_opt_2, 'AUTO'))
+                                || (stripos($task->ibp_carrello_opt_3, 'STRINGIF')!==false && stripos($task->ibp_carrello_opt_3, 'AUTO')); })
                             ->count()
                         }}
                     </td>
                     <td>
                         {{
                             $tasks->where('ibp_carrello', $cart)
-                            ->filter(function ($task){ return stripos($task->ibp_carrello_opt, 'STRINGIF. MAN.')!==false || stripos($task->ibp_carrello_opt_2, 'STRINGIF. MAN.')!==false || stripos($task->ibp_carrello_opt_3, 'STRINGIF. MAN.')!==false; })
+                            ->filter(function ($task){ return (stripos($task->ibp_carrello_opt, 'STRINGIF')!==false && stripos($task->ibp_carrello_opt, 'MAN'))
+                                || (stripos($task->ibp_carrello_opt_2, 'STRINGIF')!==false && stripos($task->ibp_carrello_opt_2, 'MAN'))
+                                || (stripos($task->ibp_carrello_opt_3, 'STRINGIF')!==false && stripos($task->ibp_carrello_opt_3, 'MAN')); })
                             ->count()
                         }}
                     </td>

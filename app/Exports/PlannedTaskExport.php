@@ -18,12 +18,16 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 class PlannedTaskExport implements FromQuery, WithMapping, WithHeadings, ShouldAutoSize, WithColumnFormatting, WithStyles
 {
     protected $taskIds;
+    protected $order_tasks;
+    protected $filter_on_tasks;
     protected $importType;
     protected $typeAttribute;
 
-    public function __construct($taskIds, $import_type_id)
+    public function __construct($taskIds, $import_type_id, $order_tasks, $filter_on_tasks)
     {
         $this->taskIds = $taskIds;
+        $this->order_tasks = $order_tasks;
+        $this->filter_on_tasks = $filter_on_tasks;
         $this->importType = PlanImportType::where('id', $import_type_id)->first();
         $this->typeAttribute = PlanImportTypeAttribute::where('import_type_id', $import_type_id)->with(['attribute'])->orderBy('cell_num')->get();
         // dd($this);
@@ -31,7 +35,21 @@ class PlannedTaskExport implements FromQuery, WithMapping, WithHeadings, ShouldA
 
     public function query()
     {
-        return PlannedTask::query()->whereIn('id', $this->taskIds);
+        if ($this->order_tasks) {
+            $order_applied = false;
+            $tasksWithSameValues = PlannedTask::whereIn('id', $this->taskIds);
+            foreach ($this->order_tasks as $key => $value) {
+                    $order_applied = true;
+                    $tasksWithSameValues->orderBy($key, $value);
+            }
+            if (!$order_applied) {
+                $tasksWithSameValues->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc');
+            }
+        } else {
+            $tasksWithSameValues = PlannedTask::query()->whereIn('id', $this->taskIds)->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc');
+        }
+        // return PlannedTask::query()->whereIn('id', $this->taskIds);
+        return $tasksWithSameValues;
     }
 
     public function headings(): array

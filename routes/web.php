@@ -30,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/planned_tasks/{id?}', [App\Http\Controllers\PlannedTaskController::class, 'index'])->name('planned_tasks');
     Route::get('/exportxls_tasks', [App\Http\Controllers\PlannedTaskController::class, 'exportXls'])->name('exportxls_tasks');
+    Route::get('/exportxls_alltasks', [App\Http\Controllers\PlannedTaskController::class, 'exportAllXls'])->name('exportxls_alltasks');
     Route::get('/exportxls_completed_tasks', [App\Http\Controllers\PlannedTaskController::class, 'exportXls_completed'])->name('exportxls_completed_tasks');
     Route::get('/plan_xls', [App\Http\Controllers\PlanImportFileController::class, 'index'])->name('plan_xls');
     Route::get('/plan_xls/{id}/', [App\Http\Controllers\PlanImportFileController::class, 'rows'])->name('plan_xls_rows');

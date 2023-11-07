@@ -41,6 +41,8 @@ class XlsExportModal extends Modal
     {
         Session::put('plannedtask.xlsExport.task_ids', $this->tasks_ids);
         Session::put('plannedtask.xlsExport.import_type_id', $this->import_type_id);
+        Session::put('plannedtask.xlsExport.order_tasks', $this->order_tasks);
+        Session::put('plannedtask.xlsExport.filter_on_tasks', $this->filter_on_tasks);
         if($this->completed){
             return redirect()->route('exportxls_completed_tasks');
         } else {

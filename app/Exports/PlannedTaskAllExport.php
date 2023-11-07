@@ -5,6 +5,8 @@ namespace App\Exports;
 use App\Models\PlanImportType;
 use App\Models\PlanImportTypeAttribute;
 use App\Models\PlannedTask;
+use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
@@ -14,30 +16,87 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class PlannedTaskCompletedExport implements FromQuery, WithMapping, WithHeadings, ShouldAutoSize, WithColumnFormatting, WithStyles
+class PlannedTaskAllExport implements WithMultipleSheets
 {
-    protected $taskIds;
+    use Exportable;
+
+    protected $planConf;
+    protected $filters;
+
+    public function __construct($planConf, $filters)
+    {
+        $this->planConf = $planConf;
+        $this->filters = $filters;
+    }
+
+    public function sheets(): array
+    {
+        $sheets = [];
+
+        foreach ($this->planConf as $key => $plan) {
+            if(!$plan['selected']) continue;
+            $planTypeId = $plan['planType']['id'];
+            $exportXlsTypeId = $plan['xlsTypeId'];
+            $planName = $plan['planType']['name'];
+            $sheets[] = new PlannedTaskSheet($planName, $planTypeId, $exportXlsTypeId, null, $this->filters);
+        }
+
+        return $sheets;
+    }
+
+}
+
+class PlannedTaskSheet implements FromQuery, WithMapping, WithHeadings, ShouldAutoSize, WithColumnFormatting, WithStyles, WithTitle
+{
+    protected $planName;
+    protected $planTypeId;
     protected $order_tasks;
-    protected $filter_on_tasks;
-    protected $importType;
+    protected $filters;
+    protected $exportType;
     protected $typeAttribute;
 
-    public function __construct($taskIds, $import_type_id, $order_tasks, $filter_on_tasks)
+    public function __construct($planName, $planTypeId, $exportXlsTypeId, $order_tasks, $filters)
     {
-        $this->taskIds = $taskIds;
+        $this->planName = $planName;
+        $this->planTypeId = $planTypeId;
         $this->order_tasks = $order_tasks;
-        $this->filter_on_tasks = $filter_on_tasks;
-        $this->importType = PlanImportType::where('id', $import_type_id)->first();
-        $this->typeAttribute = PlanImportTypeAttribute::where('import_type_id', $import_type_id)->with(['attribute'])->orderBy('cell_num')->get();
+        $this->filters = $filters;
+        $this->exportType = PlanImportType::where('id', $exportXlsTypeId)->first();
+        $this->typeAttribute = PlanImportTypeAttribute::where('import_type_id', $exportXlsTypeId)->with(['attribute'])->orderBy('cell_num')->get();
         // dd($this);
     }
 
     public function query()
     {
+        $tasksWithSameValues = PlannedTask::select();
+
+        if($this->filters){
+            foreach ($this->filters as $key => $filter) {
+                $value= $filter['value'];
+                if($value=='' or $value==null) continue;                
+                $colname= $filter['column_name'];
+                $type= $filter['type'];
+                $operator= $filter['operator'];
+                if($type=='date'){
+                    $date = (new Carbon($value));
+                    $tasksWithSameValues = $tasksWithSameValues->where($colname, $operator, $date);
+                }
+                if ($type == 'string') {
+                    $tasksWithSameValues = $tasksWithSameValues->where($colname, $operator, '%'.$value.'%');
+                }
+                if ($type == 'choice') {
+                    if($value=='true') $value=1;
+                    if($value=='false') $value=0;
+                    $tasksWithSameValues = $tasksWithSameValues->where($colname, $operator, $value);
+                }
+            }
+        }
+
         if ($this->order_tasks) {
             $order_applied = false;
-            $tasksWithSameValues = PlannedTask::whereIn('id', $this->taskIds)->where('completed', true);
             foreach ($this->order_tasks as $key => $value) {
                 $order_applied = true;
                 $tasksWithSameValues->orderBy($key, $value);
@@ -46,15 +105,14 @@ class PlannedTaskCompletedExport implements FromQuery, WithMapping, WithHeadings
                 $tasksWithSameValues->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc');
             }
         } else {
-            $tasksWithSameValues = PlannedTask::query()->whereIn('id', $this->taskIds)->where('completed', true)->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc');
+            $tasksWithSameValues = $tasksWithSameValues->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc');
         }
         // return PlannedTask::query()->whereIn('id', $this->taskIds);
         return $tasksWithSameValues;
-        // return PlannedTask::query()->whereIn('id', $this->taskIds)->where('completed', true);
     }
 
     public function headings(): array
-    {   
+    {
         $head = [];
         array_push($head, 'Completato');
         array_push($head, 'Data Completato');
@@ -68,7 +126,7 @@ class PlannedTaskCompletedExport implements FromQuery, WithMapping, WithHeadings
     {
         $format = [];
         $alphabet = range('C', 'Z');
-        $index=0;
+        $index = 0;
         $format['B'] = NumberFormat::FORMAT_DATE_DDMMYYYY;
         foreach ($this->typeAttribute as $column) {
             if ($column->attribute->col_type == 'date') {
@@ -105,7 +163,7 @@ class PlannedTaskCompletedExport implements FromQuery, WithMapping, WithHeadings
         array_push($body, ($row->completed ? Date::dateTimeToExcel($row->completed_date) : '-'));
         foreach ($this->typeAttribute as $column) {
             $colname = $column->attribute->col_name;
-            if($column->attribute->col_type=='date'){
+            if ($column->attribute->col_type == 'date') {
                 array_push($body, Date::dateTimeToExcel($row->$colname));
             } else {
                 array_push($body, $row->$colname);
@@ -115,5 +173,11 @@ class PlannedTaskCompletedExport implements FromQuery, WithMapping, WithHeadings
         return $body;
     }
 
-
+    /**
+     * @return string
+     */
+    public function title(): string
+    {
+        return $this->planName;
+    }
 }

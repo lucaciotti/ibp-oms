@@ -240,7 +240,7 @@ class PlannedTaskTable extends DataTableComponent
             'xlsExportCompleted' => 'Export Xls (Completati)',
         ];
 
-        if (Laratrust::isAbleTo('tasks-update')) {
+        if (Laratrust::isAbleTo('completed-update')) {
             $actions=array_merge(
                 $actions,
                 [
