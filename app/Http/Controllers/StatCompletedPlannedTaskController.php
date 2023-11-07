@@ -35,7 +35,9 @@ class StatCompletedPlannedTaskController extends Controller
         $completed = $req->session()->get('statplannedtask.filter.completed');
         $datetype = $req->session()->get('statplannedtask.filter.datetype');
         $planType = PlanType::find($plantype_id);
-        $filename = $planType->name . '_STAT_Export_' . Carbon::now()->format('YmdHis') . '.xlsx';
+        $extraCompl = $completed=='si' ? 'Completati_' : 'NON-Completati_';
+        $extraDate = $datetype=='date_completed' ? 'Data-Completamento_' : ($datetype== 'ibp_data_inizio_prod' ? 'Data-Inizio-Prod_' : 'Data-Consegna_');
+        $filename = $planType->name . '_STAT_Export_'. $extraCompl . $extraDate . Carbon::now()->format('YmdHis') . '.xlsx';
         return Excel::download(new StatPlannedTaskExport($plantype_id, $month, $completed, $datetype), $filename);
     }
 

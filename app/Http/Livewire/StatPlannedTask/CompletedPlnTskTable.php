@@ -47,7 +47,8 @@ class CompletedPlnTskTable extends DataTableComponent
     {
         $this->type_id = Session::get('statplannedtask.plantype.id');
         $this->month = !empty(Session::get('statplannedtask.filter.month')) ? Session::get('statplannedtask.filter.month') : (new DateTime())->format('F');
-        $this->completed = !empty(Session::get('statplannedtask.filter.completed')) ? ((Session::get('statplannedtask.filter.completed')=='no') ? 0 : 1) : null;
+        $this->completed = !empty(Session::get('statplannedtask.filter.completed')) ? Session::get('statplannedtask.filter.completed') : null;
+        // dd($this->completed);
         $this->datetype = Session::get('statplannedtask.filter.datetype');
 
         try {
@@ -71,10 +72,13 @@ class CompletedPlnTskTable extends DataTableComponent
             $firstDayOfWeek = clone $date;
             $lastDayOfWeek = (clone $date)->modify('next Sunday');
             // $query->selectRaw('SUM(IF(ibp_data_inizio_prod>="' . $firstDayOfWeek->format('Y-m-d') . '" and ibp_data_inizio_prod<="' . $lastDayOfWeek->format('Y-m-d') . '", 1, 0)) as w_' . $date->format('W'));
-            $query->selectRaw('SUM(IF('. $this->datetype.'>="' . $firstDayOfWeek->format('Y-m-d') .'" and ' . $this->datetype . '<="' . $lastDayOfWeek->format('Y-m-d') . '", 1, 0)) as w_' . $date->format('W'));
+            $query = $query->selectRaw('SUM(IF('. $this->datetype.'>="' . $firstDayOfWeek->format('Y-m-d') .'" and ' . $this->datetype . '<="' . $lastDayOfWeek->format('Y-m-d') . '", 1, 0)) as w_' . $date->format('W'));
         }
-        if ($this->completed != null) $query->where('completed', $this->completed);
-        $query->where('type_id', $this->type_id)->groupBy('modello')->orderBy('modello');
+        if ($this->completed != null) {
+            if ($this->completed == 'no') $query = $query->where('completed', false);
+            if ($this->completed == 'si') $query = $query->where('completed', true);
+        }
+        $query = $query->where('type_id', $this->type_id)->groupBy('modello')->orderBy('modello');
         
         $query_b =
         PlannedTask::query()->selectRaw('"TOTALE" as modello')->selectRaw('MAX(id)+1 as id');
@@ -85,10 +89,14 @@ class CompletedPlnTskTable extends DataTableComponent
             $firstDayOfWeek = clone $date;
             $lastDayOfWeek = (clone $date)->modify('next Sunday');
             // $query_b->selectRaw('SUM(IF(ibp_data_inizio_prod>="' . $firstDayOfWeek->format('Y-m-d') . '" and ibp_data_inizio_prod<="' . $lastDayOfWeek->format('Y-m-d') . '", 1, 0)) as w_' . $date->format('W'));
-            $query_b->selectRaw('SUM(IF(' . $this->datetype . '>="' . $firstDayOfWeek->format('Y-m-d') .'" and ' . $this->datetype . '<="' . $lastDayOfWeek->format('Y-m-d') . '", 1, 0)) as w_' . $date->format('W'));
+            $query_b = $query_b->selectRaw('SUM(IF(' . $this->datetype . '>="' . $firstDayOfWeek->format('Y-m-d') .'" and ' . $this->datetype . '<="' . $lastDayOfWeek->format('Y-m-d') . '", 1, 0)) as w_' . $date->format('W'));
         }
-        if($this->completed != null) $query_b->where('completed', $this->completed);
-        $query_b->where('type_id', $this->type_id)->groupBy('modello')->orderBy('modello');
+        if ($this->completed != null) {
+            // dd($this->completed);
+            if ($this->completed == 'no') $query_b = $query_b->where('completed', false);
+            if ($this->completed == 'si') $query_b = $query_b->where('completed', true);
+        }
+        $query_b = $query_b->where('type_id', $this->type_id)->groupBy('modello')->orderBy('modello');
         // dd($this->query->get());
         
         return $query->union($query_b);
