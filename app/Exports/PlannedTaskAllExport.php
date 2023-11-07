@@ -72,7 +72,7 @@ class PlannedTaskSheet implements FromQuery, WithMapping, WithHeadings, ShouldAu
     public function query()
     {
         $tasksWithSameValues = PlannedTask::select();
-
+        $tasksWithSameValues->where('type_id', $this->planTypeId);
         if($this->filters){
             foreach ($this->filters as $key => $filter) {
                 $value= $filter['value'];
