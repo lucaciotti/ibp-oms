@@ -29,6 +29,17 @@ $leftSidebar = [
         // 'label_color' => 'success',
     ],
     [
+        'header' => 'Statistiche',
+        'classes'  => 'text-bold text-center',
+        'laratrust'  => 'completed-update',
+    ],
+    [
+        'text'        => ' Stat. Conteggio Pianificazioni',
+        'url'         => 'stat_plntask',
+        'icon'        => 'fas fa-chart-bar',
+        'laratrust'  => 'completed-update',
+    ],
+    [
         'header' => 'Configurazioni',
         'classes'  => 'text-bold text-center',
         // 'can'  => ['config-read'],
