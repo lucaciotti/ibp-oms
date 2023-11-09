@@ -17894,7 +17894,18 @@
      
 }
 
-        namespace Barryvdh\Snappy\Facades { 
+        namespace App\Helpers { 
+            /**
+     * 
+     *
+     */ 
+        class DatetimeHelper {
+         
+    }
+     
+}
+
+    namespace Barryvdh\Snappy\Facades { 
             /**
      * 
      *
@@ -23734,6 +23745,7 @@ namespace  {
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
             class Vite extends \Illuminate\Support\Facades\Vite {}
+            class DatetimeHelper extends \App\Helpers\DatetimeHelper {}
             class PDF extends \Barryvdh\Snappy\Facades\SnappyPdf {}
             class SnappyImage extends \Barryvdh\Snappy\Facades\SnappyImage {}
             class Livewire extends \Livewire\Livewire {}

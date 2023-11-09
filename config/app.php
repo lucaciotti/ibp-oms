@@ -218,6 +218,7 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
         // MyHelpers
         // 'LabelHelper' => App\Helpers\LabelHelper::class,
+        'DatetimeHelper' => App\Helpers\DatetimeHelper::class,
     ])->toArray(),
 
 ];

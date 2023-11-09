@@ -59,14 +59,14 @@ class CompletedContent extends DynamicContent
         $this->plantype_id = Session::get('statplannedtask.plantype.id');
 
         if (!Session::has('statplannedtask.filter.month')) {
-            $this->month = (new DateTime())->format('F');
+            $this->month = strtolower((new DateTime())->format('F'));
             Session::put('statplannedtask.filter.month', $this->month);
         }
         $this->month = Session::get('statplannedtask.filter.month');
 
         if (!Session::has('statplannedtask.filter.completed')) {
             $this->completed = 'si';
-            Session::put('statplannedtask.filter.completed', $this->month);
+            Session::put('statplannedtask.filter.completed', $this->completed);
         }
         $this->completed = Session::get('statplannedtask.filter.completed');
 

@@ -24,6 +24,7 @@ class HelpersServiceProvider extends ServiceProvider
     public function register()
     {
         require_once app_path() . '/Helpers/LabelHelper.php';
+        require_once app_path() . '/Helpers/DatetimeHelper.php';
         require_once app_path() . '/Helpers/RALHelper.php';
     }
 }

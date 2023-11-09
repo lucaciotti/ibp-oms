@@ -8,6 +8,7 @@ use App\Models\PlannedTask;
 use DateInterval;
 use DatePeriod;
 use DateTime;
+use DatetimeHelper;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
@@ -33,15 +34,7 @@ class StatPlannedTaskExport implements FromQuery, WithMapping, WithHeadings, Sho
         $this->completed = $completed;
         $this->datetype = $datetype;
 
-        try {
-            $start    = new DateTime('first day of ' . $this->month . ' this year');
-            $end      = new DateTime('last day of ' . $this->month . ' this year');
-        } catch (\Throwable $th) {
-            $start    = new DateTime('first day of january this year');
-            $end      = new DateTime('last day of january this year');
-        }
-        $interval = new DateInterval('P1W');
-        $period   = new DatePeriod($start, $interval, $end);
+        $period   = DatetimeHelper::getDateWeekPeriodByMonth($this->month);
         foreach ($period as $date) {
             array_push($this->aDateOfWeeks, $date);
         }
