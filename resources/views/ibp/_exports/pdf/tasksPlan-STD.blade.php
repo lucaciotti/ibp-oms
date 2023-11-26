@@ -35,7 +35,7 @@
             $firstPage=false;
         @endphp
     @endif
-    
+
     @foreach ($tasks as $task)
     @php
     $ralRGB = $ralHelper->getRGB($task['values']['ibp_ral']);
@@ -118,8 +118,8 @@
                 <td>{{ $task['values']['ibp_rampa_dime_opt'] ?? '' }}</td>
             </tr>
         </table>
-    </div>
-    <div>
+    {{-- </div>
+    <div> --}}
         <hr class="dividerPage">
     </div>
     @endforeach
