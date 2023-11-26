@@ -90,7 +90,7 @@ class StatPlannedTaskExport implements FromQuery, WithMapping, WithHeadings, Sho
             }
             array_push(
                 $head,
-                $date->format('d/m/Y') . ' [w_' . $date->format('W') . ']'
+                $date->modify('next Friday')->format('d/m/Y') . ' [w_' . ($date->format('W') - 1) . ']'
             );
         }
         return $head;

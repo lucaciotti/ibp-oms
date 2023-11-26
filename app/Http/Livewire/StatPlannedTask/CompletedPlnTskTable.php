@@ -153,7 +153,7 @@ class CompletedPlnTskTable extends DataTableComponent
             }
             array_push(
                 $columns,
-                Column::make($date->format('d/m/Y').' [w_'. $date->format('W').']')
+                Column::make($date->modify('next Friday')->format('d/m/Y').' [w_'. ($date->format('W')-1) .']')
                     ->label(
                     function ($row) use($date) {
                         return $row['w_' . $date->format('W')];
