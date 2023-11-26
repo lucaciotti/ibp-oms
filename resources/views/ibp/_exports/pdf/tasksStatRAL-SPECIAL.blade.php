@@ -71,6 +71,43 @@
     </div>
 
     <div class="row">
+        <h2>RAL / Basamento</h2>
+        <table>
+            <tr height="30px">
+                <th colspan="2"></th>
+                @foreach ($stats['basaments'] as $item)
+                <th width='20px'>{{ $item }}</th>
+                @endforeach
+                <th width='15px'>Tot.</th>
+            </tr>
+            @foreach ($stats['rals'] as $ral)
+            @php
+            $ralRGB = $ralHelper->getRGB($ral);
+            @endphp
+            <tr>
+                <td style="background-color: rgb({{ $ralRGB }}); opacity:75%;" width='10px'></td>
+                <th width='20px'>{{ $ral }}</th>
+                @foreach ($stats['basaments'] as $item)
+                <th>{{ $tasks->where('ibp_ral', $ral)->where('ibp_basamento', $item)->count() }}</th>
+                @endforeach
+                <th>{{ $tasks->where('ibp_ral', $ral)->count() }}</th>
+            </tr>
+            @endforeach
+            <tr>
+                <th colspan="2">TOTALE</th>
+                @foreach ($stats['basaments'] as $item)
+                <th>{{ $tasks->where('ibp_basamento', $item)->count() }}</th>
+                @endforeach
+                <th>{{ $tasks->count() }}</th>
+            </tr>
+        </table>
+    </div>
+
+    <div>
+        <hr class="dividerPage">
+    </div>
+    
+    <div class="row">
         <h2>RAL / Colonna (da verificare)</h2>
         <table>
             <tr height="30px">
