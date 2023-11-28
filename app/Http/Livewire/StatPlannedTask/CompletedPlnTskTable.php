@@ -11,6 +11,7 @@ use DatePeriod;
 use DateTime;
 use DatetimeHelper;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 use Laratrust;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\DateFilter;
@@ -154,7 +155,8 @@ class CompletedPlnTskTable extends DataTableComponent
             }
             array_push(
                 $columns,
-                Column::make($date->modify('next Friday')->format('d/m/Y').' [w_'. ($date->format('W')-1) .']')
+                Column::make(
+                    Carbon::instance($date->modify('next Friday'))->currentOrNextBusinessDay()->format('d/m/Y').' [w_'. ($date->format('W')-1) .']')
                     ->label(
                     function ($row) use($date) {
                         return $row['w_' . $date->format('W')];

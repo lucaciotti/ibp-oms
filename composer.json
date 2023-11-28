@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.0.2",
         "barryvdh/laravel-snappy": "^1.0",
+        "cmixin/business-day": "^1.16",
         "doctrine/dbal": "^3.6",
         "guzzlehttp/guzzle": "^7.2",
         "h4cc/wkhtmltoimage-amd64": "^0.12.4",

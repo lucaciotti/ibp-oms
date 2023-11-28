@@ -9,6 +9,7 @@ use DateInterval;
 use DatePeriod;
 use DateTime;
 use DatetimeHelper;
+use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
@@ -92,7 +93,7 @@ class StatPlannedTaskExport implements FromQuery, WithMapping, WithHeadings, Sho
             }
             array_push(
                 $head,
-                $date->modify('next Friday')->format('d/m/Y') . ' [w_' . ($date->format('W') - 1) . ']'
+                Carbon::instance($date->modify('next Friday'))->currentOrNextBusinessDay()->format('d/m/Y') . ' [w_' . ($date->format('W') - 1) . ']'
             );
         }
         return $head;
