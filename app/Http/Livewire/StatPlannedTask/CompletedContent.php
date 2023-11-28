@@ -12,6 +12,7 @@ class CompletedContent extends DynamicContent
     public $plantypes;
     public $plantype_id;
     public $month;
+    public $year;
     public $completed;
     public $datetype;
 
@@ -29,6 +30,8 @@ class CompletedContent extends DynamicContent
                     'november' => 'Novembre',
                     'december' => 'Dicembre',
     ];
+
+    public $years;
 
     public $completed_opt = [
         '' => 'Tutti',
@@ -52,11 +55,18 @@ class CompletedContent extends DynamicContent
     ];
 
     public function mount(){
+        $this->years = range(2022, 2050);
         if (!Session::has('statplannedtask.plantype.id')) {
             $planType = PlanType::first();
             Session::put('statplannedtask.plantype.id', $planType->id);
         }
         $this->plantype_id = Session::get('statplannedtask.plantype.id');
+
+        if (!Session::has('statplannedtask.filter.year')) {
+            $this->year = (new DateTime())->format('Y');
+            Session::put('statplannedtask.filter.year', $this->year);
+        }
+        $this->year = Session::get('statplannedtask.filter.year');
 
         if (!Session::has('statplannedtask.filter.month')) {
             $this->month = strtolower((new DateTime())->format('F'));
@@ -93,6 +103,14 @@ class CompletedContent extends DynamicContent
     public function updatedMonth()
     {
         Session::put('statplannedtask.filter.month', $this->month);
+        return redirect()->route('stat_plntask');
+        // $this->emit('refreshDatatable');
+        // $this->emit('clearSelected');
+    }
+
+    public function updatedYear()
+    {
+        Session::put('statplannedtask.filter.year', $this->year);
         return redirect()->route('stat_plntask');
         // $this->emit('refreshDatatable');
         // $this->emit('clearSelected');

@@ -19,19 +19,26 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <x-adminlte-select name="month" label="Mese di riferimento" error-key="month" wire:model="month" style="text-align: center;" class="text-bold" fgroup-class="col-lg-4">
+                    <x-adminlte-select name="year" label="Anno di riferimento" error-key="year" wire:model="year" style="text-align: center;" class="text-bold" fgroup-class="col-lg-6">
+                        @foreach ($years as $key => $value)
+                            <option value='{{ $value }}'><strong>{{ $value }}</strong></option>
+                        @endforeach
+                    </x-adminlte-select>
+
+                    <x-adminlte-select name="month" label="Mese di riferimento" error-key="month" wire:model="month" style="text-align: center;" class="text-bold" fgroup-class="col-lg-6">
                         @foreach ($months as $key => $value)
                             <option value='{{ $key }}'><strong>{{ $value }}</strong></option>
                         @endforeach
                     </x-adminlte-select>
-            
-                    <x-adminlte-select name="completed" label="Completati" error-key="completed" wire:model="completed" style="text-align: center;" class="text-bold" fgroup-class="col-lg-4">
+                </div>
+                <div class="row">            
+                    <x-adminlte-select name="completed" label="Completati" error-key="completed" wire:model="completed" style="text-align: center;" class="text-bold" fgroup-class="col-lg-6">
                         @foreach ($completed_opt as $key => $value)
                             <option value='{{ $key }}'><strong>{{ $value }}</strong></option>
                         @endforeach
                     </x-adminlte-select>
 
-                    <x-adminlte-select name="datetype" label="Data di aggregazione" error-key="datetype" wire:model="datetype" style="text-align: center;" class="text-bold" fgroup-class="col-lg-4">
+                    <x-adminlte-select name="datetype" label="Data di aggregazione" error-key="datetype" wire:model="datetype" style="text-align: center;" class="text-bold" fgroup-class="col-lg-6">
                         @foreach ($datetypes as $key => $value)
                         <option value='{{ $key }}'><strong>{{ $value }}</strong></option>
                         @endforeach

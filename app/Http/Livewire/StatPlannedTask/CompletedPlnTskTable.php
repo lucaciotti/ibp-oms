@@ -25,6 +25,7 @@ class CompletedPlnTskTable extends DataTableComponent
     protected $model = PlannedTask::class;
 
     public $type_id;
+    public $year;
     public $month;
     public $completed;
     public $datetype;
@@ -47,12 +48,12 @@ class CompletedPlnTskTable extends DataTableComponent
     public function builder(): Builder
     {
         $this->type_id = Session::get('statplannedtask.plantype.id');
+        $this->year = !empty(Session::get('statplannedtask.filter.year')) ? Session::get('statplannedtask.filter.year') : (new DateTime())->format('Y');
         $this->month = !empty(Session::get('statplannedtask.filter.month')) ? Session::get('statplannedtask.filter.month') : (new DateTime())->format('F');
         $this->completed = !empty(Session::get('statplannedtask.filter.completed')) ? Session::get('statplannedtask.filter.completed') : null;
-        // dd($this->completed);
         $this->datetype = Session::get('statplannedtask.filter.datetype');
 
-        $period   = DatetimeHelper::getDateWeekPeriodByMonth($this->month);
+        $period   = DatetimeHelper::getDateWeekPeriodByMonth($this->month, $this->year);
         foreach ($period as $date) {
             array_push($this->aDateOfWeeks, $date);
         }

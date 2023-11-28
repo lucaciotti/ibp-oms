@@ -23,18 +23,20 @@ class StatPlannedTaskExport implements FromQuery, WithMapping, WithHeadings, Sho
 {
     protected $plantype_id;
     protected $month;
+    protected $year;
     protected $completed;
     protected $datetype;
     protected $aDateOfWeeks = [];
 
-    public function __construct($plantype_id, $month, $completed, $datetype)
+    public function __construct($plantype_id, $month, $year, $completed, $datetype)
     {
         $this->plantype_id = $plantype_id;
         $this->month = $month;
+        $this->year = $year;
         $this->completed = $completed;
         $this->datetype = $datetype;
 
-        $period   = DatetimeHelper::getDateWeekPeriodByMonth($this->month);
+        $period   = DatetimeHelper::getDateWeekPeriodByMonth($this->month, $this->year);
         foreach ($period as $date) {
             array_push($this->aDateOfWeeks, $date);
         }

@@ -7,18 +7,19 @@ use DatePeriod;
 use DateTime;
 
 class DatetimeHelper {
-    public static function getFirstDayOfMonth($monthName)
+    public static function getFirstDayOfMonth($monthName, $year)
     {
-        return new DateTime('first day of ' . $monthName . ' this year');
+        return new DateTime('first day of ' . $monthName . ' ' .$year);
     }
 
-    public static function getLastDayOfMonth($monthName)
+    public static function getLastDayOfMonth($monthName, $year)
     {
-        return new DateTime('last day of ' . $monthName . ' this year');
+        return new DateTime('last day of ' .$monthName . ' ' . $year);
     }
 
-    public static function getFirstWeekOfMonth($monthName){
-        $firstDay = DatetimeHelper::getFirstDayOfMonth($monthName);
+    public static function getFirstWeekOfMonth($monthName, $year=null){
+        if($year==null) $year = (new DateType())->format('Y');
+        $firstDay = DatetimeHelper::getFirstDayOfMonth($monthName, $year);
         $weekNum = $firstDay->format('W');
         $yearNum = $firstDay->format('Y');
         $dto = new DateTime();
@@ -26,8 +27,10 @@ class DatetimeHelper {
         return $dto;
     }
 
-    public static function getLastWeekOfMonth($monthName){
-        $firstDay = DatetimeHelper::getLastDayOfMonth($monthName);
+    public static function getLastWeekOfMonth($monthName,$year = null)
+    {
+        if ($year == null) $year = (new DateType())->format('Y');
+        $firstDay = DatetimeHelper::getLastDayOfMonth($monthName, $year);
         $weekNum = $firstDay->format('W');
         $yearNum = $firstDay->format('Y');
         $dto = new DateTime();
@@ -42,10 +45,10 @@ class DatetimeHelper {
         return $period;
     }
 
-    public static function getDateWeekPeriodByMonth($monthName=null) {
+    public static function getDateWeekPeriodByMonth($monthName=null, $year=null) {
         if (empty($monthName)) $monthName = strtolower((new DateTime())->format('F'));
-        $startdate = DatetimeHelper::getFirstWeekOfMonth($monthName);
-        $endDate = DatetimeHelper::getLastWeekOfMonth($monthName);
+        $startdate = DatetimeHelper::getFirstWeekOfMonth($monthName, $year);
+        $endDate = DatetimeHelper::getLastWeekOfMonth($monthName, $year);
         return DatetimeHelper::getDateWeekPeriod($startdate, $endDate);
     }
 }
