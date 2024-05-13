@@ -183,7 +183,7 @@ class GenerateReports extends Modal
         }
 
         $tasks = PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->get();
-
+        
         $title = "Statistiche IMPIANTI_" . $planName;
         $subTitle = str_replace('/', '-', $dtMin . "_" . $dtMax);
         $view = 'ibp._exports.pdf.tasksStatIMP-' . $planName;
@@ -215,7 +215,7 @@ class GenerateReports extends Modal
             $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->max('ibp_data_inizio_prod')))->format('d/m/Y');
         }
 
-        $tasks = PlannedTask::select('ibp_ral', 'ibp_ral_basamcol', 'ibp_ral_guscio', 'ibp_ral_colbraccio', 'ibp_basamento', 'ibp_colonna', 'ibp_prodotto_tipo', 'ibp_carrello', 'ibp_braccio')->whereIn('id', $this->tasks_ids)->where('completed', false)->get();
+        $tasks = PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->get();
 
         $title = "Statistiche RAL_" . $planName;
         $subTitle = str_replace('/', '-', $dtMin . "_" . $dtMax);
@@ -318,6 +318,47 @@ class GenerateReports extends Modal
             $arrayOfValues = $this->buildImbRobot();
         } else {
             $arrayOfValues = Arr::pluck($collect->where($key, '!=', '')->unique($key)->sortBy($key)->toArray(), $key);
+            if($key == 'ibp_basamento') {
+                # Controllo i valori aggiuntivi: PIATTO 8 MM, PIATTO TP-BILANCIA, PIATTO PINZA 
+                $piatto8mms = $collect->filter(function ($task) {
+                    return
+                    stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, '8') !== false && stripos($task->ibp_basamento_opt, 'MM') !== false ||
+                    stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento, '8') !== false && stripos($task->ibp_opt2_basamento, 'MM') !== false ||
+                    stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, '8') !== false && stripos($task->ibp_opt3_basamento, 'MM') !== false;
+                });
+                foreach ($piatto8mms as $task) {
+                    if (stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, '8') !== false && stripos($task->ibp_basamento_opt, 'MM') !== false) $task->ibp_basamento_opt = 'PIATTO 8 MM';
+                    if (stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento, '8') !== false && stripos($task->ibp_opt2_basamento, 'MM') !== false) $task->ibp_opt2_basamento = 'PIATTO 8 MM';
+                    if (stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, '8') !== false && stripos($task->ibp_opt3_basamento, 'MM') !== false) $task->ibp_opt3_basamento = 'PIATTO 8 MM';
+                    array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO 8 MM');
+                }
+
+                $piattoTpBilancias = $collect->filter(function ($task) {
+                    return
+                    stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, 'TP') !== false && stripos($task->ibp_basamento_opt, 'BIL') !== false ||
+                    stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento, 'TP') !== false && stripos($task->ibp_opt2_basamento, 'BIL') !== false ||
+                    stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, 'TP') !== false && stripos($task->ibp_opt3_basamento, 'BIL') !== false;
+                });
+                foreach ($piattoTpBilancias as $task) {
+                    if (stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, 'TP') !== false && stripos($task->ibp_basamento_opt, 'BIL') !== false) $task->ibp_basamento_opt = 'PIATTO TP-BILANCIA';
+                    if (stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento, 'TP') !== false && stripos($task->ibp_opt2_basamento, 'BIL') !== false) $task->ibp_opt2_basamento = 'PIATTO TP-BILANCIA';
+                    if (stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, 'TP') !== false && stripos($task->ibp_opt3_basamento, 'BIL') !== false) $task->ibp_opt3_basamento = 'PIATTO TP-BILANCIA';
+                    array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO TP-BILANCIA');
+                }
+
+                $piattoPinzas = $collect->filter(function ($task) {
+                    return
+                    stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, 'PINZ') !== false ||
+                    stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento, 'PINZ') !== false ||
+                    stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, 'PINZ') !== false;
+                });
+                foreach ($piattoPinzas as $task) {
+                    if (stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, 'PINZ') !== false) $task->ibp_basamento_opt = 'PIATTO PINZA';
+                    if (stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento, 'PINZ') !== false) $task->ibp_opt2_basamento = 'PIATTO PINZA';
+                    if (stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, 'PINZ') !== false) $task->ibp_opt3_basamento = 'PIATTO PINZA';
+                    array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO PINZA');
+                }
+            }
         }
         
         // $aMapped = Arr::map($arrayOfValues, function (string $value, string $key) {

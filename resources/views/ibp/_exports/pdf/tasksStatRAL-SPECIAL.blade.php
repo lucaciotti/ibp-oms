@@ -127,7 +127,72 @@
                 <td style="background-color: rgb({{ $ralRGB }}); opacity:75%;" width='10px'></td>
                 <th width='20px'>{{ $ral }}</th>
                 @foreach ($stats['basaments'] as $item)
-                <td>{{ $tasks->where('ibp_ral', $ral)->where('ibp_basamento', $item)->count() }}</td>
+                @if (stripos($item, 'PIATTO') !== false)
+                    @php
+                        $dim_basamento = substr($item, 0, strrpos($item, '-')-0);
+                    @endphp
+                    @if (str_contains($item, 'PIATTO 8 MM'))
+                        <td>
+                            {{ 
+                                $tasks->where('ibp_ral', $ral)->where('ibp_basamento', $dim_basamento)
+                                ->filter(function ($task) {
+                                return
+                                    str_contains($task->ibp_basamento_opt, 'PIATTO 8 MM') || 
+                                    str_contains($task->ibp_opt2_basamento, 'PIATTO 8 MM') ||
+                                    str_contains($task->ibp_opt3_basamento, 'PIATTO 8 MM') ;
+                                })
+                                ->count() 
+                            }}
+                        </td>
+                    @endif
+
+                    @if (str_contains($item, 'PIATTO TP-BILANCIA'))
+                        <td>
+                            {{ 
+                                $tasks->where('ibp_ral', $ral)->where('ibp_basamento', $dim_basamento)
+                                ->filter(function ($task) {
+                                return
+                                    str_contains($task->ibp_basamento_opt, 'PIATTO TP-BILANCIA') || 
+                                    str_contains($task->ibp_opt2_basamento, 'PIATTO TP-BILANCIA') ||
+                                    str_contains($task->ibp_opt3_basamento, 'PIATTO TP-BILANCIA') ;
+                                })
+                                ->count() 
+                            }}
+                        </td>
+                    @endif
+
+                    @if (str_contains($item, 'PIATTO PINZA'))
+                        <td>
+                            {{ 
+                                $tasks->where('ibp_ral', $ral)->where('ibp_basamento', $dim_basamento)
+                                ->filter(function ($task) {
+                                return
+                                    str_contains($task->ibp_basamento_opt, 'PIATTO PINZA') ||
+                                    str_contains($task->ibp_opt2_basamento, 'PIATTO PINZA') || 
+                                    str_contains($task->ibp_opt3_basamento, 'PIATTO PINZA') ;
+                                })
+                                ->count() 
+                            }}
+                        </td>
+                    @endif
+                @else
+                    <td>{{ 
+                        $tasks->where('ibp_ral', $ral)->where('ibp_basamento', $item)
+                        ->filter(function ($task) {
+                        return
+                            !str_contains($task->ibp_basamento_opt, 'PIATTO 8 MM') && 
+                            !str_contains($task->ibp_basamento_opt, 'PIATTO TP-BILANCIA') && 
+                            !str_contains($task->ibp_basamento_opt, 'PIATTO PINZA') && 
+                            !str_contains($task->ibp_opt2_basamento, 'PIATTO 8 MM') &&
+                            !str_contains($task->ibp_opt2_basamento, 'PIATTO TP-BILANCIA') && 
+                            !str_contains($task->ibp_opt2_basamento, 'PIATTO PINZA') && 
+                            !str_contains($task->ibp_opt3_basamento, 'PIATTO 8 MM') &&
+                            !str_contains($task->ibp_opt3_basamento, 'PIATTO TP-BILANCIA') && 
+                            !str_contains($task->ibp_opt3_basamento, 'PIATTO PINZA') ;
+                        })
+                        ->count() 
+                        }}</td>
+                @endif
                 @endforeach
                 <td>{{ $tasks->where('ibp_ral', $ral)->count() }}</td>
             </tr>
@@ -135,7 +200,43 @@
             <tr>
                 <th colspan="2">TOTALE</th>
                 @foreach ($stats['basaments'] as $item)
-                <th>{{ $tasks->where('ibp_basamento', $item)->count() }}</th>
+                @if (stripos($item, 'PIATTO') !== false)
+                    <th>
+                        {{
+                        $tasks->where('ibp_ral', $ral)->where('ibp_basamento', $dim_basamento)
+                        ->filter(function ($task) {
+                        return
+                            str_contains($task->ibp_basamento_opt, 'PIATTO 8 MM') || 
+                            str_contains($task->ibp_basamento_opt, 'PIATTO TP-BILANCIA') || 
+                            str_contains($task->ibp_basamento_opt, 'PIATTO PINZA') || 
+                            str_contains($task->ibp_opt2_basamento, 'PIATTO 8 MM') ||
+                            str_contains($task->ibp_opt2_basamento, 'PIATTO TP-BILANCIA') || 
+                            str_contains($task->ibp_opt2_basamento, 'PIATTO PINZA') || 
+                            str_contains($task->ibp_opt3_basamento, 'PIATTO 8 MM') ||
+                            str_contains($task->ibp_opt3_basamento, 'PIATTO TP-BILANCIA') || 
+                            str_contains($task->ibp_opt3_basamento, 'PIATTO PINZA') ;
+                        })
+                        ->count()
+                        }}
+                    </th>
+                @else
+                    <th>{{ 
+                            $tasks->where('ibp_basamento', $item)
+                            ->filter(function ($task) {
+                            return
+                                !str_contains($task->ibp_basamento_opt, 'PIATTO 8 MM') && 
+                                !str_contains($task->ibp_basamento_opt, 'PIATTO TP-BILANCIA') && 
+                                !str_contains($task->ibp_basamento_opt, 'PIATTO PINZA') && 
+                                !str_contains($task->ibp_opt2_basamento, 'PIATTO 8 MM') &&
+                                !str_contains($task->ibp_opt2_basamento, 'PIATTO TP-BILANCIA') && 
+                                !str_contains($task->ibp_opt2_basamento, 'PIATTO PINZA') && 
+                                !str_contains($task->ibp_opt3_basamento, 'PIATTO 8 MM') &&
+                                !str_contains($task->ibp_opt3_basamento, 'PIATTO TP-BILANCIA') && 
+                                !str_contains($task->ibp_opt3_basamento, 'PIATTO PINZA') ;
+                            })
+                            ->count() 
+                        }}</th>
+                    @endif
                 @endforeach
                 <th>{{ $tasks->count() }}</th>
             </tr>
