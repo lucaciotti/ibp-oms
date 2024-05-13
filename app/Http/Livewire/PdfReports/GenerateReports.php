@@ -40,12 +40,14 @@ class GenerateReports extends Modal
         if (array_key_exists('date_prod_from', $this->filter_on_tasks)){
             $dtMin = (new Carbon($this->filter_on_tasks['date_prod_from']))->format('d/m/Y');
         } else {
-            $dtMin = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->min('ibp_data_inizio_prod')))->format('d/m/Y');
+            // $dtMin = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->min('ibp_data_inizio_prod')))->format('d/m/Y');
+            $dtMin = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->min('ibp_data_inizio_prod')))->format('d/m/Y');
         }
         if (array_key_exists('date_prod_to', $this->filter_on_tasks)) {
             $dtMax = (new Carbon($this->filter_on_tasks['date_prod_to']))->format('d/m/Y');
         } else {
-            $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->max('ibp_data_inizio_prod')))->format('d/m/Y');
+            // $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->max('ibp_data_inizio_prod')))->format('d/m/Y');
+            $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->max('ibp_data_inizio_prod')))->format('d/m/Y');
         }
 
         $columns = Arr::pluck(Attribute::select('col_name')->whereHas('planTypeAttribute', fn ($query) => $query->where('type_id', $this->type_id))->where('col_name', '!=', 'ibp_plan_matricola')->get()->toArray(), 'col_name');
@@ -54,7 +56,8 @@ class GenerateReports extends Modal
         $tasksWithSameValues = null;
         if ($this->order_tasks) {
             $order_applied = false;
-            $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->where('completed', false)->groupBy($columns);
+            // $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->where('completed', false)->groupBy($columns);
+            $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->groupBy($columns);
             foreach ($this->order_tasks as $key => $value) {
                 // if(!in_array($key, $columns)){
                 //     $tasksWithSameValues->addSelect($key);
@@ -71,7 +74,8 @@ class GenerateReports extends Modal
             $tasksWithSameValues = $tasksWithSameValues->get();
             // dd($tasksWithSameValues);
         } else {
-            $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->where('completed', false)->groupBy($columns)->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc')->get();
+            // $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->where('completed', false)->groupBy($columns)->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc')->get();
+            $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->groupBy($columns)->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc')->get();
         }
         $tasks = [];
         $sum_total_tasks = 0;
@@ -80,7 +84,8 @@ class GenerateReports extends Modal
             foreach ($columns as $column) {
                 array_push($aWhere, [$column, $task->$column]);
             }
-            $matricole = Arr::pluck(PlannedTask::select('ibp_plan_matricola')->where($aWhere)->whereIn('id', $this->tasks_ids)->where('completed', false)->get()->toArray(), 'ibp_plan_matricola');
+            // $matricole = Arr::pluck(PlannedTask::select('ibp_plan_matricola')->where($aWhere)->whereIn('id', $this->tasks_ids)->where('completed', false)->get()->toArray(), 'ibp_plan_matricola');
+            $matricole = Arr::pluck(PlannedTask::select('ibp_plan_matricola')->where($aWhere)->whereIn('id', $this->tasks_ids)->get()->toArray(), 'ibp_plan_matricola');
             $chunck_matricole = array_chunk($matricole, 8);
             foreach ($chunck_matricole as $aMat) {
                 $aTask=[
@@ -92,6 +97,7 @@ class GenerateReports extends Modal
                 array_push($tasks, $aTask);
             }
         }
+        $matricole_completed = Arr::pluck(PlannedTask::select('ibp_plan_matricola')->where('completed', true)->whereIn('id', $this->tasks_ids)->get()->toArray(), 'ibp_plan_matricola');
         // dd($tasks);
         $title = "Pianificazioni_da_Elaborare_" . $planName;
         $subTitle = str_replace('/', '-', $dtMin."_".$dtMax);
@@ -102,6 +108,8 @@ class GenerateReports extends Modal
             'dtMax' => $dtMax,
             'tasks' => $tasks,
             'total_tasks' => $sum_total_tasks,
+            'matricole_completed' => $matricole_completed,
+            'total_tasks_completed' => count($matricole_completed),
         ];
         // dd($data);
         $this->pdfReport = $title . '-' . $subTitle . '_' . Carbon::now()->format('YmdHis') . '.pdf';

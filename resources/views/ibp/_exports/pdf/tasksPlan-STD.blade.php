@@ -27,8 +27,16 @@
             <h1>Pianificazione {{ $planName }}</h1>
             <h2>Periodo Produzione: {{ $dtMin }} - {{ $dtMax }}</h2>{{--
             <hr> --}}
+            @if ($total_tasks_completed>0)
+            <h2 style="color: rgba(170, 0, 0, 0.919);">ATTENZIONE IL REPORT CONTIENE ANCHE MACCHINE GIA' COMPLETATE <br>(Fare attenzione alla
+                spunta a fianco della matricola)</h2>
+            @endif
             <br>
             <h2 style="text-align: right;"><i><u>Totale Macchine:</u></i> {{ $total_tasks }}</h2>
+            @if ($total_tasks_completed>0)
+                <h2 style="text-align: right;"><i>Già Completate:</i> {{ $total_tasks_completed }}</h2>
+                <h2 style="text-align: right;"><i><u>-> Da COMPLETARE:</u></i> {{ $total_tasks-$total_tasks_completed }}</h2>
+            @endif
             <hr>
         </div>
         @php
@@ -74,8 +82,16 @@
                 {{-- <th rowspan=6>{{ $task['qta'] ?? '' }}</th> --}}
             </tr>
             <tr>
-                <td>{{ $task['matricole'][0] ?? '' }}</td>
-                <td>{{ $task['matricole'][4] ?? '' }}</td>
+                <td>
+                    @if (in_array($task['matricole'][0] ?? '', $matricole_completed)) <strong style="color: green">✓ </strong> <del>@endif 
+                        {{ $task['matricole'][0] ?? '' }}
+                    @if (in_array($task['matricole'][0] ?? '', $matricole_completed)) </del>@endif
+                </td>
+                <td>
+                    @if (in_array($task['matricole'][4] ?? '', $matricole_completed)) <strong style="color: green">✓ </strong> <del>@endif 
+                    {{ $task['matricole'][4] ?? '' }}
+                    @if (in_array($task['matricole'][4] ?? '', $matricole_completed)) </del>@endif
+                </td>
                 <th>BASAMENTO</th>
                 <th colspan="2">RAL BAS - COL</th>
                 <td>{{ $task['values']['ibp_colonna_opt'] ?? '' }}</td>
@@ -83,8 +99,16 @@
                 <td>{{ $task['values']['ibp_imballo_dim'] ?? '' }}</td>
             </tr>
             <tr>
-                <td>{{ $task['matricole'][1] ?? '' }}</td>
-                <td>{{ $task['matricole'][5] ?? '' }}</td>
+                <td>
+                    @if (in_array($task['matricole'][1] ?? '', $matricole_completed)) <strong style="color: green">✓ </strong> <del>@endif 
+                    {{ $task['matricole'][1] ?? '' }}
+                    @if (in_array($task['matricole'][1] ?? '', $matricole_completed)) </del>@endif
+                </td>
+                <td>
+                    @if (in_array($task['matricole'][5] ?? '', $matricole_completed)) <strong style="color: green">✓ </strong> <del>@endif 
+                    {{ $task['matricole'][5] ?? '' }}
+                    @if (in_array($task['matricole'][5] ?? '', $matricole_completed)) </del>@endif
+                </td>
                 <td>{{ $task['values']['ibp_basamento'] ?? '' }}</td>
                 <td style="background-color: rgb({{ $ralRGB2 }}); opacity:75%;"></td><td>{{ $task['values']['ibp_ral_basamcol'] ?? '' }}</td>
                 <td>{{ $task['values']['ibp_opt2_colonna'] ?? '' }}</td>
@@ -92,8 +116,16 @@
                 <td>{{ $task['values']['ibp_imballo_note'] ?? '' }}</td>
             </tr>
             <tr>
-                <td>{{ $task['matricole'][2] ?? '' }}</td>
-                <td>{{ $task['matricole'][6] ?? '' }}</td>
+                <td>
+                    @if (in_array($task['matricole'][2] ?? '', $matricole_completed)) <strong style="color: green">✓ </strong> <del>@endif 
+                        {{ $task['matricole'][2] ?? '' }}
+                    @if (in_array($task['matricole'][2] ?? '', $matricole_completed)) </del>@endif
+                </td>
+                <td>
+                    @if (in_array($task['matricole'][6] ?? '', $matricole_completed)) <strong style="color: green">✓ </strong> <del>@endif 
+                        {{ $task['matricole'][6] ?? '' }}
+                    @if (in_array($task['matricole'][6] ?? '', $matricole_completed)) </del>@endif
+                </td>
                 <td>{{ $task['values']['ibp_basamento_opt'] ?? '' }}</td>
                 <th colspan="2">ADESIVI</th>
                 <td>{{ $task['values']['ibp_opt3_colonna'] ?? '' }}</td>
@@ -101,8 +133,16 @@
                 <td>{{ $task['values']['ibp_note_imballo2'] ?? '' }}</td>
             </tr>
             <tr>
-                <td>{{ $task['matricole'][3] ?? '' }}</td>
-                <td>{{ $task['matricole'][7] ?? '' }}</td>
+                <td>
+                    @if (in_array($task['matricole'][3] ?? '', $matricole_completed)) <strong style="color: green">✓ </strong> <del>@endif 
+                    {{ $task['matricole'][3] ?? '' }}
+                    @if (in_array($task['matricole'][3] ?? '', $matricole_completed)) </del>@endif
+                </td>
+                <td>
+                    @if (in_array($task['matricole'][7] ?? '', $matricole_completed)) <strong style="color: green">✓ </strong> <del>@endif 
+                    {{ $task['matricole'][7] ?? '' }}
+                    @if (in_array($task['matricole'][7] ?? '', $matricole_completed)) </del>@endif
+                </td>
                 <td>{{ $task['values']['ibp_opt2_basamento'] ?? '' }}</td>
                 <td colspan="2">{{ $task['values']['ibp_adesivi'] ?? '' }}</td>
                 <th>PRESSORE</th>
