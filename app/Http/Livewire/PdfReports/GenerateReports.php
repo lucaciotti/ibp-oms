@@ -366,6 +366,23 @@ class GenerateReports extends Modal
                     if (stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, 'PINZ') !== false) $task->ibp_opt3_basamento = 'PIATTO PINZA';
                     array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO PINZA');
                 }
+
+                $piattoAntiscivolos = $collect->filter(function ($task) {
+                    return
+                        stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, 'ANTISC') !== false ||
+                        stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento,
+                        'ANTISC'
+                        ) !== false ||
+                        stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento,
+                        'ANTISC'
+                        ) !== false;
+                });
+                foreach ($piattoPinzas as $task) {
+                    if (stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, 'ANTISC') !== false) $task->ibp_basamento_opt = 'PIATTO ANTISCIVOLO';
+                    if (stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento, 'ANTISC') !== false) $task->ibp_opt2_basamento = 'PIATTO ANTISCIVOLO';
+                    if (stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, 'ANTISC') !== false) $task->ibp_opt3_basamento = 'PIATTO ANTISCIVOLO';
+                    array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO ANTISCIVOLO');
+                }
             }
         }
         
