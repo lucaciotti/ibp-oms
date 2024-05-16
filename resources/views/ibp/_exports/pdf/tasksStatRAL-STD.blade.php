@@ -58,15 +58,17 @@ $firstPage=false;
             <td>{{ $tasks->where('ibp_ral_basamcol', $ral)->where('ibp_basamento', '!=', '')->count() }}</td>
         </tr>
         @endforeach
-        <tfoot>
+            <tfoot>
             <tr>
                 <th colspan="2">TOTALE</th>
                 @foreach ($stats['basaments'] as $item)
-                <th>{{ $tasks->where('ibp_basamento', $item)->count() }}</th>
+                    @if (!str_contains($item, 'PIATTO'))    
+                        <th>{{ $tasks->where('ibp_basamento', $item)->count() }}</th>
+                    @endif
                 @endforeach
                 <th>{{ $tasks->where('ibp_basamento', '!=', '')->count() }}</th>
             </tr>
-        </tfoot>
+            </tfoot>
     </table>
 </div>
 
@@ -156,7 +158,7 @@ $firstPage=false;
         <h2>RAL / Basamento</h2>
         <table>
             <tr height="30px">
-                <th colspan="2"></th>
+                <td colspan="2"></td>
                 @foreach ($stats['basaments'] as $item)
                 <th width='20px'>{{ $item }}</th>
                 @endforeach
