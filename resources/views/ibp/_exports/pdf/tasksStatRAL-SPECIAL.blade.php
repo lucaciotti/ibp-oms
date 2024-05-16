@@ -37,7 +37,9 @@
             <tr height="30px">
                 <td colspan="2"></td>
                 @foreach ($stats['basaments'] as $item)
-                    <th width='20px'>{{ $item }}</th>
+                    @if (!str_contains($item, 'PIATTO'))    
+                        <th width='20px'>{{ $item }}</th>
+                    @endif
                 @endforeach
                 <th width='15px'>Tot.</th>
             </tr>
@@ -49,7 +51,9 @@
                 <td style="background-color: rgb({{ $ralRGB }}); opacity:75%;" width='10px'></td>
                 <th width='20px'>{{ $ral }}</th>
                 @foreach ($stats['basaments'] as $item)
-                <td>{{ $tasks->where('ibp_ral_basamcol', $ral)->where('ibp_basamento', $item)->count() }}</td>
+                    @if (!str_contains($item, 'PIATTO'))
+                        <td>{{ $tasks->where('ibp_ral_basamcol', $ral)->where('ibp_basamento', $item)->count() }}</td>
+                    @endif
                 @endforeach
                 <td>{{ $tasks->where('ibp_ral_basamcol', $ral)->where('ibp_basamento', '!=', '')->count() }}</td>
             </tr>
