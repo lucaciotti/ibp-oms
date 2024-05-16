@@ -266,7 +266,7 @@ $firstPage=false;
                 $dim_basamento = substr($item, 0, strrpos($item, '-')-0);
                 @endphp
                 @if (str_contains($item, 'PIATTO 8 MM'))
-                <td>
+                <th>
                     {{
                     $tasks->where('ibp_basamento', $dim_basamento)
                     ->filter(function ($task) {
@@ -277,11 +277,11 @@ $firstPage=false;
                     })
                     ->count()
                     }}
-                </td>
+                </th>
                 @endif
         
                 @if (str_contains($item, 'PIATTO TP-BILANCIA'))
-                <td>
+                <th>
                     {{
                     $tasks->where('ibp_basamento', $dim_basamento)
                     ->filter(function ($task) {
@@ -292,11 +292,11 @@ $firstPage=false;
                     })
                     ->count()
                     }}
-                </td>
+                </th>
                 @endif
         
                 @if (str_contains($item, 'PIATTO PINZA'))
-                <td>
+                <th>
                     {{
                     $tasks->where('ibp_basamento', $dim_basamento)
                     ->filter(function ($task) {
@@ -307,11 +307,11 @@ $firstPage=false;
                     })
                     ->count()
                     }}
-                </td>
+                </th>
                 @endif
         
                 @if (str_contains($item, 'PIATTO ANTISCIVOLO'))
-                <td>
+                <th>
                     {{
                     $tasks->where('ibp_basamento', $dim_basamento)
                     ->filter(function ($task) {
@@ -322,7 +322,7 @@ $firstPage=false;
                     })
                     ->count()
                     }}
-                </td>
+                </th>
                 @endif
                 @else
                 <th>{{
