@@ -338,7 +338,7 @@ class GenerateReports extends Modal
                     if (stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, '8') !== false && stripos($task->ibp_basamento_opt, 'MM') !== false) $task->ibp_basamento_opt = 'PIATTO 8 MM';
                     if (stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento, '8') !== false && stripos($task->ibp_opt2_basamento, 'MM') !== false) $task->ibp_opt2_basamento = 'PIATTO 8 MM';
                     if (stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, '8') !== false && stripos($task->ibp_opt3_basamento, 'MM') !== false) $task->ibp_opt3_basamento = 'PIATTO 8 MM';
-                    array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO 8 MM');
+                    if (!in_array($task['ibp_basamento'] . ' - PIATTO 8 MM', $arrayOfValues)) array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO 8 MM');
                 }
 
                 $piattoTpBilancias = $collect->filter(function ($task) {
@@ -351,7 +351,7 @@ class GenerateReports extends Modal
                     if (stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, 'TP') !== false && stripos($task->ibp_basamento_opt, 'BIL') !== false) $task->ibp_basamento_opt = 'PIATTO TP-BILANCIA';
                     if (stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento, 'TP') !== false && stripos($task->ibp_opt2_basamento, 'BIL') !== false) $task->ibp_opt2_basamento = 'PIATTO TP-BILANCIA';
                     if (stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, 'TP') !== false && stripos($task->ibp_opt3_basamento, 'BIL') !== false) $task->ibp_opt3_basamento = 'PIATTO TP-BILANCIA';
-                    array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO TP-BILANCIA');
+                    if (!in_array($task['ibp_basamento'] . ' - PIATTO TP-BILANCIA', $arrayOfValues)) array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO TP-BILANCIA');
                 }
 
                 $piattoPinzas = $collect->filter(function ($task) {
@@ -364,7 +364,7 @@ class GenerateReports extends Modal
                     if (stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, 'PINZ') !== false) $task->ibp_basamento_opt = 'PIATTO PINZA';
                     if (stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento, 'PINZ') !== false) $task->ibp_opt2_basamento = 'PIATTO PINZA';
                     if (stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, 'PINZ') !== false) $task->ibp_opt3_basamento = 'PIATTO PINZA';
-                    array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO PINZA');
+                    if (!in_array($task['ibp_basamento'] . ' - PIATTO PINZA', $arrayOfValues)) array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO PINZA');
                 }
 
                 $piattoAntiscivolos = $collect->filter(function ($task) {
@@ -381,7 +381,7 @@ class GenerateReports extends Modal
                     if (stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, 'ANTISC') !== false) $task->ibp_basamento_opt = 'PIATTO ANTISCIVOLO';
                     if (stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento, 'ANTISC') !== false) $task->ibp_opt2_basamento = 'PIATTO ANTISCIVOLO';
                     if (stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, 'ANTISC') !== false) $task->ibp_opt3_basamento = 'PIATTO ANTISCIVOLO';
-                    array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO ANTISCIVOLO');
+                    if (!in_array($task['ibp_basamento'] . ' - PIATTO ANTISCIVOLO', $arrayOfValues)) array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO ANTISCIVOLO');
                 }
             }
         }
