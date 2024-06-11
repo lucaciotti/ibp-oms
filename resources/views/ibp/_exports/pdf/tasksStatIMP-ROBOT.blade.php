@@ -55,8 +55,16 @@
                 <th>{{ $col }}</th>
                 @foreach ($stats['prods'] as $item)
                 <td>{{ $tasks->where('ibp_colonna', $col)->where('ibp_prodotto_tipo', $item)->count() }}</td>
-                <td>{{ $tasks->where('ibp_colonna', $col)->where('ibp_prodotto_tipo', $item.' TOUCH')->count() }}</td>
+                <td>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) { 
+                    return str_contains($task->ibp_prodotto_tipo, 'TOUCH');
+                })->count() }}</td>
+                @if (count(explode(" ", $item))>0)
+                    <th>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item) { foreach (explode(" ", $item) as $value) {
+                        return str_contains($task->ibp_prodotto_tipo, $value);
+                    } })->count() }}</th>
+                @else
                 <th>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item) { return false !== stripos($task, $item); })->count() }}</th>
+                @endif
                 @endforeach
             </tr>
             @endforeach
@@ -65,8 +73,18 @@
                 <th>{{ $braccio }}</th>
                 @foreach ($stats['prods'] as $item)
                 <td>{{ $tasks->where('ibp_braccio', $braccio)->where('ibp_prodotto_tipo', $item)->count() }}</td>
-                <td>{{ $tasks->where('ibp_braccio', $braccio)->where('ibp_prodotto_tipo', $item.' TOUCH')->count() }}</td>
-                <th>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) use ($item) { return false !== stripos($task, $item); })->count() }}</th>
+                <td>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) { 
+                    return str_contains($task->ibp_prodotto_tipo, 'TOUCH');
+                })->count() }}</td>
+                @if (count(explode(" ", $item))>0)
+                <th>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) use ($item) { foreach (explode(" ", $item) as $value)
+                    {
+                    return str_contains($task->ibp_prodotto_tipo, $value);
+                    } })->count() }}</th>
+                @else
+                <th>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) use ($item) { return false !== stripos($task, $item);
+                    })->count() }}</th>
+                @endif
                 @endforeach
             </tr>
             @endforeach
