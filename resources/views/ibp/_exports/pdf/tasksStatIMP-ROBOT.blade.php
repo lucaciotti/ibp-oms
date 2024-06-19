@@ -63,14 +63,14 @@
             <tr>
                 <th>{{ $col }}</th>
                 @foreach ($stats['prods'] as $item)
-                    <td>{{ $tasks->where('ibp_colonna', $col)->where('ibp_prodotto_tipo', $item)->count() + $tasks->where('ibp_colonna', $col)->filter(function ($task) {
+                    <td>{{ $tasks->where('ibp_colonna', $col)->where('ibp_prodotto_tipo', $item)->count() + $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item) {
                     return str_contains($task->ibp_prodotto_tipo, $item) && (str_contains($task->ibp_prodotto_tipo, '-SF-') || str_contains($task->ibp_prodotto_tipo, '-NT-'));
                     })->count() }}</td>
-                    <td>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) { 
+                    <td>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item){ 
                         return str_contains($task->ibp_prodotto_tipo, $item) && (str_contains($task->ibp_prodotto_tipo, 'TOUCH') || str_contains($task->ibp_prodotto_tipo, '-ST-') || str_contains($task->ibp_prodotto_tipo, '-NE-'));
                     })->count() }}</td>
                     @if ($item=='NEOS') 
-                    <td>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) { 
+                    <td>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item){ 
                         return str_contains($task->ibp_prodotto_tipo, $item) && (str_contains($task->ibp_prodotto_tipo, '-V2-'));
                     })->count() }}</td>
                     @endif
@@ -89,14 +89,14 @@
             <tr>
                 <th>{{ $braccio }}</th>
                 @foreach ($stats['prods'] as $item)
-                    <td>{{ $tasks->where('ibp_braccio', $braccio)->where('ibp_prodotto_tipo', $item)->count() + $tasks->where('ibp_colonna', $col)->filter(function ($task) {
+                    <td>{{ $tasks->where('ibp_braccio', $braccio)->where('ibp_prodotto_tipo', $item)->count() + $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item){
                     return str_contains($task->ibp_prodotto_tipo, $item) && (str_contains($task->ibp_prodotto_tipo, '-SF-') || str_contains($task->ibp_prodotto_tipo, '-NT-'));
                     })->count() }}</td>
-                    <td>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) {
+                    <td>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) use ($item){
                     return str_contains($task->ibp_prodotto_tipo, $item) && (str_contains($task->ibp_prodotto_tipo, 'TOUCH') || str_contains($task->ibp_prodotto_tipo, '-ST-') || str_contains($task->ibp_prodotto_tipo, '-NE-'));
                     })->count() }}</td>
                     @if ($item=='NEOS')
-                    <td>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) {
+                    <td>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) use ($item){
                         return str_contains($task->ibp_prodotto_tipo, $item) && (str_contains($task->ibp_prodotto_tipo, '-V2-'));
                         })->count() }}</td>
                     @endif
