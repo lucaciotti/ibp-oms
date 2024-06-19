@@ -38,13 +38,22 @@
                 <tr height="20px">
                     <th width='150px' rowspan="2"></th>
                     @foreach ($stats['prods'] as $item)
+                    @if ($item=='NEOS')
+                    <th colspan="4">{{ $item }}</th>
+                    @else
                     <th colspan="3">{{ $item }}</th>
+                    @endif
                     @endforeach
                 </tr>
                 <tr height="20px">
                     @foreach ($stats['prods'] as $item)
-                    <th >TASTI</th>
-                    <th >TOUCH</th>
+                    <th >TASTI @if ($item=='SFERA') -SF- @endif @if ($item=='NEOS') -NT- @endif</th>
+                    @if ($item!='NEOS')
+                        <th>TOUCH @if ($item=='SFERA') -ST- @endif</th>
+                    @else
+                        <th>DISPLAY -NE- @endif</th>
+                    @endif
+                    @if ($item=='NEOS') <th>V2</th> @endif
                     <th >TOT.</th>
                     @endforeach
                 </tr>
@@ -54,19 +63,25 @@
             <tr>
                 <th>{{ $col }}</th>
                 @foreach ($stats['prods'] as $item)
-                <td>{{ $tasks->where('ibp_colonna', $col)->where('ibp_prodotto_tipo', $item)->count() + $tasks->where('ibp_colonna', $col)->filter(function ($task) {
-                return str_contains($task->ibp_prodotto_tipo, '-SF-');
-                })->count() }}</td>
-                <td>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) { 
-                    return str_contains($task->ibp_prodotto_tipo, 'TOUCH') || str_contains($task->ibp_prodotto_tipo, '-ST-');
-                })->count() }}</td>
-                @if (count(explode(" ", $item))>0)
-                    <th>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item) { foreach (explode(" ", $item) as $value) {
-                        return str_contains($task->ibp_prodotto_tipo, $value);
-                    } })->count() }}</th>
-                @else
-                <th>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item) { return false !== stripos($task, $item); })->count() }}</th>
-                @endif
+                    <td>{{ $tasks->where('ibp_colonna', $col)->where('ibp_prodotto_tipo', $item)->count() + $tasks->where('ibp_colonna', $col)->filter(function ($task) {
+                    return str_contains($task->ibp_prodotto_tipo, '-SF-') || str_contains($task->ibp_prodotto_tipo, '-NT-');
+                    })->count() }}</td>
+                    <td>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) { 
+                        return str_contains($task->ibp_prodotto_tipo, 'TOUCH') || str_contains($task->ibp_prodotto_tipo, '-ST-') || str_contains($task->ibp_prodotto_tipo, '-NE-');
+                    })->count() }}</td>
+                    @if ($item=='NEOS') 
+                    <td>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) { 
+                        return str_contains($task->ibp_prodotto_tipo, '-V2-');
+                    })->count() }}</td>
+                    @endif
+                    {{-- QUI SOTTO RIGA TOTALI --}}
+                    @if (count(explode(" ", $item))>0)
+                        <th>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item) { foreach (explode(" ", $item) as $value) {
+                            return str_contains($task->ibp_prodotto_tipo, $value);
+                        } })->count() }}</th>
+                    @else
+                    <th>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item) { return false !== stripos($task, $item); })->count() }}</th>
+                    @endif
                 @endforeach
             </tr>
             @endforeach
@@ -74,21 +89,27 @@
             <tr>
                 <th>{{ $braccio }}</th>
                 @foreach ($stats['prods'] as $item)
-                <td>{{ $tasks->where('ibp_braccio', $braccio)->where('ibp_prodotto_tipo', $item)->count() + $tasks->where('ibp_colonna', $col)->filter(function ($task) {
-                return str_contains($task->ibp_prodotto_tipo, '-SF-');
-                })->count() }}</td>
-                <td>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) {
-                return str_contains($task->ibp_prodotto_tipo, 'TOUCH') || str_contains($task->ibp_prodotto_tipo, '-ST-');
-                })->count() }}</td>
-                @if (count(explode(" ", $item))>0)
-                <th>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) use ($item) { foreach (explode(" ", $item) as $value)
-                    {
-                    return str_contains($task->ibp_prodotto_tipo, $value);
-                    } })->count() }}</th>
-                @else
-                <th>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) use ($item) { return false !== stripos($task, $item);
-                    })->count() }}</th>
-                @endif
+                    <td>{{ $tasks->where('ibp_braccio', $braccio)->where('ibp_prodotto_tipo', $item)->count() + $tasks->where('ibp_colonna', $col)->filter(function ($task) {
+                    return str_contains($task->ibp_prodotto_tipo, '-SF-') || str_contains($task->ibp_prodotto_tipo, '-NT-');
+                    })->count() }}</td>
+                    <td>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) {
+                    return str_contains($task->ibp_prodotto_tipo, 'TOUCH') || str_contains($task->ibp_prodotto_tipo, '-ST-') || str_contains($task->ibp_prodotto_tipo, '-NE-');
+                    })->count() }}</td>
+                    @if ($item=='NEOS')
+                    <td>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) {
+                        return str_contains($task->ibp_prodotto_tipo, '-V2-');
+                        })->count() }}</td>
+                    @endif
+                    {{-- QUI SOTTO RIGA TOTALI --}}
+                    @if (count(explode(" ", $item))>0)
+                    <th>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) use ($item) { foreach (explode(" ", $item) as $value)
+                        {
+                        return str_contains($task->ibp_prodotto_tipo, $value);
+                        } })->count() }}</th>
+                    @else
+                    <th>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) use ($item) { return false !== stripos($task, $item);
+                        })->count() }}</th>
+                    @endif
                 @endforeach
             </tr>
             @endforeach
@@ -114,6 +135,7 @@
                     <th width='10%'>Opt. TAGLIO</th>
                     <th width='10%'>Opt. TAGLIO A FASCE</th>
                     <th width='10%'>Opt. CARRELLO PLURIBALL</th>
+                    <th width='10%'>Opt. ANTI-SCHIACC</th>
                 </tr>
             </thead>
             <tbody>
@@ -171,6 +193,15 @@
                         {{
                             $tasks->where('ibp_carrello', $cart)
                             ->filter(function ($task){ return stripos($task->ibp_carrello_opt, 'CARRELLO PLURIBALL')!==false || stripos($task->ibp_carrello_opt_2, 'CARRELLO PLURIBALL')!==false || stripos($task->ibp_carrello_opt_3, 'CARRELLO PLURIBALL')!==false; })
+                            ->count()
+                        }}
+                    </td>
+                    <td>
+                        {{
+                            $tasks->where('ibp_carrello', $cart)
+                            ->filter(function ($task){ return (stripos($task->ibp_carrello_opt, 'SCHIACC')!==false && stripos($task->ibp_carrello_opt, 'ANTI'))
+                                || (stripos($task->ibp_carrello_opt_2, 'SCHIACC')!==false && stripos($task->ibp_carrello_opt_2, 'ANTI'))
+                                || (stripos($task->ibp_carrello_opt_3, 'SCHIACC')!==false && stripos($task->ibp_carrello_opt_3, 'ANTI')); })
                             ->count()
                         }}
                     </td>

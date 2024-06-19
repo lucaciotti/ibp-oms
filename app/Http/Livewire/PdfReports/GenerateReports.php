@@ -295,6 +295,10 @@ class GenerateReports extends Modal
             $prodLabel = str_replace('TOUCH', '', $prod);
             $prodLabel = str_replace('-SF-', '', $prodLabel);
             $prodLabel = str_replace('-ST-', '', $prodLabel);
+            $prodLabel = str_replace('TASTI', '', $prodLabel);
+            $prodLabel = str_replace('-NT-', '', $prodLabel);
+            $prodLabel = str_replace('-NE-', '', $prodLabel);
+            $prodLabel = str_replace('-V2-', '', $prodLabel);
             array_push($prodsLabel, trim($prodLabel));
         }
         $prodsLabel = array_unique($prodsLabel);
