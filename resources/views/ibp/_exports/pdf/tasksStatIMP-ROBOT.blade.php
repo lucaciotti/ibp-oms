@@ -51,7 +51,7 @@
                     @if ($item!='NEOS')
                         <th>TOUCH @if ($item=='SFERA') -ST- @endif</th>
                     @else
-                        <th>DISPLAY -NE- @endif</th>
+                        <th>DISPLAY -NE- </th>
                     @endif
                     @if ($item=='NEOS') <th>V2</th> @endif
                     <th >TOT.</th>
