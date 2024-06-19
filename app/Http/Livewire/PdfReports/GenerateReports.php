@@ -292,7 +292,15 @@ class GenerateReports extends Modal
         $prods = $this->getUniqueFromCollection($tasks, 'ibp_prodotto_tipo');
         $prodsLabel = [];
         foreach ($prods as $prod) {
-            array_push($prodsLabel, trim(str_replace('TOUCH', '', $prod)));
+            if (str_contains($prod, 'TOUCH')) {
+                array_push($prodsLabel, trim(str_replace('TOUCH', '', $prod)));
+            }
+            if (str_contains($prod, '-SF-')) {
+                array_push($prodsLabel, trim(str_replace('-SF-', '', $prod)));
+            }
+            if (str_contains($prod, '-ST-')) {
+                array_push($prodsLabel, trim(str_replace('-ST-', '', $prod)));
+            }
         }
         $prodsLabel = array_unique($prodsLabel);
 

@@ -54,9 +54,11 @@
             <tr>
                 <th>{{ $col }}</th>
                 @foreach ($stats['prods'] as $item)
-                <td>{{ $tasks->where('ibp_colonna', $col)->where('ibp_prodotto_tipo', $item)->count() }}</td>
+                <td>{{ $tasks->where('ibp_colonna', $col)->where('ibp_prodotto_tipo', $item)->count() + $tasks->where('ibp_colonna', $col)->filter(function ($task) {
+                return str_contains($task->ibp_prodotto_tipo, '-SF-');
+                })->count() }}</td>
                 <td>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) { 
-                    return str_contains($task->ibp_prodotto_tipo, 'TOUCH');
+                    return str_contains($task->ibp_prodotto_tipo, 'TOUCH') || str_contains($task->ibp_prodotto_tipo, '-ST-');
                 })->count() }}</td>
                 @if (count(explode(" ", $item))>0)
                     <th>{{ $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item) { foreach (explode(" ", $item) as $value) {
@@ -72,9 +74,11 @@
             <tr>
                 <th>{{ $braccio }}</th>
                 @foreach ($stats['prods'] as $item)
-                <td>{{ $tasks->where('ibp_braccio', $braccio)->where('ibp_prodotto_tipo', $item)->count() }}</td>
-                <td>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) { 
-                    return str_contains($task->ibp_prodotto_tipo, 'TOUCH');
+                <td>{{ $tasks->where('ibp_braccio', $braccio)->where('ibp_prodotto_tipo', $item)->count() + $tasks->where('ibp_colonna', $col)->filter(function ($task) {
+                return str_contains($task->ibp_prodotto_tipo, '-SF-');
+                })->count() }}</td>
+                <td>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) {
+                return str_contains($task->ibp_prodotto_tipo, 'TOUCH') || str_contains($task->ibp_prodotto_tipo, '-ST-');
                 })->count() }}</td>
                 @if (count(explode(" ", $item))>0)
                 <th>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) use ($item) { foreach (explode(" ", $item) as $value)
