@@ -89,7 +89,7 @@
             <tr>
                 <th>{{ $braccio }}</th>
                 @foreach ($stats['prods'] as $item)
-                    <td>{{ $tasks->where('ibp_braccio', $braccio)->where('ibp_prodotto_tipo', $item)->count() + $tasks->where('ibp_colonna', $col)->filter(function ($task) use ($item){
+                    <td>{{ $tasks->where('ibp_braccio', $braccio)->where('ibp_prodotto_tipo', $item)->count() + $tasks->where('ibp_braccio', $braccio)->filter(function ($task) use ($item){
                     return str_contains($task->ibp_prodotto_tipo, $item) && (str_contains($task->ibp_prodotto_tipo, '-SF-') || str_contains($task->ibp_prodotto_tipo, '-NT-'));
                     })->count() }}</td>
                     <td>{{ $tasks->where('ibp_braccio', $braccio)->filter(function ($task) use ($item){
