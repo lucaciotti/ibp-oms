@@ -309,6 +309,7 @@ class GenerateReports extends Modal
 
         $imb_tipo = $this->getUniqueFromCollection($tasks, 'ibp_imballo_tipo');
         $imb_dim = $this->getUniqueFromCollection($tasks, 'ibp_imballo_dim');
+        $imb_dim2 = $this->getUniqueFromCollection($tasks, 'ibp_dim_imballo2');
 
         $stats = [
             'rals' => $rals_piatto,
@@ -324,6 +325,7 @@ class GenerateReports extends Modal
             'batteria' => $batteria,
             'imb_tipo' => $imb_tipo,
             'imb_dim' => $imb_dim,
+            'imb_dim2' => $imb_dim2,
         ];
         return $stats;
     }
