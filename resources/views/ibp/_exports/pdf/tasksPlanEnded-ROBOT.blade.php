@@ -70,7 +70,7 @@ $ralRGB2 = $ralHelper->getRGB($task['values']['ibp_ral_colbraccio']);
             @if (!empty($task['values']['ibp_colonna']))<td>{{ $task['values']['ibp_colonna'] ?? '' }}</td>@else<td>{{ $task['values']['ibp_braccio'] ?? '' }}</td>@endif
             <td>{{ $task['values']['ibp_carrello'] ?? '' }}</td>
             <td>{{ $task['values']['ibp_imballo_tipo'] ?? '' }}</td>
-            <td rowspan=6>{{ $task['values']['ibp_plan_note'] ?? '' }}</td>
+            <td rowspan=6>{!! $task['values']['ibp_plan_note'] ?? '' !!}</td>
             {{-- <th rowspan=6>{{ $task['qta'] ?? '' }}</th> --}}
         </tr>
         <tr>

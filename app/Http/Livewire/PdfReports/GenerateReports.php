@@ -87,6 +87,7 @@ class GenerateReports extends Modal
             // $matricole = Arr::pluck(PlannedTask::select('ibp_plan_matricola')->where($aWhere)->whereIn('id', $this->tasks_ids)->where('completed', false)->get()->toArray(), 'ibp_plan_matricola');
             $matricole = Arr::pluck(PlannedTask::select('ibp_plan_matricola')->where($aWhere)->whereIn('id', $this->tasks_ids)->get()->toArray(), 'ibp_plan_matricola');
             $chunck_matricole = array_chunk($matricole, 8);
+            $task = $this->buildExtraNote($task);
             foreach ($chunck_matricole as $aMat) {
                 $aTask=[
                     'matricole' => $aMat,
@@ -147,6 +148,7 @@ class GenerateReports extends Modal
             }
             $matricole = Arr::pluck(PlannedTask::select('ibp_plan_matricola')->where($aWhere)->where($aWhere)->whereIn('id', $this->tasks_ids)->where('completed', true)->get()->toArray(), 'ibp_plan_matricola');
             $chunck_matricole = array_chunk($matricole, 8);
+            $task = $this->buildExtraNote($task);
             foreach ($chunck_matricole as $aMat) {
                 $aTask = [
                     'matricole' => $aMat,
@@ -430,6 +432,54 @@ class GenerateReports extends Modal
 
         return $arrayOfValues;
     }
+
+    private function buildExtraNote($task) {
+        $extra_note='';
+        if (str_contains($task->ibp_basamento_opt, 'BILANCIA') || str_contains($task->ibp_opt2_basamento, 'BILANCIA') || str_contains($task->ibp_opt3_basamento, 'BILANCIA')){
+            $extra_note .= "-->  VERIFICARE PIASTRA CONTENIMENTO PIEDI<br>";
+        }
+        if (str_contains($task->ibp_basamento_opt, 'TELAIO DI RIALZO') || str_contains($task->ibp_opt2_basamento, 'TELAIO DI RIALZO') || str_contains($task->ibp_opt3_basamento, 'TELAIO DI RIALZO')){
+            $extra_note .= "-->  VERIFICARE PRESENZA PIEDI PER TELAIO DI RIALZO<br>";
+        }
+
+        if (!str_contains($task->ibp_pressore_opt, 'NO') && $task->ibp_pressore_opt!=null){
+            $extra_note .= "-->  VERIFICARE PRESENZA DEI 4 DISTANZIALI L=30<br>";
+        }
+        
+        if (str_contains($task->ibp_rampadime, 'RAMPA') && str_contains($task->ibp_rampa_dime_opt, 'BILANCIA')){
+            $extra_note .= "-->  VERIFICARE PRESENZA PIEDI DI REGOLAZIONE PER RAMPA<br>";
+        }
+        
+        if (str_contains($task->ibp_carrello_opt, 'KIT SPINA PER BOBINE SENZA ANIMA CON MOLLE A STECCA') || 
+            str_contains($task->ibp_carrello_opt_2, 'KIT SPINA PER BOBINE SENZA ANIMA CON MOLLE A STECCA') || 
+            str_contains($task->ibp_carrello_opt_3, 'KIT SPINA PER BOBINE SENZA ANIMA CON MOLLE A STECCA') || 
+            str_contains($task->ibp_opt4_carrello, 'KIT SPINA PER BOBINE SENZA ANIMA CON MOLLE A STECCA') || 
+            str_contains($task->ibp_opt5_carrello, 'KIT SPINA PER BOBINE SENZA ANIMA CON MOLLE A STECCA')){
+            $extra_note .= "-->  VERIFICARE PRESENZA KIT SPINA PER BOBINE SENZA ANIMA CON MOLLE A STECCA<br>";
+        }        
+        if (str_contains($task->ibp_carrello_opt, 'A CORREDO') || 
+            str_contains($task->ibp_carrello_opt_2, 'A CORREDO') || 
+            str_contains($task->ibp_carrello_opt_3, 'A CORREDO') || 
+            str_contains($task->ibp_opt4_carrello, 'A CORREDO') || 
+            str_contains($task->ibp_opt5_carrello, 'A CORREDO')){
+            $extra_note .= "--> VERIFICARE PRESENZA PULEGGE A CORREDO<br>";
+        }
+        
+        if (str_contains($task->ibp_colonna_opt, 'TELECOMANDO') || 
+            str_contains($task->ibp_opt2_colonna, 'TELECOMANDO') || 
+            str_contains($task->ibp_opt3_colonna, 'TELECOMANDO')) {
+            $extra_note .= "--> VERIFICARE PRESENZA TELECOMANDO";               
+        }
+
+        if (!empty($extra_note)){
+            $task->ibp_plan_note .= !empty($task->ibp_plan_note) ? "<hr><br>" : "";
+            $task->ibp_plan_note .= "<u>ATTENZIONE:</u><br>";
+            $task->ibp_plan_note .= $extra_note;
+        }
+
+        return $task;
+    }
+
 
     public function mount($tasks_ids, $reportKey, $type_id, $configs)
     {
