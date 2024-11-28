@@ -1,12 +1,15 @@
 <?php
 
 $topNavbar = [
-         // Navbar items:
-        // [
-        //     'type'         => 'navbar-search',
-        //     'text'         => 'search',
-        //     'topnav_right' => true,
-        // ],
+    // Navbar items:
+        [
+            'text'        => ' APP Inventario',
+            'url'         => 'https://inv.ibpoms.lucaciotti.space/',
+            'icon'        => 'fas fa-barcode',
+            'topnav' => true,
+            'target'        => '_blank',
+            // 'can'  => ['config-read'],
+        ],
         [
             'type'         => 'navbar-notification',
             'id'           => 'my-notification',
