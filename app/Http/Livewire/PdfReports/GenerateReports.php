@@ -351,7 +351,7 @@ class GenerateReports extends Modal
                     if (stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, '8') !== false && stripos($task->ibp_opt3_basamento, 'MM') !== false) $task->ibp_opt3_basamento = 'PIATTO 8 MM';
                     if (!in_array($task['ibp_basamento'] . ' - PIATTO 8 MM', $arrayOfValues)) array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO 8 MM');
                 }
-
+                
                 $piattoTpBilancias = $collect->filter(function ($task) {
                     return
                     stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, 'TP') !== false && stripos($task->ibp_basamento_opt, 'BIL') !== false ||
@@ -364,7 +364,7 @@ class GenerateReports extends Modal
                     if (stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, 'TP') !== false && stripos($task->ibp_opt3_basamento, 'BIL') !== false) $task->ibp_opt3_basamento = 'PIATTO TP-BILANCIA';
                     if (!in_array($task['ibp_basamento'] . ' - PIATTO TP-BILANCIA', $arrayOfValues)) array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO TP-BILANCIA');
                 }
-
+                
                 $piattoPinzas = $collect->filter(function ($task) {
                     return
                     stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, 'PINZ') !== false ||
@@ -377,22 +377,34 @@ class GenerateReports extends Modal
                     if (stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, 'PINZ') !== false) $task->ibp_opt3_basamento = 'PIATTO PINZA';
                     if (!in_array($task['ibp_basamento'] . ' - PIATTO PINZA', $arrayOfValues)) array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO PINZA');
                 }
-
+                
                 $piattoAntiscivolos = $collect->filter(function ($task) {
                     return
-                        stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, 'ANTISC') !== false ||
-                        stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento,
-                        'ANTISC'
-                        ) !== false ||
-                        stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento,
-                        'ANTISC'
-                        ) !== false;
+                    stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, 'ANTISC') !== false ||
+                    stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento,
+                    'ANTISC'
+                    ) !== false ||
+                    stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento,
+                    'ANTISC'
+                    ) !== false;
                 });
                 foreach ($piattoAntiscivolos as $task) {
                     if (stripos($task->ibp_basamento_opt, 'PIATTO') !== false && stripos($task->ibp_basamento_opt, 'ANTISC') !== false) $task->ibp_basamento_opt = 'PIATTO ANTISCIVOLO';
                     if (stripos($task->ibp_opt2_basamento, 'PIATTO') !== false && stripos($task->ibp_opt2_basamento, 'ANTISC') !== false) $task->ibp_opt2_basamento = 'PIATTO ANTISCIVOLO';
                     if (stripos($task->ibp_opt3_basamento, 'PIATTO') !== false && stripos($task->ibp_opt3_basamento, 'ANTISC') !== false) $task->ibp_opt3_basamento = 'PIATTO ANTISCIVOLO';
                     if (!in_array($task['ibp_basamento'] . ' - PIATTO ANTISCIVOLO', $arrayOfValues)) array_push($arrayOfValues, $task['ibp_basamento'] . ' - PIATTO ANTISCIVOLO');
+                }
+            }
+            if ($key == 'ibp_imballo_tipo') {
+                $imbNote = Arr::pluck($collect->where('ibp_imballo_note', '!=', '')->unique('ibp_imballo_note')->sortBy('ibp_imballo_note')->toArray(), 'ibp_imballo_note');
+                $imbNote2 = Arr::pluck($collect->where('ibp_note_imballo2', '!=', '')->unique('ibp_note_imballo2')->sortBy('ibp_note_imballo2')->toArray(), 'ibp_note_imballo2');
+                if(in_array('polistirolo', array_map('strtolower', $imbNote)) || in_array('polistirolo', array_map('strtolower', $imbNote2))) {
+                    $colImbPol = $collect->filter(function ($task) { return strpos(strtolower($task->ibp_imballo_note), 'polistirolo') !== false || strpos(strtolower($task->ibp_note_imballo2), 'polistirolo') !== false; });
+                    foreach ($colImbPol as $task) {
+                        if(strpos(strtolower($task->ibp_imballo_tipo), 'macchina')!==false) continue;
+                        $newImb = $task->ibp_imballo_tipo.' + POLISTIROLO *';
+                        if(!in_array($newImb, $arrayOfValues)) array_push($arrayOfValues, $newImb);
+                    }
                 }
             }
         }

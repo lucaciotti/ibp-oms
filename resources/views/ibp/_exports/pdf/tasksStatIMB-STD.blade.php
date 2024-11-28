@@ -44,22 +44,72 @@
             @foreach ($stats['imb_dim'] as $imb_dim)
             <tr>
                 <th width='100px'>{{ $imb_dim }}</th>
+                @php
+                $countPolistirolo = 0;
+                $countNONPolistirolo = 0;
+                $totRow= 0;
+                @endphp
                 @foreach ($stats['imb_tipo'] as $item)
-                <td>{{ $tasks->where('ibp_imballo_dim', $imb_dim)->where('ibp_imballo_tipo', $item)->count() }}</td>
+                @if (strpos(strtolower($item), 'polistirolo'))
+                @php
+                    $countPolistirolo = $tasks->where('ibp_imballo_dim', $imb_dim)->where('ibp_imballo_tipo', substr($item, 0, strpos($item, ' +')))
+                        ->filter(function ($task) { return strpos(strtolower($task->ibp_imballo_note), 'polistirolo') !== false || strpos(strtolower($task->ibp_note_imballo2), 'polistirolo') !== false; })->count()/4;
+                    $countNONPolistirolo = 0;
+                @endphp
+                <td>{{ $countPolistirolo }}</td>
+                @else
+                @php
+                    $countPolistirolo = 0;
+                    $countNONPolistirolo = $tasks->where('ibp_imballo_dim', $imb_dim)->where('ibp_imballo_tipo', $item)
+                        ->filter(function ($task) { return strpos(strtolower($task->ibp_imballo_note), 'polistirolo') === false && strpos(strtolower($task->ibp_note_imballo2),'polistirolo') === false; })->count();
+                @endphp
+                <td>{{ $countNONPolistirolo }}</td>
+                @endif
+                @php
+                    $totRow = $totRow + $countPolistirolo + $countNONPolistirolo;
+                @endphp
                 @endforeach
-                <th>{{ $tasks->where('ibp_imballo_dim', $imb_dim)->count() }}</th>
+                {{-- <th>{{ $tasks->where('ibp_imballo_dim', $imb_dim)->count() }}</th> --}}
+                <th>{{ $totRow }}</th>
             </tr>
             @endforeach
             <tfoot>
             <tr>
                 <th>TOTALE</th>
+                @php
+                    $countPolistirolo = 0;
+                    $countNONPolistirolo = 0;
+                    $totTable= 0;
+                @endphp
                 @foreach ($stats['imb_tipo'] as $item)
-                <th>{{ $tasks->where('ibp_imballo_tipo', $item)->count() }}</th>
+                @if (strpos(strtolower($item), 'polistirolo'))
+                @php
+                    $countPolistirolo = $tasks->where('ibp_imballo_tipo', substr($item, 0, strpos($item, ' +')))
+                        ->filter(function ($task) { return strpos(strtolower($task->ibp_imballo_note), 'polistirolo') !== false || strpos(strtolower($task->ibp_note_imballo2), 'polistirolo') !== false; })->count()/4;
+                    $countNONPolistirolo = 0;
+                @endphp
+                <th>{{ $countPolistirolo }}</th>
+                @else
+                @php
+                    $countPolistirolo = 0;
+                    $countNONPolistirolo = $tasks->where('ibp_imballo_tipo', $item)
+                        ->filter(function ($task) { return strpos(strtolower($task->ibp_imballo_note), 'polistirolo') === false && strpos(strtolower($task->ibp_note_imballo2),'polistirolo') === false; })->count();
+                @endphp
+                <th>{{ $countNONPolistirolo }}</th>
+                @endif
+                @php
+                    $totTable = $totTable + $countPolistirolo + $countNONPolistirolo;
+                @endphp
+                {{-- <th>{{ $tasks->where('ibp_imballo_tipo', $item)->count() }}</th> --}}
                 @endforeach
-                <th>{{ $tasks->count() }}</th>
+                {{-- <th>{{ $tasks->count() }}</th> --}}
+                <th>{{ $totTable }}</th>
             </tr>
             </tfoot>
         </table>
+        @if ($countPolistirolo>0)
+            <p><small><i>* => su ogni "BANCALE + POLISTIROLO" ci sono 4 macchine</i></small></p>
+        @endif
     </div>
 
     <div>
