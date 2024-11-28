@@ -450,11 +450,11 @@ class GenerateReports extends Modal
             $extra_note .= "-->  VERIFICARE PRESENZA PIEDI DI REGOLAZIONE PER RAMPA<br>";
         }
         
-        if (str_contains($task->ibp_carrello_opt, 'KIT SPINA PER BOBINE SENZA ANIMA CON MOLLE A STECCA') || 
-            str_contains($task->ibp_carrello_opt_2, 'KIT SPINA PER BOBINE SENZA ANIMA CON MOLLE A STECCA') || 
-            str_contains($task->ibp_carrello_opt_3, 'KIT SPINA PER BOBINE SENZA ANIMA CON MOLLE A STECCA') || 
-            str_contains($task->ibp_opt4_carrello, 'KIT SPINA PER BOBINE SENZA ANIMA CON MOLLE A STECCA') || 
-            str_contains($task->ibp_opt5_carrello, 'KIT SPINA PER BOBINE SENZA ANIMA CON MOLLE A STECCA')){
+        if (str_contains($task->ibp_carrello_opt, 'MOLLE A STECCA') || 
+            str_contains($task->ibp_carrello_opt_2, 'MOLLE A STECCA') || 
+            str_contains($task->ibp_carrello_opt_3, 'MOLLE A STECCA') || 
+            str_contains($task->ibp_opt4_carrello, 'MOLLE A STECCA') || 
+            str_contains($task->ibp_opt5_carrello, 'MOLLE A STECCA')){
             $extra_note .= "-->  VERIFICARE PRESENZA KIT SPINA PER BOBINE SENZA ANIMA CON MOLLE A STECCA<br>";
         }        
         if (str_contains($task->ibp_carrello_opt, 'A CORREDO') || 
