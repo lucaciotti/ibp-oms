@@ -401,7 +401,9 @@ class GenerateReports extends Modal
                 if(in_array('polistirolo', array_map('strtolower', $imbNote)) || in_array('polistirolo', array_map('strtolower', $imbNote2))) {
                     $colImbPol = $collect->filter(function ($task) { return strpos(strtolower($task->ibp_imballo_note), 'polistirolo') !== false || strpos(strtolower($task->ibp_note_imballo2), 'polistirolo') !== false; });
                     foreach ($colImbPol as $task) {
-                        if(strpos(strtolower($task->ibp_imballo_tipo), 'macchina')!==false) continue;
+                        if(strpos(strtolower($task->ibp_imballo_tipo), 'macchina')!==false) {
+                            continue;
+                        }
                         $newImb = $task->ibp_imballo_tipo.' + POLISTIROLO *';
                         if(!in_array($newImb, $arrayOfValues)) array_push($arrayOfValues, $newImb);
                     }

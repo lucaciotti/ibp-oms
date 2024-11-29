@@ -35,7 +35,7 @@
         <h2>Tipologia Imballi + Misure</h2>
         <table>
             <tr height="20px">
-                <td></td>
+                <td width='100px'></td>
                 @foreach ($stats['imb_tipo'] as $item)
                     <th width='50px'>{{ $item }}</th>
                 @endforeach
@@ -43,7 +43,7 @@
             </tr>
             @foreach ($stats['imb_dim'] as $imb_dim)
             <tr>
-                <th width='100px'>{{ $imb_dim }}</th>
+                <th>{{ $imb_dim }}</th>
                 @php
                 $countPolistirolo = 0;
                 $countNONPolistirolo = 0;
@@ -60,8 +60,13 @@
                 @else
                 @php
                     $countPolistirolo = 0;
-                    $countNONPolistirolo = $tasks->where('ibp_imballo_dim', $imb_dim)->where('ibp_imballo_tipo', $item)
-                        ->filter(function ($task) { return strpos(strtolower($task->ibp_imballo_note), 'polistirolo') === false && strpos(strtolower($task->ibp_note_imballo2),'polistirolo') === false; })->count();
+                    if(strpos(strtolower($item), 'macchina')!==false){
+                        $countNONPolistirolo = $tasks->where('ibp_imballo_dim', $imb_dim)->where('ibp_imballo_tipo', $item)->count();
+                    } else {
+                        $countNONPolistirolo = $tasks->where('ibp_imballo_dim', $imb_dim)->where('ibp_imballo_tipo', $item)
+                        ->filter(function ($task) { return strpos(strtolower($task->ibp_imballo_note), 'polistirolo') === false &&
+                        strpos(strtolower($task->ibp_note_imballo2),'polistirolo') === false; })->count();
+                    }
                 @endphp
                 <td>{{ $countNONPolistirolo }}</td>
                 @endif
@@ -92,8 +97,12 @@
                 @else
                 @php
                     $countPolistirolo = 0;
-                    $countNONPolistirolo = $tasks->where('ibp_imballo_tipo', $item)
-                        ->filter(function ($task) { return strpos(strtolower($task->ibp_imballo_note), 'polistirolo') === false && strpos(strtolower($task->ibp_note_imballo2),'polistirolo') === false; })->count();
+                    if(strpos(strtolower($item), 'macchina')!==false){
+                        $countNONPolistirolo = $tasks->where('ibp_imballo_tipo', $item)->count();
+                    } else {
+                        $countNONPolistirolo = $tasks->where('ibp_imballo_tipo', $item)
+                            ->filter(function ($task) { return strpos(strtolower($task->ibp_imballo_note), 'polistirolo') === false && strpos(strtolower($task->ibp_note_imballo2),'polistirolo') === false; })->count();
+                    }
                 @endphp
                 <th>{{ $countNONPolistirolo }}</th>
                 @endif
