@@ -27,7 +27,7 @@
             <h1>Pianificazione {{ $planName }}</h1>
             <h2>Periodo Produzione: {{ $dtMin }} - {{ $dtMax }}</h2>
             {{-- <hr> --}}
-            <br>
+            {{-- <br> --}}
             <h2 style="text-align: right;"><i><u>Totale Macchine:</u></i> {{ $total_tasks }}</h2>
             <hr>
         </div>

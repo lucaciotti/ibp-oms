@@ -30,8 +30,8 @@
             @if ($total_tasks_completed>0)
             <h2 style="color: rgba(170, 0, 0, 0.919);">ATTENZIONE IL REPORT CONTIENE ANCHE MACCHINE GIA' COMPLETATE <br>(Fare attenzione alla
                 spunta a fianco della matricola)</h2>
-            @endif
             <br>
+            @endif
             <h2 style="text-align: right;"><i><u>Totale Macchine:</u></i> {{ $total_tasks }}</h2>
             @if ($total_tasks_completed>0)
                 <h2 style="text-align: right;"><i>Già Completate:</i> {{ $total_tasks_completed }}</h2>
