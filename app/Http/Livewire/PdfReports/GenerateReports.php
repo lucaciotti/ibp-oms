@@ -449,6 +449,9 @@ class GenerateReports extends Modal
 
     private function buildExtraNote($task) {
         $extra_note='';
+        if (str_contains($task->ibp_basamento_opt, 'FREEZER') || str_contains($task->ibp_opt2_basamento, 'FREEZER') || str_contains($task->ibp_opt3_basamento, 'FREEZER')){
+            $extra_note .= "-->  MONTANTE CINGHIE FREEZER<br>";
+        }
         if (str_contains($task->ibp_basamento_opt, 'BILANCIA') || str_contains($task->ibp_opt2_basamento, 'BILANCIA') || str_contains($task->ibp_opt3_basamento, 'BILANCIA')){
             $extra_note .= "-->  VERIFICARE PIASTRA CONTENIMENTO PIEDI<br>";
         }
