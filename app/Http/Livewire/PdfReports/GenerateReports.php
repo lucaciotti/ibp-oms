@@ -53,11 +53,11 @@ class GenerateReports extends Modal
         $columns = Arr::pluck(Attribute::select('col_name')->whereHas('planTypeAttribute', fn ($query) => $query->where('type_id', $this->type_id))->where('col_name', '!=', 'ibp_plan_matricola')->get()->toArray(), 'col_name');
         $n_of_columns = count($columns);
         // $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->where('completed', false)->groupBy($columns)->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc')->get();
-        $tasksWithSameValues = null;
+        // $tasksWithSameValues = null;
+        $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->groupBy($columns);
         if ($this->order_tasks) {
             $order_applied = false;
             // $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->where('completed', false)->groupBy($columns);
-            $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->groupBy($columns);
             foreach ($this->order_tasks as $key => $value) {
                 // if(!in_array($key, $columns)){
                 //     $tasksWithSameValues->addSelect($key);
@@ -71,15 +71,43 @@ class GenerateReports extends Modal
             if(!$order_applied){
                 $tasksWithSameValues->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc');
             }
-            $tasksWithSameValues = $tasksWithSameValues->get();
+            // $tasksWithSameValues = $tasksWithSameValues->get();
             // dd($tasksWithSameValues);
         } else {
             // $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->where('completed', false)->groupBy($columns)->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc')->get();
-            $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->groupBy($columns)->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc')->get();
+            $tasksWithSameValues = $tasksWithSameValues->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc');
         }
+        $tasksWithSameValues = $tasksWithSameValues->get();
+        // dd();
+        $tasksWithSameValues_Tassative = $tasksWithSameValues->filter(function ($item) {
+            return str_contains($item->ibp_note_imp, 'TASSATIVA');
+        });
+        $tasksWithSameValues_NotTassative = $tasksWithSameValues->filter(function ($item) {
+            return !str_contains($item->ibp_note_imp, 'TASSATIVA');
+        });
         $tasks = [];
+        $tasks_Tassativi = [];
         $sum_total_tasks = 0;
-        foreach ($tasksWithSameValues as $task) {
+        foreach ($tasksWithSameValues_Tassative as $task) {
+            $aWhere = [];
+            foreach ($columns as $column) {
+                array_push($aWhere, [$column, $task->$column]);
+            }
+            // $matricole = Arr::pluck(PlannedTask::select('ibp_plan_matricola')->where($aWhere)->whereIn('id', $this->tasks_ids)->where('completed', false)->get()->toArray(), 'ibp_plan_matricola');
+            $matricole = Arr::pluck(PlannedTask::select('ibp_plan_matricola')->where($aWhere)->whereIn('id', $this->tasks_ids)->get()->toArray(), 'ibp_plan_matricola');
+            $chunck_matricole = array_chunk($matricole, 8);
+            $task = $this->buildExtraNote($task);
+            foreach ($chunck_matricole as $aMat) {
+                $aTask=[
+                    'matricole' => $aMat,
+                    'values' => $task->toArray(),
+                    'qta' => count($aMat),
+                ];
+                $sum_total_tasks += count($aMat);
+                array_push($tasks_Tassativi, $aTask);
+            }
+        }
+        foreach ($tasksWithSameValues_NotTassative as $task) {
             $aWhere = [];
             foreach ($columns as $column) {
                 array_push($aWhere, [$column, $task->$column]);
@@ -108,6 +136,7 @@ class GenerateReports extends Modal
             'dtMin' => $dtMin,
             'dtMax' => $dtMax,
             'tasks' => $tasks,
+            'tasks_Tassativi' => $tasks_Tassativi,
             'total_tasks' => $sum_total_tasks,
             'matricole_completed' => $matricole_completed,
             'total_tasks_completed' => count($matricole_completed),
@@ -124,12 +153,12 @@ class GenerateReports extends Modal
 
         $planName = Str::upper((PlanType::select('name')->find($this->type_id))->name);
         // Costruisco le date di riferimento report
-        if (array_key_exists('date_prod_from', $this->filter_on_tasks)) {
+        if (array_key_exists('date_complete_from', $this->filter_on_tasks)) {
             $dtMin = (new Carbon($this->filter_on_tasks['date_complete_from']))->format('d/m/Y');
         } else {
             $dtMin = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->min('ibp_data_inizio_prod')))->format('d/m/Y');
         }
-        if (array_key_exists('date_prod_to', $this->filter_on_tasks)) {
+        if (array_key_exists('date_complete_to', $this->filter_on_tasks)) {
             $dtMax = (new Carbon($this->filter_on_tasks['date_complete_to']))->format('d/m/Y');
         } else {
             $dtMax = (new Carbon(PlannedTask::whereIn('id', $this->tasks_ids)->where('completed', false)->max('ibp_data_inizio_prod')))->format('d/m/Y');
@@ -139,9 +168,36 @@ class GenerateReports extends Modal
         $n_of_columns = count($columns);
         array_push($columns, 'completed_date');
         $tasksWithSameValues = PlannedTask::select($columns)->whereIn('id', $this->tasks_ids)->where('completed', true)->groupBy($columns)->orderBy('ibp_data_inizio_prod')->orderBy('ibp_cliente_ragsoc')->get();
+
+        $tasksWithSameValues_Tassative = $tasksWithSameValues->filter(function ($item) {
+            return str_contains($item->ibp_note_imp, 'TASSATIVA');
+        });
+        $tasksWithSameValues_NotTassative = $tasksWithSameValues->filter(function ($item) {
+            return !str_contains($item->ibp_note_imp, 'TASSATIVA');
+        });
+
         $tasks = [];
+        $tasks_Tassativi = [];
         $sum_total_tasks = 0;
-        foreach ($tasksWithSameValues as $task) {
+        foreach ($tasksWithSameValues_Tassative as $task) {
+            $aWhere = [];
+            foreach ($columns as $column) {
+                array_push($aWhere, [$column, $task->$column]);
+            }
+            $matricole = Arr::pluck(PlannedTask::select('ibp_plan_matricola')->where($aWhere)->where($aWhere)->whereIn('id', $this->tasks_ids)->where('completed', true)->get()->toArray(), 'ibp_plan_matricola');
+            $chunck_matricole = array_chunk($matricole, 8);
+            $task = $this->buildExtraNote($task);
+            foreach ($chunck_matricole as $aMat) {
+                $aTask = [
+                    'matricole' => $aMat,
+                    'values' => $task->toArray(),
+                    'qta' => count($aMat),
+                ];
+                $sum_total_tasks += count($aMat);
+                array_push($tasks_Tassativi, $aTask);
+            }
+        }
+        foreach ($tasksWithSameValues_NotTassative as $task) {
             $aWhere = [];
             foreach ($columns as $column) {
                 array_push($aWhere, [$column, $task->$column]);
@@ -168,6 +224,7 @@ class GenerateReports extends Modal
             'dtMin' => $dtMin,
             'dtMax' => $dtMax,
             'tasks' => $tasks,
+            'tasks_Tassativi' => $tasks_Tassativi,
             'total_tasks' => $sum_total_tasks,
         ];
         // dd($data);
