@@ -545,6 +545,27 @@ class GenerateReports extends Modal
             $extra_note .= "--> VERIFICARE PRESENZA TELECOMANDO";               
         }
 
+        if (str_contains($task->ibp_prodotto_tipo, 'EVA')) {
+            $extra_note .= "-->  ATTIVARE CONTATORE<br>";
+        }
+
+        if (
+            str_contains($task->ibp_carrello_opt, 'CONTASPIGOLI') ||
+            str_contains($task->ibp_carrello_opt_2, 'CONTASPIGOLI') ||
+            str_contains($task->ibp_carrello_opt_3, 'CONTASPIGOLI') ||
+            str_contains($task->ibp_opt4_carrello, 'CONTASPIGOLI') ||
+            str_contains($task->ibp_opt5_carrello, 'CONTASPIGOLI') ||
+            str_contains($task->ibp_opt5_carrello, 'CONTASPIGOLI') ||
+            str_contains($task->ibp_rampadime, 'CONTASPIGOLI') ||
+            str_contains($task->ibp_rampa_dime_opt, 'CONTASPIGOLI') ||
+            str_contains($task->ibp_basamento_opt, 'CONTASPIGOLI') || 
+            str_contains($task->ibp_opt2_basamento, 'CONTASPIGOLI') || 
+            str_contains($task->ibp_opt3_basamento, 'CONTASPIGOLI') ||
+            str_contains($task->ibp_plan_note, 'CONTASPIGOLI')
+        ) {
+            $extra_note .= "--> DIMA ALLINEAMENTO ENCODER CONTA SPIGOLI<br>";
+        }
+
         if (!empty($extra_note)){
             $task->ibp_plan_note .= !empty($task->ibp_plan_note) ? "<hr><br>" : "";
             $task->ibp_plan_note .= "<u>ATTENZIONE:</u><br>";
