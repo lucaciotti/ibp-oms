@@ -566,6 +566,13 @@ class GenerateReports extends Modal
             $extra_note .= "--> DIMA ALLINEAMENTO ENCODER CONTA SPIGOLI<br>";
         }
 
+        if ((str_contains($task->ibp_carrello_opt, 'KIT SOFFIO') ||
+            str_contains($task->ibp_carrello_opt_2, 'KIT SOFFIO') ||
+            str_contains($task->ibp_carrello_opt_3, 'KIT SOFFIO')) &&
+            str_contains($task->ibp_cliente_ragsoc, 'PKG')) {
+            $extra_note .= "--> TELECOMANDO PKG A CORREDO<br>";
+        }
+
         if (!empty($extra_note)){
             $task->ibp_plan_note .= !empty($task->ibp_plan_note) ? "<hr><br>" : "";
             $task->ibp_plan_note .= "<u>ATTENZIONE:</u><br>";
