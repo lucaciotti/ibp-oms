@@ -22,6 +22,14 @@ host('dev')
     ->set('shared_files', ['.env', 'auth.json'])
     ->set('deploy_path', '/var/www/ibp-oms.lucaciotti.space');
 
+host('1p01')
+    ->set('stage', 'dev')
+    ->set('remote_user', 'root')
+    ->set('hostname', '100.82.153.53')
+    ->set('identity_file', '~/.ssh/id_ed25519')
+    ->set('shared_files', ['.env', 'auth.json'])
+    ->set('deploy_path', '/var/www/ibp-oms.lucaciotti.space');
+
 task('deploy', [
     'deploy:prepare',
     'deploy:vendors',
