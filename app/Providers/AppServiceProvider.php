@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use LogViewer;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -50,6 +51,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if (config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
         LogViewer::auth(function ($request) {
             // dd($request->user()->roles());
             // $request->user()
