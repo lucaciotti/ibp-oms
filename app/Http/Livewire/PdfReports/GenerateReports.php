@@ -573,6 +573,12 @@ class GenerateReports extends Modal
             $extra_note .= "--> TELECOMANDO PKG A CORREDO<br>";
         }
 
+        if (str_contains($task->ibp_note_imp, ' UL') ||
+            str_contains($task->ibp_note_imp, ' _UL') ||
+            str_contains($task->ibp_note_imp, '-UL')) {
+            $extra_note .= "--> SOSTITUIRE 'PG STD' con 'UL'<br>";
+        }
+
         if (!empty($extra_note)){
             $task->ibp_plan_note .= !empty($task->ibp_plan_note) ? "<hr><br>" : "";
             $task->ibp_plan_note .= "<u>ATTENZIONE:</u><br>";
